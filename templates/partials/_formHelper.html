@@ -1,0 +1,49 @@
+{% macro render_field(field) %}
+    <div class="form-group">
+        {{ field.label }}
+        {{ field(class="form-control text-center") }}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro show_flashed_messages() %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="list-unstyled">
+                {% for message in messages %}
+                    <li class="alert-danger">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+{% endmacro %}
+
+{% macro render_user_form(form, title) %}
+    <div class="container-fluid border border-dark p-2">
+        <h1>{{ title }}</h1>
+
+        {{ show_flashed_messages() }}
+
+        <form method="POST" action="">
+            {% for field in form %}
+                {{ render_field(field) }}
+            {% endfor %}
+            <input type="submit" value="{{ title }}" class="btn btn-primary py-2"/>
+        </form>
+    </div>
+{% endmacro %}
+
+{% macro render_field(field) %}
+  {{ field.label }}
+  {{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    {% for error in field.errors %}
+      <div class="text-danger">{{ error }}</div>
+    {% endfor %}
+  {% endif %}
+{% endmacro %}
+

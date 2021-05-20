@@ -1,0 +1,126 @@
+<head>
+    {% block PageJS %}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    {% endblock PageJS %}
+{% block PageCSS %}
+<style>
+#bigSidebar {
+    background-color: lightgrey;
+}
+#sidebarDash {
+    font-weight:bold;
+    font-size: 20px;
+    color: purple;
+}
+#sidebarLive {
+    font-weight:bold;
+    font-size: 20px;
+    color: purple;
+}
+#sidebarAna {
+    font-weight:bold;
+    font-size: 20px;
+    color: purple;
+}
+#sidebarSet {
+    font-weight:bold;
+    font-size: 20px;
+    color: purple;
+}
+#sidebarLog {
+    font-weight:bold;
+    font-size: 20px;
+    color: purple;
+}
+</style>
+{% endblock PageCSS %}
+</head>
+{% extends "layouts/base.html" %}
+{% block PageTitle %}ESTIC - Performer Settings{% endblock PageTitle %}
+
+{% block PageContent %}
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar" id="bigSidebar">
+            <ul class="nav nav-sidebar">
+                <li>placeholderpic
+                </li>
+            </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarDash"><a href="performer_dashboard">Dashboard</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarLive"><a href="createLivestream">Livestream</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarAna"><a href="performer_analytics">Analytics</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarSet" class="active"><a href="#">Settings<span class="sr-only">(current)</span></a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarLog"><a href="performer_logout">Log Out</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">placeholdername</h1>
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+            </div>
+          </div>
+          <h2 class="sub-header">Settings</h2>
+          <div class="table-responsive">
+              <form method="POST" enctype="multipart/form-data" action="">
+                  <table class="table table-bordered">
+                      <tr>
+                          <td>change picture
+                              <!-- <div class="form-group">
+                                  <img name="file" id="blah" placeholderpic width="150" height="150"/><br><br>
+                                  <input name="file" type='file' id="imgInp" />
+                              </div> -->
+                              <script>
+                                  function readURL(input) {
+                                    if (input.files && input.files[0]) {
+                                        var reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        $('#blah').attr('src', e.target.result);
+                                    }
+                                    reader.readAsDataURL(input.files[0]); // convert to base64 string
+                                    }
+                                }
+                                $("#imgInp").change(function() {
+                                    readURL(this);
+                                });
+                              </script>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>
+                              <div class="form-group">
+                                  change name
+                              </div>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>
+                              <div class="form-group">
+                                  change password
+                              </div>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>
+                              <div class="form-group">
+                                  change email
+                              </div>
+                          </td>
+                      </tr>
+                  </table>
+                  <input type="submit" value="Save" class="btn btn-success"/>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock PageContent %}

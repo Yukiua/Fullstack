@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize');
-const db = require('../config/DBConfig');
+import Sequelize from 'sequelize';
+import db from '../config/DBConfig.js';
 
 /* Creates a user(s) table in MySQL Database.
 Note that Sequelize automatically pleuralizes the entity name as the table name
@@ -16,4 +16,4 @@ const User = db.define('user', {
     },
 });
 
-module.exports = User;
+export default User;
