@@ -1,0 +1,140 @@
+<head>
+  {% block PageCSS%}
+  <style>
+#bigSidebar{
+    background-color: lightgrey;
+}
+#sidebarDash {
+    font-weight:bold;
+    font-size: 20px;
+    color: purple;
+}
+#sidebarLive {
+    font-weight:bold;
+    font-size: 20px;
+    color: purple;
+}
+#sidebarAna {
+    font-weight:bold;
+    font-size: 20px;
+    color: purple;
+}
+#sidebarSet {
+    font-weight:bold;
+    font-size: 20px;
+    color: purple;
+}
+#sidebarLog {
+    font-weight:bold;
+    font-size: 20px;
+    color: purple;
+}
+#container {
+    width:500px;
+    height: 500px;
+    position: relative;
+}
+#videocontainer {
+    padding-top: 30px;
+	width: 500px;
+	height: 375px;
+    display: inline-block;
+}
+#sumanalytic {
+    margin-top: 30px;
+	width: 250px;
+	height: 325px;
+    background: grey;
+    display: inline-block;
+    float: right;
+    position: absolute;
+    margin-left: 150px;
+}
+#videoElement {
+	width: 500px;
+	height: 375px;
+	background-color: #666;
+	border: 3px #333 solid;
+}
+</style>
+{% endblock PageCSS%}
+</head>
+{% extends "layouts/base.html" %}
+{% block title %}ESTIC - Performer Dashboard{% endblock %}
+
+{% block PageContent %}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar" id="bigSidebar">
+	    <ul class="nav nav-sidebar">
+		<li>placeholderpic
+                </li>
+            </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarDash" class="active"><a href="#">Dashboard <span class="sr-only">(current)</span></a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarLive"><a href="createLivestream">Livestream</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarAna"><a href="performer_analytics">Analytics</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarSet"><a href="performer_settings">Settings</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarLog"><a href="performer_logout">Log Out</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">placeholdername</h1>
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+            </div>
+          </div>
+          <h2 class="sub-header">Dashboard</h2>
+            <div id="container">
+              <div id="videocontainer">
+              <video autoplay="true" id="videoElement"></video><button id="start" value="start">START</button><button id="stop" value="stop">STOP</button>
+              <script>
+                var video = document.querySelector("#videoElement");
+                var stopVideo = document.querySelector("#stop");
+                var startVideo = document.querySelector("#start");
+                if (navigator.mediaDevices.getUserMedia) {
+                  navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (stream) {
+                      video.srcObject = stream;
+                    })
+                    .catch(function (err0r) {
+                      console.log("Something went wrong!");
+                    });
+                }
+
+                stopVideo.addEventListener("click", stop, false);
+                function stop(e) {
+                  var stream = video.srcObject;
+                  var tracks = stream.getTracks();
+                  for (var i = 0; i < tracks.length; i++) {
+                    var track = tracks[i];
+                    track.stop();
+                  }
+                  video.srcObject = null;
+                }
+
+                startVideo.addEventListener("click", start, true);
+                function start(e) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (stream) {
+                      video.srcObject = stream;
+                    })
+                    .catch(function (err0r) {
+                      console.log("Something went wrong!");
+                    });
+                }
+              </script>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+{% endblock PageContent %}

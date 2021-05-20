@@ -1,17 +1,16 @@
-const Sequilize = require('sequelize');
-const sequelize = require('../config/DBConfig');
-const db = require('../config/DBConfig');
+import Sequelize from 'sequelize';
+import db from '../config/DBConfig.js';
 
 const Livestream = db.define('livestream',{
     title:{
-        type: Sequilize.STRING
+        type: Sequelize.STRING
     },
     info:{
-        type: Sequilize.STRING(1000)
+        type: Sequelize.STRING(1000)
     },
     dateLivestream:{
-        type: Sequilize.DATE
+        type: Sequelize.DATE
     }
 });
 
-module.exports = Livestream;
+export default Livestream;

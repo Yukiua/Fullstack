@@ -1,10 +1,75 @@
 {% extends 'layouts/base.html' %}
+<head>
+	{% block PageCSS %}
+    <style>
+    body{
+        background-image: url('public/img/background.gif');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size:cover;
+    }
+    #home h1 {
+    font-size: 5.5rem;
+    font-weight: bold;
+    line-height: 1.2;
+    color: white;
+    text-align: center;
+    margin-top: 275px;
+    text-shadow: -2.5px 3px 3.5px grey;
+    }
+    #home p {
+    font-size: 1.5rem;
+    font-weight: 275;
+    line-height: 1.2;
+    color: white;
+    text-align: center;
+    text-shadow: -0.5px 1px 1px grey;
+    }
+    .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl{
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+    }
+    #contactpage {
+    width: 100%;
+    margin-top: 500px;
+    background-color: red;
+    display: inline-block;
+    }
+    #contactpage h1 {
+    margin-top: 90px;
+    }
+    #contactpage h1, #contactpage h2, #contactpage p {
+    color: white;
+    margin-left:100px;
+    }
+    #contactpage h1, #contactpage h2 {
+    color: lightgrey !important;
+    font-weight: bold;
+    text-shadow: 2px 1.5px 1px black;
+    }
+    #contactpage table {
+    width: 50%;
+    margin: auto;
+    }
+    #contactpage .mapiframe {
+    text-align: center;
+    }
+    </style>
+	{% endblock PageCSS%}
+</head>
+{% block title %}ESTIC{% endblock title %}
 {% block PageContent %}
-<div class="jumbotron text-center">
-	<div class="container">
-		<h1 class="display-4">{{title}}</h1>
-		<p class="lead">Your personal video jotter</p>
-	</div>
-	<br>
+<div id="home">
+<h1>ESTIC</h1>
+<p>Your ultimate digital concert spot</p>
+</div>
+<div id="contactpage">
+    <table class="table table-borderless">
+    <tr><th><h1>CONTACT US</h1></th></tr>
+    <tr><th><h2>Address</h2></th><td><p>180 Ang Mo Kio Avenue 8</p></td></tr>
+    <tr><th><h2>EMAIL</h2></th><td><p>ESTIC@myconcert.nyp.sg</p></td></tr>
+    <tr><th><h2>TEL</h2></th><td><p>1800-455-6900</p></td></tr>
+    <tr><td class="mapiframe" colspan="2"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.6611775828724!2d103.84676001526061!3d1.3799553618611367!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da16eb64b0249d%3A0xe5f10ff680eed942!2sNanyang%20Polytechnic!5e0!3m2!1sen!2ssg!4v1612089505849!5m2!1sen!2ssg" width="500" height="350" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe></td></tr>
+    </table>
 </div>
 {% endblock PageContent %}

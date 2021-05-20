@@ -1,6 +1,6 @@
-const mySQLDB = require('./DBConfig');
-const user = require('../models/User');
-const Livestream = require('../models/Livestream');
+import mySQLDB from './DBConfig.js';
+import Performer from '../models/Performer.js';
+import Livestream from '../models/Livestream.js';
 
 // If drop is true, all existing tables are dropped and recreated
 const setUpDB = (drop) => {
@@ -14,7 +14,7 @@ const setUpDB = (drop) => {
                 In this case the primary key from user will be a foreign key
                 in video.
             */
-            user.hasMany(Livestream);
+            Performer.hasMany(Livestream);
             mySQLDB.sync({ // Creates table if none exists
                 force: drop   
             }).then(() => {
@@ -24,4 +24,4 @@ const setUpDB = (drop) => {
         .catch(err => console.log('Error: ' + err));
 };
 
-module.exports = { setUpDB };
+export default { setUpDB };

@@ -3,13 +3,15 @@
  */
 
 import Express         from 'express';
-import ExpSession      from 'express-session';
+import session         from 'express-session';
 import BodyParser      from 'body-parser';
 import CookieParser    from 'cookie-parser';
 import MethodOverrides from 'method-override';
 import Path            from 'path';
-
+import MySQLStore      from 'express-mysql-session';
 import Nunjcks         from 'nunjucks';
+import ESTICDB         from './config/DBConnection.js';
+import db              from './config/db.js'
 
 const Server = Express();
 const Port   = process.env.PORT || 3000;
@@ -37,13 +39,34 @@ Server.use(CookieParser());
 Server.use(MethodOverrides('_method'));
 
 /**
- * Express Session
+ * Express Session, using mysql
  */
-Server.use(ExpSession({
-	name:   'example-app',
-	secret: 'random-secret',
-	resave:  false,
-	saveUninitialized: false
+Server.use(session({
+	key: 'ESTIC_session',
+	secret: 'ESTIC',
+	store: new MySQLStore({
+		createDatabaseTable: true,
+		schema: {
+			tableName: 'SESSIONS',
+			columnNames: {
+				session_id: 'session_id',
+				expires: 'expires',
+				data:'data'
+			}
+		},
+		host: db.host,
+		port: 3306,
+		user: db.user,
+		password: db.password,
+		database: db.database,
+		// clearExpired: true,
+		// // How frequently expired sessions will be cleared; milliseconds:
+		// checkExpirationInterval: 900000,
+		// // The maximum age of a valid session; milliseconds:
+		// expiration: 900000,
+	}),
+	resave: false,
+	saveUnintialized: false,
 }));
 
 
@@ -56,6 +79,8 @@ Server.use(function (req, res, next) {
 	res.locals.user = req.user || null;
 	next();
 });
+
+ESTICDB.setUpDB(false)
 
 
 import Routes from './routes/main.mjs'
@@ -78,4 +103,5 @@ console.log(`===========================`);
  */
 Server.listen(Port, function() {
 	console.log(`Server listening at port ${Port}`);
+	console.log("http://localhost:3000")
 });

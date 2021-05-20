@@ -2,13 +2,12 @@ import { Router } from 'express';
 const router = Router();
 export default router;
 
-router.get("/login",      async function(req, res) {
-	console.log("Login page accessed");
-	return res.render('auth/login.html');
+router.get("/performer_login",async function(req, res) {
+	console.log("Performer Login page accessed");
+	return res.render('auth/performer_login.html');
 });
 
-router.get("/register", async function(req, res) {
-	console.log("Register page accessed");
-	return res.render('auth/register.html');
-})
-
+router.get("/performer_signup", async function(req, res) {
+	console.log("Performer SignUp page accessed");
+	return res.render('auth/performer_signup.html');
+});
