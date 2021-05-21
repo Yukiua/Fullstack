@@ -45,3 +45,26 @@ router.get("/performer_logout", async function(req,res){
 	console.log("Performer Logout accessed");
 	return res.render('performer_logout.html')
 });
+
+
+//Concert, cart, payment
+router.get("/concertList", async function(req, res){
+	console.log("concertLists accessed");
+	return res.render('concertList.html')
+});
+
+router.get("/concerts", async function(req, res){
+	console.log("Concerts accessed");
+	return res.render('concerts.html')
+});
+
+router.get("/concertDetails", async function(req, res){
+	console.log("concertDetails accessed");
+	return res.render('concertDetails.html')
+});
+
+router.get("/cart", async function(req, res){
+	console.log("Cart accessed");
+	return res.render('cart.html')
+});
+//

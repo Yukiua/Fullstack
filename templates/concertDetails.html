@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}ESTIC - Details{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/payment.css">
+<div class="row">
+  <div class="col-75">
+    <div class="container">
+        <div class="row">
+          <div class="col-50">
+            <form method="POST" action="">
+              <div class="form-group">
+                {{ render_field(form.concert_title, class="form-control", readonly=True) }}
+              </div>
+              <div class="form-group">
+                {{ render_field(form.concert_details, class="form-control", readonly=True) }}
+              </div>
+              <div class="form-group">
+                {{ render_field(form.concert_date, class="form-control", type="date", readonly=True) }}
+              </div>
+              <div class="form-group">
+                {{ render_field(form.concert_time, class="form-control", type="time", readonly=True) }}
+              </div>
+              <div class="form-group">
+                {{ render_field(form.concert_tickets, class="form-check", style="list-style-type:none") }}
+              </div>
+              <div class="row">
+                <div class="col-50">
+                  <input type="submit" value="Add to Cart" class="btn btn-primary">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
