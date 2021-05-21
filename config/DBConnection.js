@@ -1,6 +1,8 @@
 import mySQLDB from './DBConfig.js';
 import Performer from '../models/Performer.js';
 import Livestream from '../models/Livestream.js';
+import Concert from '../models/Concert.js';
+import Cart from '../models/Cart.js';
 
 // If drop is true, all existing tables are dropped and recreated
 const setUpDB = (drop) => {
