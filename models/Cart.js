@@ -3,13 +3,14 @@ import db from '../config/DBConfig.js';
 
 const Cart = db.define('cart',{
     id:{
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        primaryKey: true
     },
     title:{
         type: Sequelize.STRING
     },
     price:{
-        type: Sequelize.FLOAT(INTEGER)
+        type: Sequelize.FLOAT
     },
     ticket:{
         type: Sequelize.STRING

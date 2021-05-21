@@ -3,7 +3,8 @@ import db from '../config/DBConfig.js';
 
 const Concert = db.define('concert',{
     id:{
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        primaryKey: true
     },
     title:{
         type: Sequelize.STRING

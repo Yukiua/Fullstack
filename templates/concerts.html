@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}ESTIC - Concerts{% endblock %}
+
+{% block content %}
+{% if 'concert_created' in session%}
+<div class="alert alert-success alert-dismissible">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  {{ session.pop('concert_created', None) }} was created.
+</div>
+{% elif 'concert_updated' in session %}
+<div class="alert alert-warning alert-dismissible">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  {{ session.pop('concert_updated', None) }} was updated.
+</div>
+{% elif 'concert_deleted' in session %}
+<div class="alert alert-danger alert-dismissible">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  {{ session.pop('concert_deleted', None) }} was deleted.
+</div>
+{% endif %}
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<h1 class="display-4">Concerts</h1>
+
+<div>
+  {% if count == 0 %}
+  <p>There are no concert entry.</p>
+  {% elif count == 1 %}
+  <p>There is 1 concert entries.</p>
+  {% else %}
+  <p>There are {{ count }} concert entry(ies).</p>
+  {% endif %}
+</div>
+<div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Details</th>
+        <th>Genre</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for concert in concert_list %}
+      <tr>
+        <td>{{ concert.get_title() }}</td>
+        <td>{{ concert.get_details() }}</td>
+        <td>{{ concert.get_genre() }}</td>
+        <td>{{ concert.get_date() }}</td>
+        <td></td>
+        <td></td>
+        <td><a href="/updateConcert/{{concert.get_id()}}" class="btn btn-warning">Update</a></td>
+        <td>
+          <form action="{{url_for('delete_concert', id=concert.get_id())}}" method="POST">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal_{{concert.get_id()}}">Delete</button>
+            <div class="modal" id="myModal_{{concert.get_id()}}">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Delete Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+
+                  <div class="modal-body">
+                    Delete {{concert.get_title()}}?
+                  </div>
+
+                  <div class="modal-footer">
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
