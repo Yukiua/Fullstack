@@ -47,7 +47,7 @@ router.get("/performer_logout", async function(req,res){
 });
 
 
-//Concert, cart, payment
+//Concert, cart, payment test
 router.get("/concertList", async function(req, res){
 	console.log("concertLists accessed");
 	return res.render('concertList.html')
