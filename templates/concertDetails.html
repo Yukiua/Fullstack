@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
 {% block title %}ESTIC - Details{% endblock %}
 
-{% block content %}
+{% block PageContent %}
 {% from "includes/_formHelper.html" import render_field %}
 <link rel="stylesheet" href="/public/css/bootstrap.min.css">
 <link rel="stylesheet" href="/public/css/payment.css">
@@ -38,4 +38,4 @@
     </div>
   </div>
 </div>
-{% endblock %}
+{% endblock PageContent %}
