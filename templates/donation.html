@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Donate!{% endblock %}
+
+{% block PageContent %}
+
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card card-body">
+                <h1>Donate</h1>
+                <form method="POST" action="/donation/addDonation">
+                    <div class="form-group">
+                        <label for = "donationAmount">Enter the amount you want to donate:</label><br>
+                        <input type = "number" id = "donationAmount" name = "donationAmount"><br><br>
+                        </div>
+                        <div class="form-group">
+                        <label for = "donationMessage">Enter the message you want to send:</label><br>
+                        <input type = "text" id = "donationMessage" name = "donationMessage"><br><br>
+                    </div>
+                    <input type="submit" value="Proceed" class="btn btn-primary"/>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

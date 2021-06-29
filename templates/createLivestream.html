@@ -1,0 +1,28 @@
+{% extends "layouts/base.html" %}
+{% block title %}Create Livestream{% endblock %}
+
+{% block PageContent %}
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card card-body">
+                <h1>Create Livestream</h1>
+                <form method="POST" action="">
+                    <div class="form-group">
+                        <label for = "title">Enter the title of the Livestream: </label><br>
+                        <input type = "text" id = "title" name = "title"><br><br>
+                    </div>
+                    <div class="form-group">
+                        <label for = "info">Enter Livestream Info: </label><br>
+                        <input type = "text" id = "info" name = "info"><br><br>
+                    </div>
+                        <label for = "dateLivestream">Enter the date: </label>
+                        <input type = "date" id = "dateLivestream" name = "dateLivestream">
+                    <input type="submit" value="Submit" class="btn btn-primary"/>
+        
+                </form>
+                    <a href="performer_dashboard">Go back to dashboard</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

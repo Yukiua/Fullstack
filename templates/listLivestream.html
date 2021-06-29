@@ -1,0 +1,30 @@
+{% extends "layouts/base.html" %}
+{% block title %}List of Livestreams{% endblock %}
+
+{% block PageContent %}
+  {% if livestreams >= 1 %}
+  <h1 class = "display-4">List of Livestreams</h1>
+    <div>
+      <table class = "table table-striped">
+        <thead>
+          <tr>
+            <th>Livestream Title</th>
+            <th>Livestream Info</th>
+            <th>Date of Livestream</th>
+          </tr>      
+        </thead>
+        <tbody>
+        {% for livestream in livestreams %}
+        <tr>
+          <td>{{livestream.title}}</td>
+          <td>{{livestream.info}}</td>
+          <td>{{livestream.dateLivestream}}</td>
+        </tr>
+        {%endfor%}
+        </tbody>
+      </table>
+    </div>
+  {%else%}
+  <h1 class = "display-4">No Livestreams</h1>
+  {%endif%}
+{% endblock PageContent%}

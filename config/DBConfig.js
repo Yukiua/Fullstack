@@ -4,6 +4,7 @@ import Sequelize from 'sequelize';
 import db from './db.js';
 // Instantiates Sequelize with database parameters
 const mySQLDB = new Sequelize(db.database,db.user,db.password, {
+    port: db.port,
     host: db.host, // Name or IP address of MySQL server
     dialect: 'mysql', // Tells squelize that MySQL is used
     operatorsAliases: false,

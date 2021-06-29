@@ -2,6 +2,9 @@ import route from 'express';
 const { Router } = route;
 const router = Router();
 export default router;
+import moment from 'moment';
+import Livestream from '../models/Livestream.js';
+//import addLivestream from './Livestream.mjs';
 
 // ---------------- 
 //	Serves dynamic files from the dynamic folder
@@ -13,6 +16,9 @@ router.get("/dynamic/:path", async function (req, res) {
 //	TODO: Attach additional routers here
 import RouterAuth from './auth.mjs'
 router.use("/auth", RouterAuth);
+//import Livestream from '../models/Livestream';
+//router.use("/addLivestream", addLivestream);
+
 
 
 // ---------------- 
@@ -67,4 +73,51 @@ router.get("/cart", async function(req, res){
 	console.log("Cart accessed");
 	return res.render('cart.html')
 });
-//
+
+router.get("/donation", async function(req,res){
+	console.log("Donation page accessed");
+	return res.render('donation.html')
+})
+
+router.get("/createLivestream", async function(req,res){
+	console.log("Create Livestream Page accessed");
+	return res.render('createLivestream.html')
+})
+
+router.get("/listLivestream", async function(req,res){
+	console.log("List Livestream Page accessed");
+	return res.render('listLivestream.html')
+})
+
+router.get('/listLivestream',(req,res) => {
+    Livestream.findAll({
+        where:{
+            userId: req.user.id
+        },
+        order : [
+            ['title', 'ASC']
+        ],
+        raw: true
+    })
+    .then((livestreams) => {
+        res.render('livestream/listLivestream', {
+            livestreams : livestreams
+        });
+    })
+    .catch(err => console.log(err));
+})
+
+router.post('/createLivestream', (req, res) => {
+    let title = req.body.title;
+    let info = req.body.info.slice(0,999);
+    let dateLivestream = req.body.dateLivestream;
+
+    Livestream.create({
+        title : title,
+        info : info,
+        dateLivestream : dateLivestream
+    }) .then((livestream) => {
+        res.redirect('/livestream/listLivestream');
+    })
+    .catch (err => console.log(err))
+});
