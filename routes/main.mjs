@@ -88,36 +88,3 @@ router.get("/listLivestream", async function(req,res){
 	console.log("List Livestream Page accessed");
 	return res.render('listLivestream.html')
 })
-
-router.get('/listLivestream',(req,res) => {
-    Livestream.findAll({
-        where:{
-            userId: req.user.id
-        },
-        order : [
-            ['title', 'ASC']
-        ],
-        raw: true
-    })
-    .then((livestreams) => {
-        res.render('livestream/listLivestream', {
-            livestreams : livestreams
-        });
-    })
-    .catch(err => console.log(err));
-})
-
-router.post('/createLivestream', (req, res) => {
-    let title = req.body.title;
-    let info = req.body.info.slice(0,999);
-    let dateLivestream = req.body.dateLivestream;
-
-    Livestream.create({
-        title : title,
-        info : info,
-        dateLivestream : dateLivestream
-    }) .then((livestream) => {
-        res.redirect('/livestream/listLivestream');
-    })
-    .catch (err => console.log(err))
-});
