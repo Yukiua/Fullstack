@@ -5,24 +5,26 @@ import db from '../config/DBConfig.js';
 Note that Sequelize automatically pleuralizes the entity name as the table name
 */
 const Performer = db.define('performer', {
-    performer_id:{
+    id:{
         type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
-        defaultValue : 1
+        autoIncrement: 1,
     },
-    performer_name: {
+    name: {
     type: Sequelize.STRING
     },
-    performer_email: {
+    email: {
         type: Sequelize.STRING
     },
-    performer_password: {
+    password: {
         type: Sequelize.STRING
     },
-    // performer_profile_pic: {
-    //     type: Sequelize.STRING
-    // }
+    profile_pic: {
+        type: Sequelize.STRING,
+        allowNull:true,
+        defaultValue: "default.png"
+    }
 });
 
 export default Performer;

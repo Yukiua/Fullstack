@@ -4,32 +4,6 @@ const router = Router();
 export default router;
 import Performer from '../models/Performer.js';
 
-
-router.get("/login",async function(req, res) {
-	console.log("Performer Login page accessed");
-	return res.render('auth/performer/login.html');
-});
-
-router.get("/signup", async function(req, res) {
-	console.log("Performer SignUp page accessed");
-	return res.render('auth/performer/signup.html');
-});
-
-router.post("/signup", (req,res) =>{
-    let name = req.body.name;
-    let email = req.body.email;
-    let password = req.body.password;
-
-    Performer.create({
-        name:name,
-        email:email,
-        password:password,
-    }).then(() => {
-        res.redirect('/dashboard')
-    })
-    .catch (err => console.log(err))
-})
-
 router.get("/dashboard", async function(req,res){
 	console.log("Performer Dashboard accessed");
 	return res.render('performer/dashboard.html')
@@ -50,6 +24,15 @@ router.get("/settings", async function(req,res){
 	console.log("Performer Settings accessed");
 	return res.render('performer/settings.html')
 });
+router.put("/settings", (req,res)=>{
+    let {name,email,password} = req.body
+    Performer.findOne({
+    })
+    Performer.update({
+        //profilepicture
+        name:req.body.name
+    })
+})
 router.get("/logout", async function(req,res){
 	console.log("Performer Logout accessed");
 	return res.render('performer/logout.html')
