@@ -64,3 +64,11 @@ async function table_data(req, res){
         "rows": livestreams
     });
 }
+
+await user.destroy();
+
+const deleted = await ModelLivestream.destroy({
+    where: {
+        
+    }
+});

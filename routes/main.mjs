@@ -54,14 +54,14 @@ router.get("/cart", async function(req, res){
 router.get("/donation", async function(req,res){
 	console.log("Donation page accessed");
 	return res.render('donation.html')
-})
+});
 
 router.get("/createLivestream", async function(req,res){
 	console.log("Create Livestream Page accessed");
 	return res.render('createLivestream.html')
-})
+});
 
 router.get("/listLivestream", async function(req,res){
 	console.log("List Livestream Page accessed");
 	return res.render('listLivestream.html')
-})
+});
