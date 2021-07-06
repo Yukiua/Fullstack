@@ -5,6 +5,12 @@ import db from '../config/DBConfig.js';
 Note that Sequelize automatically pleuralizes the entity name as the table name
 */
 const User = db.define('user', {
+    id:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: 1,
+    },
     name: {
     type: Sequelize.STRING
     },

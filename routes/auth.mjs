@@ -1,6 +1,7 @@
-import { Router } from 'express';
+import route from 'express';
+const { Router } = route
 const router = Router();
 export default router;
 
-import Performer from './Performer.mjs'
+import Performer from './PerformerAuth.mjs'
 router.use("/performer", Performer)

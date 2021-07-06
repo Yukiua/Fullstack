@@ -12,6 +12,10 @@ import MySQLStore      from 'express-mysql-session';
 import Nunjcks         from 'nunjucks';
 import ESTICDB         from './config/DBConnection.js';
 import db              from './config/db.js'
+import FlashConnect    from 'connect-flash'
+import FlashMessenger  from 'flash-messenger'
+import passport        from 'passport';
+
 
 const Server = Express();
 const Port   = process.env.PORT || 3000;
@@ -75,13 +79,22 @@ Server.use(session({
 /**
  * TODO: Setup global contexts here. Basically stuff your variables in locals
  */
+Server.use(FlashConnect());
+Server.use(FlashMessenger.middleware);
 Server.use(function (req, res, next) {
+	res.locals.success_msg = req.flash('success_msg');
+	res.locals.error_msg = req.flash('error_msg');
+	res.locals.error = req.flash('error');
 	res.locals.user = req.user || null;
 	next();
 });
 
-ESTICDB.setUpDB(false)
 
+ESTICDB.setUpDB(false)
+import { initialize_passport } from './config/passport.js'
+initialize_passport(Server);
+Server.use(passport.initialize());
+Server.use(passport.session());
 
 import Routes from './routes/main.mjs'
 Server.use("/", Routes);
