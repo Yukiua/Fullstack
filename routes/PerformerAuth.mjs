@@ -4,9 +4,11 @@ const router = Router();
 export default router;
 import User from '../models/User.js';
 import Performer from '../models/Performer.js';
+import CookieParser    from 'cookie-parser';
 import { flashMessage }  from '../utils/messenger.js';
 import passport from 'passport';
 import Hash     from 'hash.js';
+import cookieParser from 'cookie-parser';
 
 /**
  * Regular expressions for form testing
@@ -41,8 +43,15 @@ async function login_process(req, res, next) {
 			password: Hash.sha256().update(req.body.password).digest("hex")
 		}});
         if(performer){
-            return res.redirect("../../performer/dashboard")
-        }
+			res.cookie('performer', req.body.email,{maxAge: 900000, httpOnly: true});
+			console.log("HERE")
+			passport.authenticate('local', {
+				successRedirect: "../../performer/dashboard",
+				failureRedirect: "auth/performer/login.html",
+				failureFlash:    true
+			})(req, res, next);		
+			return 
+		}
         else {
             }
             if (! regexEmail.test(req.body.email)) {
@@ -69,11 +78,7 @@ async function login_process(req, res, next) {
 		return res.render('auth/performer/login.html', { errors: errors });
 	}
 
-	return passport.authenticate('local', {
-		successRedirect: "../../performer/dashboard.html",
-		failureRedirect: "auth/performer/login.html",
-		failureFlash:    true
-	})(req, res, next);
+	return successRedirect
 
 	// try {
 	// 	const user = await ModelUser.findOne({where: {
@@ -102,12 +107,12 @@ async function login_process(req, res, next) {
 }
 
 async function register_page(req, res) {
-	console.log("Register page accessed");
+	console.log("performer signup page accessed");
 	return res.render('auth/performer/signup.html');
 }
 
 async function register_process(req, res) {
-	console.log("Register contents received");
+	console.log("signup contents received");
 	console.log(req.body);
 	let errors = [];
 	//	Check your Form contents
@@ -147,11 +152,16 @@ async function register_process(req, res) {
 
 	//	Create new user, now that all the test above passed
 	try {
-		const user = await Performer.create({
+		const performer = await Performer.create({
 				email:    req.body.email,
 				password: Hash.sha256().update(req.body.password).digest("hex"),
 				name:     req.body.name,
 		});
+		const user = await User.create({
+			email:    req.body.email,
+			password: Hash.sha256().update(req.body.password).digest("hex"),
+			name:     req.body.name,
+	});
 
 		// //	Retrieve list of contents in your table
 		// const list = Performer.findAll({

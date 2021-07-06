@@ -1,38 +1,59 @@
-import pkg from 'passport-local';
-const { Strategy: LocalStrategy} = pkg;
-import bcrypt from 'bcryptjs';
+import Passport from 'passport';
+import { Strategy } from 'passport-local';
+import Hash from 'hash.js';
 import User from '../models/User.js';
 
-function localStrategy(passport){
-    passport.use(new LocalStrategy({usernameField: 'email'},(email,password,done) =>{
-        User.findOne({
-            where:{email:email}
-        }).then(user => {
-            if(!user) {
-                return done(null,false,{message:'No User Found'});
-            }
-            bcrypt.compare(password,user.password,(err,isMatch)=>{
-                if(err) throw err;
-                if(isMatch) {
-                    return done(null,user);
-                }
-                else{
-                    return done(null,false,{message: 'Password incorrect'});
-                }
-            })
-        })
-    }));
-    passport.serializeUser((user,done)=>{
-        done(null,user.id);
-    })
-    passport.deserializeUser((userId,done) =>{
-        User.findByPk(userId)
-        .then((user) => {
-            done(null, user);
-        })
-        .catch((done) => {
-            console.log(done);
-        })
-    })
+/**
+ * Initialize the passport and configure local strategy
+ * @param {import('express').Express} server 
+ */
+export function initialize_passport(server) {
+	Passport.use(LocalStrategy);
+	Passport.serializeUser(async function (user, done) {
+		return done(null, user.id);
+	});
+	Passport.deserializeUser(async function (id, done) {
+		try {
+			const user = await User.findByPk(id);
+			if (user == null) {
+				throw new Error ("Invalid user id");
+			}
+			else {
+				return done(null, user);
+			}
+		}
+		catch (error) {
+			console.error(`Failed to deserialize user ${id}`);
+			console.error(error);
+			return done (error, false);
+		}
+	})
+
+	server.use(Passport.initialize());
+	server.use(Passport.session());
 }
-export default {localStrategy}
+
+const LocalStrategy = new Strategy ({
+	usernameField: "email",
+	passwordField: "password"
+}, async function (email, password, done) {
+
+	try {
+		const user = await User.findOne({where: {
+			email:    email,
+			password: Hash.sha256().update(password).digest('hex')
+		}});
+
+		if (user == null) {
+			throw new Error ("Invalid Credentials");
+		}
+		else {
+			return done(null, user);
+		}
+	}
+	catch (error) {
+		console.error(`Failed to auth user ${email}`);
+		console.error(error);
+		return done(error, false, {message: "Invalid user credentials"});
+	}
+});

@@ -91,8 +91,8 @@ Server.use(function (req, res, next) {
 
 
 ESTICDB.setUpDB(false)
-import authenticate from './config/passport.js'
-authenticate.localStrategy(passport);
+import { initialize_passport } from './config/passport.js'
+initialize_passport(Server);
 Server.use(passport.initialize());
 Server.use(passport.session());
 
