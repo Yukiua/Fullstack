@@ -22,10 +22,7 @@
 		"express-session": "^1.17.1",
 		"flash-messenger": "^1.1.1",
 		"hash": "^0.2.1",
-<<<<<<< HEAD
-=======
 		"hash.js": "^1.1.7",
->>>>>>> 71970901b4bb8df50e02827074f07bfae9b52bed
 		"l": "^0.6.0",
 		"method-override": "^3.0.0",
 		"moment": "^2.29.1",

@@ -22,6 +22,8 @@ router.use("/auth", RouterAuth);
 import Performer from './Performer.mjs'
 router.use("/performer", Performer);
 
+import donation from './donation.mjs'
+router.use("/donation", donation);
 
 
 // ---------------- 
