@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %}
 {% block title %}ESTIC - Concerts{% endblock %}
 
-{% block PageContent %}
+{% block PageContent %}{#
 {% if 'concert_created' in session%}
 <div class="alert alert-success alert-dismissible">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -17,7 +17,7 @@
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   {{ session.pop('concert_deleted', None) }} was deleted.
 </div>
-{% endif %}
+{% endif %}#}
 <link rel="stylesheet" href="/public/css/bootstrap.min.css">
 <h1 class="display-4">Concerts</h1>
 
