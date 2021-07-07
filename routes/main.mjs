@@ -2,6 +2,8 @@ import route from 'express';
 const { Router } = route;
 const router = Router();
 export default router;
+import User from '../models/User.js';
+import Performer from '../models/Performer.js';
 import moment from 'moment';
 import Livestream from '../models/Livestream.js';
 //import addLivestream from './Livestream.mjs';
@@ -17,8 +19,8 @@ router.get("/dynamic/:path", async function (req, res) {
 import RouterAuth from './auth.mjs'
 router.use("/auth", RouterAuth);
 
-import Performer from './Performer.mjs'
-router.use("/performer", Performer);
+import performer from './Performer.mjs'
+router.use("/performer", performer);
 
 import donation from './donation.mjs'
 router.use("/donation", donation);
@@ -29,6 +31,19 @@ router.use("/donation", donation);
 // ---------------- 
 //	TODO:	Common URL paths here
 router.get("/",      async function(req, res) {
+	if(req.cookies['deleteperformer'] !== undefined){
+		Performer.destroy({
+			where: {
+				email: req.cookies['deleteperformer']
+			}
+		})
+		User.destroy({
+			where: {
+				email: req.cookies['deleteperformer']
+			}
+		})
+		res.clearCookie("deleteperformer");
+	}
 	console.log("Home page accessed");
 	return res.render('index.html')});
 

@@ -8,7 +8,7 @@
  * This is called before the loading of images stylesheets
  * @param {Event} event The triggered dom event
  */
- document.addEventListener("DOMContentLoaded", function (event) {
+document.addEventListener("DOMContentLoaded", function (event) {
 	console.log("DOM Initialized");
 });
 
