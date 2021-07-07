@@ -8,30 +8,21 @@
   {{ session.pop('concert_added', None) }}, {{ session.pop('ticket_chose', None) }} was added.
 </div>
 {% endif %}#}
-<link rel="stylesheet" href="/public/css/bootstrap.min.css">
-<link rel="stylesheet" href="/public/css/tablebootstrap.min.css">
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
 <h1 class="display-4">Concerts</h1>
-<div>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Details</th>
-        <th>Genre</th>
-        <th>Date</th>
-        <th>Time</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for concert in concert_list %}
-      <tr>
-        <td><a href="/concertDetails/{{concert.get_id()}}">{{ concert.get_title() }}</a></td>
-        <td>{{ concert.get_details() }}</td>
-        <td>{{ concert.get_genre() }}</td>
-        <td>{{ concert.get_date() }}</td>
-        <td>{{ concert.get_time() }}</td>
-    {% endfor %}
-    </tbody>
-  </table>
-</div>
+
+<table 
+data-toggle = "table"
+data-url = "/table-data">
+  <thead>
+    <tr>
+      <th data-field = "title">Title</th>
+      <th data-field = "details">Details</th>
+      <th data-field = "genre">Genre</th>
+      <th data-field = "date">Date & Time</th>
+    </tr>
+  </thead>
+</table>
+
 {% endblock PageContent %}
