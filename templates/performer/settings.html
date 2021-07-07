@@ -71,7 +71,7 @@
           </div>
           <h2 class="sub-header">Settings</h2>
           <div class="table-responsive">
-              <form method="settings?_method=PUT" enctype="multipart/form-data" action="" method="post">
+              <form action="settings"  method="post">
                   <table class="table table-bordered">
                       <tr>
                           <td>change picture
@@ -79,7 +79,7 @@
                                   <img name="file" id="blah" placeholderpic width="150" height="150"/><br><br>
                                   <input name="file" type='file' id="imgInp" />
                               </div> -->
-                              <script>
+                              <!-- <script>
                                   function readURL(input) {
                                     if (input.files && input.files[0]) {
                                         var reader = new FileReader();
@@ -92,27 +92,30 @@
                                 $("#imgInp").change(function() {
                                     readURL(this);
                                 });
-                              </script>
+                              </script> -->
                           </td>
                       </tr>
                       <tr>
                           <td>
                               <div class="form-group">
-                                  change name
+                                  Change Name
+                                  <input type="text" class="form-control" name="name" value="{{name}}">
                               </div>
                           </td>
                       </tr>
                       <tr>
                           <td>
                               <div class="form-group">
-                                  change password
+                                  Change Password
+                                  <input type="password" name="password" class="form-control" value="{{password}}" placeholder="Use old password or type in new password">
                               </div>
                           </td>
                       </tr>
                       <tr>
                           <td>
                               <div class="form-group">
-                                  change email
+                                  Change Email
+                                  <input type="email" name="email" class="form-control" value="{{email}}">
                               </div>
                           </td>
                       </tr>

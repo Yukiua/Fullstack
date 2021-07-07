@@ -5,6 +5,16 @@ export default router;
 import CookieParser    from 'cookie-parser';
 import Performer from '../models/Performer.js';
 import { ensureAuthenticated } from '../config/authenticate.js';
+import Hash     from 'hash.js';
+import { flashMessage }  from '../utils/messenger.js';
+
+
+const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//	Min 3 character, must start with alphabet
+const regexName  = /^[a-zA-Z][a-zA-Z]{2,}$/;
+//	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
+const regexPwd   = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 
 router.get("/dashboard", ensureAuthenticated ,async function(req,res){
 	console.log("Performer Dashboard accessed");
@@ -37,10 +47,11 @@ router.get("/settings", ensureAuthenticated ,async function(req,res){
 	const performer = await Performer.findOne({where:{email:email}
 	})
 	return res.render('performer/settings.html',{
-		name:performer.name
+		name:performer.name,
+		email:performer.email
 	})
 });
-router.put("/settings", (req,res)=>{
+router.post("/settings", async function(req,res){
 	console.log("Update contents received");
 	console.log(req.body);
 	let errors = [];
@@ -54,8 +65,10 @@ router.put("/settings", (req,res)=>{
 		if (! regexEmail.test(req.body.email)) {
 			errors = errors.concat({ text: "Invalid email address!" });
 		}
-		if (! regexPwd.test(req.body.password)) {
-			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number and one symbol!" });
+		if(req.body.password != ''){
+			if (! regexPwd.test(req.body.password)) {
+				errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number and one symbol!" });
+			}
 		}
 		if (errors.length > 0) {
 			throw new Error("There are validation errors");
@@ -63,30 +76,41 @@ router.put("/settings", (req,res)=>{
 	}
 	catch (error) {
 		console.error("There is errors with the update form body.");
-		console.error(errors);
-		return res.render('performer/settings', { errors: errors });
+		console.error(error);
+		console.log("smth weird")
+		return res.render('performer/settings.html', { errors: errors });
 	}
 	try {
-		if(req.body.name = ''){
-			req.body.name = req.Performer.name
+		let email = req.cookies['performer']
+		const performer =  await Performer.findOne({where:{email:email}
+		})
+		if(req.body.name == ''){
+			req.body.name = performer.name
 		}
-		if(req.body.email = ''){
-			req.body.email = req.Performer.email
+		if(req.body.email == ''){
+			req.body.email = performer.email
 		}
-		if(Hash.sha256().update(req.body.password).digest("hex") = ''){
-			req.body.password = req.Performer.password
+		if(req.body.password == ''){
+			req.body.password = performer.password
 		}
-		Performer.findOne({where:{
-			name:req.Performer.name,
-			email:req.Performer.email,
-			password:req.Performer.password
-		}}).update({
+		else{
+			req.body.password = Hash.sha256().update(req.body.password).digest("hex")
+		}
+		console.log("b4 insert")
+		Performer.update({
 			name:req.body.name,
 			email:req.body.email,
 			password:req.body.password
-		})
-		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-		return res.redirect("/performer/dashboard");
+		}, {where:{
+			id:performer.id,
+		}
+		}).then(()=>{
+			console.log('insert')
+			flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
+			console.log(req.body)
+			res.cookie('performer', req.body.email,{maxAge: 900000, httpOnly: true});
+			return res.redirect("/dashboard");
+		}).catch(err => console.log(err))
 	}
 	catch (error) {
 		//	Else internal server error
