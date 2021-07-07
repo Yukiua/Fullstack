@@ -18,9 +18,6 @@ const Concert = db.define('concert',{
     date:{
         type: Sequelize.DATE
     },
-    time:{
-        type: Sequelize.TIME
-    },
     tickets:{
         type: Sequelize.STRING
     }
