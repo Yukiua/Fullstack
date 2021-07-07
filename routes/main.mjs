@@ -16,8 +16,6 @@ router.get("/dynamic/:path", async function (req, res) {
 //	TODO: Attach additional routers here
 import RouterAuth from './auth.mjs'
 router.use("/auth", RouterAuth);
-//import Livestream from '../models/Livestream';
-//router.use("/addLivestream", addLivestream);
 
 import Performer from './Performer.mjs'
 router.use("/performer", Performer);
@@ -25,6 +23,8 @@ router.use("/performer", Performer);
 import donation from './donation.mjs'
 router.use("/donation", donation);
 
+//import livestream from './Livestream.mjs'
+//router.use("/livestream", livestream);
 
 // ---------------- 
 //	TODO:	Common URL paths here
@@ -67,3 +67,8 @@ router.get("/listLivestream", async function(req,res){
 	console.log("List Livestream Page accessed");
 	return res.render('listLivestream.html')
 });
+
+router.get("/invoice", async function(req,res){
+	console.log("Invoice page accessed");
+	return res.render('invoice.html')
+})
