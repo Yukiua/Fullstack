@@ -1,59 +1,52 @@
 <head>
-    {% block PageJS %}
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"></script>
-    {% endblock PageJS %}
-    {% block PageCSS %}
-    <style>
-      #bigSidebar {
-        background-color: lightgrey;
-      }
-  
-      #sidebarDash {
-        font-weight: bold;
-        font-size: 20px;
-        color: purple;
-      }
-  
-      #sidebarLive {
-        font-weight: bold;
-        font-size: 20px;
-        color: purple;
-      }
-  
-      #sidebarAna {
-        font-weight: bold;
-        font-size: 20px;
-        color: purple;
-      }
-  
-      #sidebarSet {
-        font-weight: bold;
-        font-size: 20px;
-        color: purple;
-      }
-  
-      #sidebarLog {
-        font-weight: bold;
-        font-size: 20px;
-        color: purple;
-      }
-    </style>
-    {% endblock PageCSS %}
-  </head>
-  {% extends "layouts/base.html" %}
-  {% block PageTitle %}ESTIC - Performer Settings{% endblock PageTitle %}
-  
-  {% block PageContent %}
-  
+  {% block PageJS %}
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  {% endblock PageJS %}
+{% block PageCSS %}
+<style>
+#bigSidebar {
+  background-color: lightgrey;
+}
+#sidebarDash {
+  font-weight:bold;
+  font-size: 20px;
+  color: purple;
+}
+#sidebarLive {
+  font-weight:bold;
+  font-size: 20px;
+  color: purple;
+}
+#sidebarAna {
+  font-weight:bold;
+  font-size: 20px;
+  color: purple;
+}
+#sidebarSet {
+  font-weight:bold;
+  font-size: 20px;
+  color: purple;
+}
+#sidebarLog {
+  font-weight:bold;
+  font-size: 20px;
+  color: purple;
+}
+</style>
+{% endblock PageCSS %}
+</head>
+{% extends "layouts/base.html" %}
+{% block PageTitle %}ESTIC - Performer Settings{% endblock PageTitle %}
+
+{% block PageContent %}
+
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-3 col-md-2 sidebar" id="bigSidebar">
-        <ul class="nav nav-sidebar">
-          <li>placeholderpic
-          </li>
-        </ul>
+          <ul class="nav nav-sidebar">
+              <li>placeholderpic
+              </li>
+          </ul>
         <ul class="nav nav-sidebar">
           <li id="sidebarDash"><a href="../dashboard">Dashboard</a></li>
         </ul>
@@ -76,17 +69,16 @@
           <div class="col-xs-6 col-sm-3 placeholder">
           </div>
         </div>
-        <h2 class="sub-header">Settings</h2>
+        <h2 class="sub-header">Delete Performer</h2>
         <div class="table-responsive">
-          <table class="table table-bordered">
-            <tr>
-              <td>
-                  raise danger msg if want to delete performer
-              </td>
-            </tr>
-          </table>
+            <form action="delete"  method="post">
+              <div class="form-group">
+                Delete
+            </div>
+                <input type="submit" value="Save" class="btn btn-success"/>
+            </form>
         </div><a href="../settings">Go back to settings</a>
       </div>
     </div>
   </div>
-  {% endblock PageContent %}
+{% endblock PageContent %}
