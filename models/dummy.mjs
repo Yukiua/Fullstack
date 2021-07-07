@@ -7,7 +7,7 @@ export function initialize_models(database) {
 	try {
 		console.log("Initializing ORM models");
 		//	Initialize models
-		ModelUser.initialize(database);
+		Concert.initialize(database);
 
 		console.log("Building ORM model relations and indices");
 		//	Create relations between models or tables
@@ -31,26 +31,29 @@ export function initialize_models(database) {
 async function generate_dummy_accounts(database, options) {
 	//	Remove this callback to ensure it runs only once
 	database.removeHook("afterBulkSync", generate_dummy_accounts.name);
-	//	Create a root user if not exists otherwise update it
+	//	Create a root concert if not exists otherwise update it
 	try {
 		console.log("Generating root administrator account");
 
-		const dummy_qty = await ModelUser.count({ where : { "name" : { [Op.startsWith]: `dummy_%`}}});
+		const dummy_qty = await Concert.count({ where : { "id" : { [Op.startsWith]: `dummy_%`}}});
 		const topup_qty = 100 - dummy_qty;
 		const batch     = [];
 		for (var i = 0; i < topup_qty; ++i) {
 			batch.push({
-				name:     `dummy_${i}`,
-				email:    `dummy_${i}@mail.com`,
-				password: Hash.sha256().update("P@ssw0rd").digest("hex"),
-				verified: true,
+				id:     `dummy_${i}`,
+				title:    `dummy_${i} Stream`,
+				details: Hash.sha256().update("P@ssw0rd").digest("hex"),
+				genre:    `dummy genre`,
+				date:    `getTime()`,
+				time:    `getTime()`,
+				tickets:    `Normal`,
 			});
 		}
 
-		const users = await ModelUser.bulkCreate(batch);
+		const concerts = await Concert.bulkCreate(batch);
 
 		console.log(`== There are ${dummy_qty} existing dummy accounts ==`);
-		console.log(`Generated ${users.length} dummy accounts`);
+		console.log(`Generated ${concerts.length} dummy accounts`);
 		console.log("====================================================");
 		return Promise.resolve();
 	}
