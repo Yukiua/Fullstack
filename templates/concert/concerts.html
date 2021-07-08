@@ -21,14 +21,14 @@
 <link rel="stylesheet" href="/public/css/bootstrap.min.css">
 <h1 class="display-4">Concerts</h1>
 
-<div>
+<div>{#
   {% if count == 0 %}
   <p>There are no concert entry.</p>
   {% elif count == 1 %}
   <p>There is 1 concert entries.</p>
   {% else %}
   <p>There are {{ count }} concert entry(ies).</p>
-  {% endif %}
+  {% endif %}#}
 </div>
 <div>
   <table class="table table-striped">
@@ -41,17 +41,17 @@
       </tr>
     </thead>
     <tbody>
-    {% for concert in concert_list %}
+      {% for concerts in concert %}
       <tr>
-        <td>{{ concert.get_title() }}</td>
-        <td>{{ concert.get_details() }}</td>
-        <td>{{ concert.get_genre() }}</td>
-        <td>{{ concert.get_date() }}</td>
+        <td>{{concerts.title}}</td>
+        <td>{{concerts.details}}</td>
+        <td>{{concerts.genre}}</td>
+        <td>{{concerts.date}}</td>
         <td></td>
         <td></td>
-        <td><a href="/updateConcert/{{concert.get_id()}}" class="btn btn-warning">Update</a></td>
+        <td><a href="/updateConcert/{{concerts.id}}" class="btn btn-warning">Update</a></td>
         <td>
-          <form action="{{url_for('delete_concert', id=concert.get_id())}}" method="POST">
+          {#<form action="{{url_for('delete_concert', id=concert.get_id())}}" method="POST">
             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal_{{concert.get_id()}}">Delete</button>
             <div class="modal" id="myModal_{{concert.get_id()}}">
               <div class="modal-dialog">
@@ -62,7 +62,6 @@
                   </div>
 
                   <div class="modal-body">
-                    Delete {{concert.get_title()}}?
                   </div>
 
                   <div class="modal-footer">
@@ -73,10 +72,10 @@
                 </div>
               </div>
             </div>
-          </form>
+          </form>#}
         </td>
       </tr>
-    {% endfor %}
+      {% endfor %}
     </tbody>
   </table>
 </div>

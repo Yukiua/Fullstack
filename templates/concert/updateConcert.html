@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}ESTIC{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/payment.css">
+<div class="row">
+  <div class="col-75">
+    <div class="container">
+        <div class="row">
+          <div class="col-50">
+            <form method="POST" action="updateConcert">
+              <div class="form-group">
+                <label for = "title">Title:</label><br>
+                <input type = "text" id = "title" name = "title" value="{{title}}"><br>
+              </div>
+              <div class="form-group">
+                <label for = "details">Details:</label><br>
+                <input type = "text" id = "details" name = "details" value="{{details}}"><br>
+              </div>
+              <div class="form-group">
+                <label for = "genre">Genre:</label><br>
+                <select id = "genre" name = "genre" value = "{{genre}}">
+                  <option value = "Alternative">Alternative</option>
+                  <option value = "Blues">Blues</option>
+                  <option value = "Classical">Classical</option>
+                  <option value = "Country">Country</option>
+                  <option value = "Dance">Dance</option>
+                  <option value = "Electronic">Electronic</option>
+                  <option value = "Hip Hop/Rap">Hip Hop/Rap</option>
+                </select><br>
+              </div>
+              <div class="form-group">
+                <label for = "date">Date:</label><br>
+                <input type="datetime-local" id = "date" name = "date" value = "{{date}}"><br>
+              </div>
+              <div class="form-group">
+                <label for = "tickets">Tickets:</label><br>
+                <select id = "tickets" name = "tickets" value = "{{tickets}}">
+                  <option value = "Normal">Normal</option>
+                </select>
+              <input type="submit" value="Submit" class="btn btn-primary"/>
+            </form>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -6,6 +6,8 @@ import User from '../models/User.js';
 import Performer from '../models/Performer.js';
 import moment from 'moment';
 import Livestream from '../models/Livestream.js';
+import Concert from '../models/Concert.js';
+
 //import addLivestream from './Livestream.mjs';
 
 // ---------------- 
@@ -24,6 +26,9 @@ router.use("/performer", performer);
 
 import donation from './donation.mjs'
 router.use("/donation", donation);
+
+import concert from './Concert.mjs'
+router.use("/concert", concert)
 
 //import livestream from './Livestream.mjs'
 //router.use("/livestream", livestream);
@@ -46,22 +51,6 @@ router.get("/",      async function(req, res) {
 	}
 	console.log("Home page accessed");
 	return res.render('index.html')});
-
-//Concert, cart, payment test
-router.get("/concertList", async function(req, res){
-	console.log("concertLists accessed");
-	return res.render('concertList.html')
-});
-
-router.get("/concerts", async function(req, res){
-	console.log("Concerts accessed");
-	return res.render('concerts.html')
-});
-
-router.get("/concertDetails", async function(req, res){
-	console.log("concertDetails accessed");
-	return res.render('concertDetails.html')
-});
 
 router.get("/cart", async function(req, res){
 	console.log("Cart accessed");
