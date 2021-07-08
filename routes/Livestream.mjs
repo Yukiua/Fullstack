@@ -1,6 +1,9 @@
+import route from 'express';
+const { Router } = route;
+const router = Router();
+export default router;
 import moment from 'moment';
 import Livestream from '../models/Livestream.js';
-import router from './main.mjs';
 
 router.get("/table", table);
 router.get("/table-data", table_data);
@@ -43,17 +46,17 @@ async function table(req, res){
 }
 
 async function table_data(req, res){
-    const filter = JSON.parse(req.query.filter);
-    console.log(filter);
-    const condition = {
-        "livestreamName": {[Op.substring]: filter.livestreamName},
-        "livestreamInfo": {[Op.substring]: filter.livestreamInfo}
-    }
-    const total = await ModelLivestream.count({
-        where: condition
+    //const filter = JSON.parse(req.query.filter);
+    //console.log(filter);
+    // const condition = {
+    //     "livestreamName": {[Op.substring]: filter.livestreamName},
+    //     "livestreamInfo": {[Op.substring]: filter.livestreamInfo}
+    // }
+    const total = await Livestream.count({
+        //where: condition
     });
-    const livestreams = await ModelLivestream.count({
-        where: condition,
+    const livestreams = await Livestream.count({
+        //where: condition,
         order: (req.query.sort) ? [[req.query.sort, req.query.order]] : undefined,
         limit: parseInt(req.query.limit),
         offset: parseInt(req.query.offset),
@@ -65,10 +68,10 @@ async function table_data(req, res){
     });
 }
 
-await user.destroy();
+// await user.destroy();
 
-const deleted = await ModelLivestream.destroy({
-    where: {
+// const deleted = await ModelLivestream.destroy({
+//     where: {
         
-    }
-});
+//     }
+// });

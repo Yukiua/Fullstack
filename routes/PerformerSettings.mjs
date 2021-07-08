@@ -23,7 +23,7 @@ router.post("/update", update_process);
 router.get("/delete", ensureAuthenticated, delete_page);
 router.post('/delete', delete_process);
 
-//to be updated
+//to be updated|| FORMLESS POST????
 async function upload_page(req, res) {
     console.log("Upload page accessed");
     let email = req.cookies['performer']
@@ -35,7 +35,7 @@ async function upload_page(req, res) {
     })
 };
 
-//to be updated
+//to be updated|| FORMLESS POST?????
 async function delete_page(req, res) {
     console.log("Performer Delete accessed");
     let email = req.cookies['performer']
@@ -118,7 +118,7 @@ async function update_process(req, res) {
             req.body.password = Hash.sha256().update(req.body.password).digest("hex")
         }
         console.log("b4 insert")
-        Performer.update({
+        await Performer.update({
             name: req.body.name,
             email: req.body.email,
             password: req.body.password
@@ -127,7 +127,7 @@ async function update_process(req, res) {
                 id: performer.id,
             }
         })
-        User.update({
+        await User.update({
             name: req.body.name,
             email: req.body.email,
             password: req.body.password
@@ -136,13 +136,11 @@ async function update_process(req, res) {
                 id: performer.id,
             }
         })
-            .then(() => {
-                console.log('insert')
-                flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-                console.log(req.body)
-                res.cookie('performer', req.body.email, { maxAge: 900000, httpOnly: true });
-                return res.redirect("../dashboard");
-            }).catch(err => console.log(err))
+        console.log('insert')
+        flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
+        console.log(req.body)
+        res.cookie('performer', req.body.email, { maxAge: 900000, httpOnly: true });
+        return res.redirect("../dashboard");
     }
     catch (error) {
         //	Else internal server error
