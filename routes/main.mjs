@@ -18,8 +18,8 @@ router.get("/dynamic/:path", async function (req, res) {
 
 // ---------------- 
 //	TODO: Attach additional routers here
-import RouterAuth from './auth.mjs'
-router.use("/auth", RouterAuth);
+import auth from './auth.mjs'
+router.use("/auth", auth);
 
 import performer from './Performer.mjs'
 router.use("/performer", performer);
@@ -33,6 +33,11 @@ router.use("/concert", concert)
 import livestream from './Livestream.mjs'
 router.use("/livestream", livestream);
 
+import user from './user.mjs'
+router.use("/user", user)
+
+import admin from './admin/admin.mjs';
+router.use("/admin", admin)
 // ---------------- 
 //	TODO:	Common URL paths here
 router.get("/",      async function(req, res) {
