@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import route from 'express';
+const { Router } = route;
 import FileSys from 'fs';
 import Axios from 'axios';
 import Hash from 'hash.js';

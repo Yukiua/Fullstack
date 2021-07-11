@@ -1,5 +1,6 @@
 import Passport from 'passport';
-import { Strategy } from 'passport-local';
+import strategy from 'passport-local';
+const { Strategy } = strategy;
 import Hash from 'hash.js';
 import User from '../models/User.js';
 

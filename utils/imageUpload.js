@@ -1,4 +1,6 @@
-import multer, { diskStorage } from 'multer';
+import multer from 'multer';
+import diskstorage  from 'multer';
+const { diskStorage } = diskstorage;
 import { extname as _extname } from 'path';
 // Set The Storage Engine
 const storage = diskStorage({

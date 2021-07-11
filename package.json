@@ -11,6 +11,7 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
+		"@sendgrid/mail": "^7.4.5",
 		"axios": "^0.21.1",
 		"bcryptjs": "^2.4.3",
 		"body-parser": "^1.19.0",
@@ -25,6 +26,7 @@
 		"flash-messenger": "^1.1.1",
 		"hash": "^0.2.1",
 		"hash.js": "^1.1.7",
+		"jsonwebtoken": "^8.5.1",
 		"l": "^0.6.0",
 		"method-override": "^3.0.0",
 		"moment": "^2.29.1",
