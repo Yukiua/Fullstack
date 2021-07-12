@@ -62,7 +62,6 @@ router.post("/updateConcert/:id", async function(req, res){
                 date : req.body.date,
                 tickets : req.body.tickets
             })
-            console.log("made it here")
             return res.render("/concert/updateConcert.html", {concert : concert})
             }
         }
@@ -91,7 +90,6 @@ async function table(req, res){
 
 async function table_data(req, res){
     const concerts = await Concert.findAll({raw: true});
-    console.log(concerts.length)
     return res.json({
         "total": concerts.length,
         "rows": concerts
