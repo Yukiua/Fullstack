@@ -21,7 +21,7 @@ router.get("/dynamic/:path", async function (req, res) {
 import auth from './auth.mjs'
 router.use("/auth", auth);
 
-import performer from './Performer.mjs'
+import performer from './performer/performer.mjs'
 router.use("/performer", performer);
 
 import donation from './donation.mjs'

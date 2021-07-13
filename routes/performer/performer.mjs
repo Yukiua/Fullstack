@@ -2,21 +2,14 @@ import route from 'express';
 const { Router } = route;
 const router = Router();
 export default router;
-import Performer from '../models/Performer.js';
-import User from '../models/User.js';
-import { ensureAuthenticated } from '../config/authenticate.js';
+import Performer from '../../models/Performer.js';
+import User from '../../models/User.js';
+import { ensureAuthenticated } from '../../config/authenticate.js';
 import Hash from 'hash.js';
-import { flashMessage } from '../utils/messenger.js';
+import { flashMessage } from '../../utils/messenger.js';
 import fs from 'fs';
-import upload from '../utils/imageUpload.js'
-
-const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-//	Min 3 character, must start with alphabet
-const regexName = /^[a-zA-Z][a-zA-Z]{2,}$/;
-//	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
-const regexPwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-import SettingsOptions from './PerformerSettings.mjs'
+import upload from '../../utils/imageUpload.js'
+import SettingsOptions from './settings.mjs'
 router.use("/settings", SettingsOptions)
 
 router.get("/dashboard", ensureAuthenticated, dashboard_page);

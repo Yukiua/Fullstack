@@ -4,15 +4,10 @@ const router = Router();
 export default router;
 import User from '../../models/User.js';
 import Performer from '../../models/Performer.js';
-import CookieParser    from 'cookie-parser';
 import { flashMessage }  from '../../utils/messenger.js';
 import passport from 'passport';
 import Hash     from 'hash.js';
-import cookieParser from 'cookie-parser';
-
-/**
- * Regular expressions for form testing
- **/ 
+ 
  const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
  //	Min 3 character, must start with alphabet
  const regexName  = /^[a-zA-Z][a-zA-Z]{2,}$/;
@@ -32,11 +27,7 @@ async function login_page(req, res) {
 async function login_process(req, res, next) {
 	console.log("login contents received");
 	console.log(req.body);
-
 	let errors = [];
-	//	Check your Form contents
-	//	Basic IF ELSE STUFF no excuse not to be able to do this alone
-	//	Common Sense
 	try {
         const performer = await Performer.findOne({where: {
 			email: req.body.email,
@@ -67,7 +58,6 @@ async function login_process(req, res, next) {
             if(performer.password != req.body.password){
                 errors = errors.concat({text: "Password does not match"})
             }
-
             if (errors.length > 0) {
                 throw new Error("There are validation errors");
             }
@@ -77,33 +67,7 @@ async function login_process(req, res, next) {
 		console.error(error);
 		return res.render('auth/performer/login.html', { errors: errors });
 	}
-
 	return successRedirect
-
-	// try {
-	// 	const user = await ModelUser.findOne({where: {
-	// 		email: req.body.email,
-	// 		password: Hash.sha256().update(req.body.password).digest("hex")
-	// 	}});
-
-
-	// 	if (user == null) {
-	// 		errors = errors.concat({ text: "Invalid user credentials!" });
-	// 	}
-
-	// 	if (errors.length > 0) {
-	// 		throw new Error("There are validation errors");
-	// 	}
-	// 	else {
-	// 		flashMessage(res, 'success', 'Successfully login!', 'fas fa-sign-in-alt', true);
-	// 		return res.redirect("/home");
-	// 	}
-	// }
-	// catch (error) {
-	// 	console.error(`Credentials problem: ${req.body.email} ${req.body.password}`);
-	// 	console.error(error);
-	// 	return res.render('auth/login', { errors: errors });
-	// }
 }
 
 async function register_page(req, res) {
@@ -115,9 +79,6 @@ async function register_process(req, res) {
 	console.log("signup contents received");
 	console.log(req.body);
 	let errors = [];
-	//	Check your Form contents
-	//	Basic IF ELSE STUFF no excuse not to be able to do this alone
-	//	Common Sense
 	try {
 		if (! regexName.test(req.body.name)) {
 			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
@@ -149,8 +110,6 @@ async function register_process(req, res) {
 		console.error(errors);
 		return res.render('auth/performer/signup.html', { errors: errors });
 	}
-
-	//	Create new user, now that all the test above passed
 	try {
 		const performer = await Performer.create({
 				email:    req.body.email,
@@ -162,26 +121,6 @@ async function register_process(req, res) {
 			password: Hash.sha256().update(req.body.password).digest("hex"),
 			name:     req.body.name,
 	});
-
-		// //	Retrieve list of contents in your table
-		// const list = Performer.findAll({
-		// 	where: {
-
-		// 	},
-		// 	limit: 20,
-		// 	offset: 30
-		// });
-
-		// //	Delete
-		// ModelUser.destroy({
-		// 	where: {
-
-		// 	}
-		// });
-
-		// //	Update
-		// await (await ModelUser.findOne()).update();
-
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
 		return res.redirect("/auth/performer/login");
 	}
