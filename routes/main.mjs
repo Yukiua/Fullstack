@@ -2,8 +2,7 @@ import route from 'express';
 const { Router } = route;
 const router = Router();
 export default router;
-import User from '../models/User.js';
-import Performer from '../models/Performer.js';
+import User, { UserRole } from '../models/User.js';
 import moment from 'moment';
 import Livestream from '../models/Livestream.js';
 import Concert from '../models/Concert.js';
@@ -42,14 +41,10 @@ router.use("/admin", admin)
 //	TODO:	Common URL paths here
 router.get("/",      async function(req, res) {
 	if(req.cookies['deleteperformer'] !== undefined){
-		Performer.destroy({
-			where: {
-				email: req.cookies['deleteperformer']
-			}
-		})
 		User.destroy({
 			where: {
-				email: req.cookies['deleteperformer']
+				email: req.cookies['deleteperformer'],
+				role:UserRole.Performer
 			}
 		})
 		res.clearCookie("deleteperformer");

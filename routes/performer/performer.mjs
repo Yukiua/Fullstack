@@ -2,8 +2,7 @@ import route from 'express';
 const { Router } = route;
 const router = Router();
 export default router;
-import Performer from '../../models/Performer.js';
-import User from '../../models/User.js';
+import User, { UserRole } from '../../models/User.js';
 import { ensureAuthenticated } from '../../config/authenticate.js';
 import Hash from 'hash.js';
 import { flashMessage } from '../../utils/messenger.js';
@@ -21,22 +20,22 @@ router.get("/createLivestream", ensureAuthenticated, createLive_page);
 async function dashboard_page(req, res) {
 	console.log("Performer Dashboard accessed");
 	let email = req.cookies['performer']
-	const performer = await Performer.findOne({
-		where: { email: email }
+	const user = await User.findOne({
+		where: { email: email, role:UserRole.Performer }
 	})
 	return res.render('performer/dashboard.html', {
-		name: performer.name
+		name: user.name
 	})
 };
 
 async function analytics_page(req, res) {
 	console.log("Performer Analytics accessed");
 	let email = req.cookies['performer']
-	const performer = await Performer.findOne({
-		where: { email: email }
+	const user = await User.findOne({
+		where: { email: email, role: UserRole.Performer }
 	})
 	return res.render('performer/analytics.html', {
-		name: performer.name,
+		name: user.name,
 		author: "The awesome programmer",
 		// donations
 		values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -50,11 +49,11 @@ async function analytics_page(req, res) {
 async function settings_page(req,res){
 	console.log("Performer Settings accessed");
 	let email = req.cookies['performer']
-	const performer = await Performer.findOne({
-		where: { email: email }
+	const user = await User.findOne({
+		where: { email: email,role:UserRole.Performer }
 	})
 	return res.render('performer/settings.html', {
-		name: performer.name
+		name: user.name
 	})
 };
 

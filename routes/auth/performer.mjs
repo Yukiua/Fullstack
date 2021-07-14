@@ -2,8 +2,7 @@ import route from 'express';
 const { Router } = route;
 const router = Router();
 export default router;
-import User from '../../models/User.js';
-import Performer from '../../models/Performer.js';
+import User, { UserRole } from '../../models/User.js';
 import { flashMessage }  from '../../utils/messenger.js';
 import passport from 'passport';
 import Hash     from 'hash.js';
@@ -29,11 +28,12 @@ async function login_process(req, res, next) {
 	console.log(req.body);
 	let errors = [];
 	try {
-        const performer = await Performer.findOne({where: {
+        const user = await User.findOne({where: {
 			email: req.body.email,
-			password: Hash.sha256().update(req.body.password).digest("hex")
+			password: Hash.sha256().update(req.body.password).digest("hex"),
+			role: UserRole.Performer
 		}});
-        if(performer){
+        if(user){
 			res.cookie('performer', req.body.email,{maxAge: 900000, httpOnly: true});
 			console.log("HERE")
 			passport.authenticate('local', {
@@ -52,10 +52,10 @@ async function login_process(req, res, next) {
             if (! regexPwd.test(req.body.password)) {
                 errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character!" });
             }
-            if(performer.email != req.body.email){
+            if(user.email != req.body.email){
                 errors = errors.concat({ text: "Email does not match"})
             }
-            if(performer.password != req.body.password){
+            if(user.password != req.body.password){
                 errors = errors.concat({text: "Password does not match"})
             }
             if (errors.length > 0) {
@@ -88,8 +88,8 @@ async function register_process(req, res) {
 			errors = errors.concat({ text: "Invalid email address!" });
 		}
 		else {
-			const performer = await Performer.findOne({where: {email: req.body.email}});
-			if (performer != null) {
+			const user = await User.findOne({where: {email: req.body.email}});
+			if (user != null) {
 				errors = errors.concat({ text: "This email cannot be used!" });
 			}
 		}
@@ -111,16 +111,12 @@ async function register_process(req, res) {
 		return res.render('auth/performer/signup.html', { errors: errors });
 	}
 	try {
-		const performer = await Performer.create({
+		const user = await User.create({
 				email:    req.body.email,
 				password: Hash.sha256().update(req.body.password).digest("hex"),
 				name:     req.body.name,
+				role: UserRole.Performer
 		});
-		const user = await User.create({
-			email:    req.body.email,
-			password: Hash.sha256().update(req.body.password).digest("hex"),
-			name:     req.body.name,
-	});
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
 		return res.redirect("/auth/performer/login");
 	}
