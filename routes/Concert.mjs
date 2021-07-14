@@ -5,10 +5,12 @@ export default router;
 import Concert from '../models/Concert.js';
 import CookieParser    from 'cookie-parser';
 
-router.get("/concertList", table);
-router.get("/table-data", table_data);
+router.get("/concertList", cltable);
+router.get("/concerts", catable);
+router.get("/concertList-data", cl_data);
+router.get("/concerts-data", ca_data);
 
-router.get("/concerts", view_concerts)
+// router.get("/concerts", view_concerts)
 router.get("/createConcert", async function(req, res){
 	console.log("createConcert accessed")
 	return res.render('concert/createConcert.html')
@@ -22,6 +24,7 @@ router.post("/createConcert", async function(req, res){
 			details: req.body.details,
 			genre: req.body.genre,
 			date: req.body.date,
+            time: req.body.time,
 			tickets: req.body.tickets
 		});
 		res.cookie('concert', concert.id, {maxAge: 900000, httpOnly: true});
@@ -60,6 +63,7 @@ router.post("/updateConcert/:id", async function(req, res){
                 details : req.body.details,
                 genre : req.body.genre,
                 date : req.body.date,
+                time: req.body.time,
                 tickets : req.body.tickets
             })
             return res.render("/concert/updateConcert.html", {concert : concert})
@@ -75,27 +79,7 @@ router.get("/concertDetails", async function(req, res){
 	return res.render('concert/concertDetails.html')
 });
 
-// concerts table
-async function view_concerts(req, res){
-    console.log("Function werking");
-    let concertID = req.cookies['concert']
-    const concert = await Concert.findAll();
-    res.cookie('concert', concert.id, { maxAge: 900000, httpOnly: true });
-    return res.render('concert/concerts.html', {concert : concert})
-}
-
-async function table(req, res){
-    return res.render("concert/concertList.html");
-}
-
-async function table_data(req, res){
-    const concerts = await Concert.findAll({raw: true});
-    return res.json({
-        "total": concerts.length,
-        "rows": concerts
-    })
-}
-
+// Update function
 async function update_concert(req, res){
     console.log("Grabbed")
     try{
@@ -109,4 +93,29 @@ async function update_concert(req, res){
     catch{
         console.error("error");
     }    
+}
+
+// concerts table
+async function cltable(req, res){
+    return res.render("concert/concertList.html");
+}
+
+async function catable(req, res){
+    return res.render("concert/concerts.html");
+}
+
+async function cl_data(req, res){
+    const concerts = await Concert.findAll({raw: true});
+    return res.json({
+        "total": concerts.length,
+        "rows": concerts
+    })
+}
+
+async function ca_data(req, res){
+    const concerts = await Concert.findAll({raw: true});
+    return res.json({
+        "total": concerts.length,
+        "rows": concerts
+    })
 }

@@ -30,53 +30,34 @@
   <p>There are {{ count }} concert entry(ies).</p>
   {% endif %}#}
 </div>
-<div>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Details</th>
-        <th>Genre</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for concerts in concert %}
-      <tr>
-        <td>{{concerts.title}}</td>
-        <td>{{concerts.details}}</td>
-        <td>{{concerts.genre}}</td>
-        <td>{{concerts.date}}</td>
-        <td></td>
-        <td></td>
-        <td><a href="/concert/updateConcert/{{concerts.id}}" class="btn btn-warning">Update</a></td>
-        <td>
-          {#<form action="{{url_for('delete_concert', id=concert.get_id())}}" method="POST">
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal_{{concert.get_id()}}">Delete</button>
-            <div class="modal" id="myModal_{{concert.get_id()}}">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Delete Confirmation</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  </div>
 
-                  <div class="modal-body">
-                  </div>
+<table 
+  data-toggle = "table"
+  data-height = "500"
+  data-search = "true"
+  data-show-columns = "true"
+  data-show-columns-toggle-all = "true"
+  data-checkbox-header = "false"
+  data-pagination = "true"
+  data-maintain-meta-data = "true"
+  data-loading-template = "loadingTemplate"
+  data-url = "/concert/concerts-data">
+  <thead>
+    <tr>
+      <th data-field = "state" data-checkbox = "true"></th>
+      <th data-field = "title">Title</th>
+      <th data-field = "details">Details</th>
+      <th data-field = "genre">Genre</th>
+      <th data-field = "date">Date</th>
+      <th data-field = "time">Time</th>
+    </tr>
+  </thead>
+</table>
 
-                  <div class="modal-footer">
-                    <input type="submit" value="Delete" class="btn btn-danger">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  </div>
+<script>
+  function loadingTemplate(message){
+    return '<i class = "fa fa-spinner fa-spin fa-fw fa-2x"></i>'
+  }
+</script>
 
-                </div>
-              </div>
-            </div>
-          </form>#}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
 {% endblock PageContent %}

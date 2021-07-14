@@ -14,15 +14,28 @@
 
 <table 
   data-toggle = "table"
-  data-url = "/concert/table-data">
+  data-height = "500"
+  data-search = "true"
+  data-show-columns = "true"
+  data-show-columns-toggle-all = "true"
+  data-pagination = "true"
+  data-loading-template = "loadingTemplate"
+  data-url = "/concert/concertList-data">
   <thead>
     <tr>
       <th data-field = "title">Title</th>
       <th data-field = "details">Details</th>
       <th data-field = "genre">Genre</th>
-      <th data-field = "date">Date & Time</th>
+      <th data-field = "date">Date</th>
+      <th data-field = "time">Time</th>
     </tr>
   </thead>
 </table>
+
+<script>
+  function loadingTemplate(message){
+    return '<i class = "fa fa-spinner fa-spin fa-fw fa-2x"></i>'
+  }
+</script>
 
 {% endblock PageContent %}
