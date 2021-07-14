@@ -1,31 +1,39 @@
 {% extends "layouts/base.html" %}
-{% block title %}List Livestream{% endblock %}
+{% block title %}ESTIC - Livestreams{% endblock %}
 
 {% block PageContent %}
-
-<h1>List of Livestreams</h1>
-
-
-<link href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css" rel="stylesheet">
-
+{#{% if 'livestream_added' in session%}
+<div class="alert alert-success alert-dismissible">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+</div>
+{% endif %}#}
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+<h1 class="display-4">Livestreams</h1>
 
-<table
-  id="table"
-  data-toggle="table"
-  data-url="/livestream/table-data"
-  data-pagination="true"
-  data-side-pagination="server"
-  data-addrbar="true"
-  data-filter-control="true">
+<table 
+  data-toggle = "table"
+  data-height = "500"
+  data-search = "true"
+  data-show-columns = "true"
+  data-show-columns-toggle-all = "true"
+  data-pagination = "true"
+  data-loading-template = "loadingTemplate"
+  data-url = "/livestream/livestream-data">
   <thead>
     <tr>
-      <th data-field="id">ID</th>
-      <th data-field="livestreamName">Livestream Name</th>
-      <th data-field="livestreamInfo">Livestream Information</th>
-      <th data-field="livestreamDate">Date of Livestream</th>
+      <th data-field = "id">ID</th>
+      <th data-field = "livestreamName">Livestrem Name</th>
+      <th data-field = "livestreamInfo">Livestream Info</th>
+      <th data-field = "livestreamDate">Date of Livestream</th>
     </tr>
   </thead>
 </table>
 
-{% endblock %}
+<script>
+  function loadingTemplate(message){
+    return '<i class = "fa fa-spinner fa-spin fa-fw fa-2x"></i>'
+  }
+</script>
+
+{% endblock PageContent %}

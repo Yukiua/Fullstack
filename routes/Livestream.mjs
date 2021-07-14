@@ -4,68 +4,56 @@ const router = Router();
 export default router;
 import moment from 'moment';
 import Livestream from '../models/Livestream.js';
+import CookieParser from 'cookie-parser';
 
-router.get("/table", table);
-router.get("/table-data", table_data);
+router.get("/livestream", lstable);
+router.get("/livestream-data", ls_data);
 
 router.get('/listLivestream',(req,res) => {
-    Livestream.findAll({
-        where:{
-            userId: req.user.id
-        },
-        order : [
-            ['title', 'ASC']
-        ],
-        raw: true
-    })
-    .then((livestreams) => {
-        res.render('livestream/listLivestream', {
-            livestreams : livestreams
-        });
-    })
-    .catch(err => console.log(err));
+    console.log("list livestream page accessed");
+    return res.render('listLivestream.html')
 })
 
-router.post('/createLivestream', (req, res) => {
-    let title = req.body.title;
-    let info = req.body.info.slice(0,999);
-    let dateLivestream = req.body.dateLivestream;
+router.post('/createLivestream', async function(req, res){
+    try{
+        const livestream = await Livestream.create({
+            title : req.body.title,
+            info : req.body.info,
+            dateLivestream : req.body.dateLivestream
+        });
+        res.cookie('livestream', livestream.id, {maxAge:99999, httpOnly:true});
+    }
+    catch{
+        console.error("error");
+    }
+    return res.redirect('listLivestream')
+}) 
+       
 
-    Livestream.create({
-        title : title,
-        info : info,
-        dateLivestream : dateLivestream
-    }) .then((livestream) => {
-        res.redirect('/livestream/listLivestream');
-    })
-    .catch (err => console.log(err))
-});
-
-async function table(req, res){
-    return res.render("listLivestream");
+async function update_livestream(req,res){
+    try{
+        const livestream = await Livestream.findOne({
+            where: {"id": req.params["id"]}
+        });
+    if (livestream){
+        return res.render("updateLivestream", {livestream : livestream})
+        }
+    }
+    catch{
+        console.error("error");
+    }
 }
 
-async function table_data(req, res){
-    //const filter = JSON.parse(req.query.filter);
-    //console.log(filter);
-    // const condition = {
-    //     "livestreamName": {[Op.substring]: filter.livestreamName},
-    //     "livestreamInfo": {[Op.substring]: filter.livestreamInfo}
-    // }
-    const total = await Livestream.count({
-        //where: condition
-    });
-    const livestreams = await Livestream.count({
-        //where: condition,
-        order: (req.query.sort) ? [[req.query.sort, req.query.order]] : undefined,
-        limit: parseInt(req.query.limit),
-        offset: parseInt(req.query.offset),
-        raw: true
-    });
+async function lstable(req, res){
+    return res.render("listLivestream.html");
+}
+
+async function ls_data(req, res){
+    const livestreams = await Livestream.count({raw:true});
     return res.json({
-        "total": total,
+        "total": livestreams.length,
         "rows": livestreams
-    });
+    })
 }
 
 // await user.destroy();
