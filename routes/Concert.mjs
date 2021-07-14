@@ -7,8 +7,7 @@ import CookieParser    from 'cookie-parser';
 
 router.get("/concertList", cltable);
 router.get("/concerts", catable);
-router.get("/concertList-data", cl_data);
-router.get("/concerts-data", ca_data);
+router.get("/table-data", table_data);
 
 // router.get("/concerts", view_concerts)
 router.get("/createConcert", async function(req, res){
@@ -104,7 +103,7 @@ async function catable(req, res){
     return res.render("concert/concerts.html");
 }
 
-async function cl_data(req, res){
+async function table_data(req, res){
     const concerts = await Concert.findAll({raw: true});
     return res.json({
         "total": concerts.length,
@@ -112,10 +111,3 @@ async function cl_data(req, res){
     })
 }
 
-async function ca_data(req, res){
-    const concerts = await Concert.findAll({raw: true});
-    return res.json({
-        "total": concerts.length,
-        "rows": concerts
-    })
-}
