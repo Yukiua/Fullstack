@@ -1,9 +1,6 @@
 import mySQLDB from './DBConfig.js';
-import Performer from '../models/Performer.js';
+import User from '../models/User.js';
 import Livestream from '../models/Livestream.js';
-import Concert from '../models/Concert.js';
-import Cart from '../models/Cart.js';
-
 // If drop is true, all existing tables are dropped and recreated
 const setUpDB = (drop) => {
     mySQLDB.authenticate()
@@ -16,7 +13,7 @@ const setUpDB = (drop) => {
                 In this case the primary key from user will be a foreign key
                 in video.
             */
-            Performer.hasMany(Livestream);
+            User.hasMany(Livestream);
             mySQLDB.sync({ // Creates table if none exists
                 force: drop   
             }).then(() => {

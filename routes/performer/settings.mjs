@@ -2,8 +2,7 @@ import route from 'express';
 const { Router } = route
 const router = Router();
 export default router;
-import Performer from '../../models/Performer.js';
-import User from '../../models/User.js';
+import User, { UserRole } from '../../models/User.js';
 import { ensureAuthenticated } from '../../config/authenticate.js';
 import Hash from 'hash.js';
 import { flashMessage } from '../../utils/messenger.js';
@@ -27,11 +26,11 @@ router.post('/delete', delete_process);
 async function upload_page(req, res) {
     console.log("Upload page accessed");
     let email = req.cookies['performer']
-    const performer = await Performer.findOne({
-        where: { email: email }
+    const user = await User.findOne({
+        where: { email: email,role:UserRole.Performer }
     })
     return res.render('performer/settings/upload.html', {
-        name: performer.name
+        name: user.name
     })
 };
 
@@ -39,21 +38,21 @@ async function upload_page(req, res) {
 async function delete_page(req, res) {
     console.log("Performer Delete accessed");
     let email = req.cookies['performer']
-    const performer = await Performer.findOne({
-        where: { email: email }
+    const user = await User.findOne({
+        where: { email: email,role:UserRole.Performer }
     })
     return res.render('performer/settings/delete.html', {
-        name: performer.name
+        name: user.name
     })
 };
 
 async function delete_process(req, res) {
     console.log("Performer Delete processing");
     let email = req.cookies['performer']
-    const performer = await Performer.findOne({
-        where: { email: email }
+    const user = await User.findOne({
+        where: { email: email,role:UserRole.Performer }
     })    
-    res.cookie('deleteperformer', performer.email, { maxAge: 900000, httpOnly: true });
+    res.cookie('deleteperformer', user.email, { maxAge: 900000, httpOnly: true });
     res.clearCookie("performer");
     console.log("Performer deleted")
     return res.redirect('../../')
@@ -62,12 +61,12 @@ async function delete_process(req, res) {
 async function update_page(req, res) {
     console.log("Performer Update accessed");
     let email = req.cookies['performer']
-    const performer = await Performer.findOne({
-        where: { email: email }
+    const user = await User.findOne({
+        where: { email: email,role:UserRole.Performer }
     })
     return res.render('performer/settings/update.html', {
-        name: performer.name,
-        email: performer.email
+        name: user.name,
+        email: user.email
     })
 };
 
@@ -75,7 +74,7 @@ async function update_process(req, res) {
     console.log("Update contents received");
     console.log(req.body);
     let email = req.cookies['performer']
-    const performer = await Performer.findOne({
+    const user = await User.findOne({
         where: { email: email }
     })
     let errors = [];
@@ -106,34 +105,26 @@ async function update_process(req, res) {
     }
     try {
         if (req.body.name == '') {
-            req.body.name = performer.name
+            req.body.name = user.name
         }
         if (req.body.email == '') {
-            req.body.email = performer.email
+            req.body.email = user.email
         }
         if (req.body.password == '') {
-            req.body.password = performer.password
+            req.body.password = user.password
         }
         else {
             req.body.password = Hash.sha256().update(req.body.password).digest("hex")
         }
         console.log("b4 insert")
-        await Performer.update({
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password
-        }, {
-            where: {
-                id: performer.id,
-            }
-        })
         await User.update({
             name: req.body.name,
             email: req.body.email,
             password: req.body.password
         }, {
             where: {
-                id: performer.id,
+                id: user.id,
+                role: UserRole.Performer
             }
         })
         console.log('insert')
