@@ -14,6 +14,16 @@ router.post("/generate", nets_generate);
 router.post("/query",    nets_query);
 router.post("/void",     nets_void);
 
+router.get("/donation", async function(req,res){
+	console.log("Donation page accessed");
+	return res.render('donation/donation.html')
+});
+
+router.get("/invoice", async function(req,res){
+	console.log("Invoice page accessed");
+	return res.render('donation/invoice.html')
+});
+
 const nets_api_key = "231e4c11-135a-4457-bc84-3cc6d3565506";
 const nets_api_skey = "16c573bf-0721-478a-8635-38e53e3badf1";
 const nets_api_gateway = {

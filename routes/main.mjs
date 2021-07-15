@@ -29,7 +29,7 @@ router.use("/donation", donation);
 import concert from './Concert.mjs'
 router.use("/concert", concert)
 
-import livestream from './Livestream.mjs'
+import livestream from './livestream.mjs'
 router.use("/livestream", livestream);
 
 import user from './user.mjs'
@@ -37,6 +37,7 @@ router.use("/user", user)
 
 import admin from './admin/admin.mjs';
 router.use("/admin", admin)
+
 // ---------------- 
 //	TODO:	Common URL paths here
 router.get("/",      async function(req, res) {
@@ -57,22 +58,3 @@ router.get("/cart", async function(req, res){
 	return res.render('cart.html')
 });
 
-router.get("/donation", async function(req,res){
-	console.log("Donation page accessed");
-	return res.render('donation.html')
-});
-
-router.get("/createLivestream", async function(req,res){
-	console.log("Create Livestream Page accessed");
-	return res.render('createLivestream.html')
-});
-
-router.get("/listLivestream", async function(req,res){
-	console.log("List Livestream Page accessed");
-	return res.render('listLivestream.html')
-});
-
-router.get("/invoice", async function(req,res){
-	console.log("Invoice page accessed");
-	return res.render('invoice.html')
-})

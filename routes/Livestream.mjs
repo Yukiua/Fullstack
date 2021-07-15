@@ -9,12 +9,17 @@ import CookieParser from 'cookie-parser';
 router.get("/livestream", lstable);
 router.get("/livestream-data", ls_data);
 
-router.get('/listLivestream',(req,res) => {
+router.get("/create", async function(req,res){
+	console.log("Create Livestream Page accessed");
+	return res.render('livestream/create.html')
+});
+
+router.get('/list',(req,res) => {
     console.log("list livestream page accessed");
-    return res.render('listLivestream.html')
+    return res.render('livestream/list.html')
 })
 
-router.post('/createLivestream', async function(req, res){
+router.post('/create', async function(req, res){
     try{
         const livestream = await Livestream.create({
             title : req.body.title,
@@ -26,7 +31,7 @@ router.post('/createLivestream', async function(req, res){
     catch{
         console.error("error");
     }
-    return res.redirect('listLivestream')
+    return res.redirect('livestream/list')
 }) 
        
 
@@ -45,7 +50,7 @@ async function update_livestream(req,res){
 }
 
 async function lstable(req, res){
-    return res.render("listLivestream.html");
+    return res.render("livestream/list.html");
 }
 
 async function ls_data(req, res){
