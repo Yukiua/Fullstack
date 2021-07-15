@@ -18,7 +18,8 @@
   {{ session.pop('concert_deleted', None) }} was deleted.
 </div>
 {% endif %}#}
-<link rel="stylesheet" href="/public/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
 <h1 class="display-4">Concerts</h1>
 
 <div>{#
@@ -38,13 +39,15 @@
   data-show-columns = "true"
   data-show-columns-toggle-all = "true"
   data-checkbox-header = "false"
+  data-click-to-select = "true"
   data-pagination = "true"
   data-maintain-meta-data = "true"
   data-loading-template = "loadingTemplate"
-  data-url = "/concert/concerts-data">
+  data-url = "/concert/table-data">
   <thead>
     <tr>
       <th data-field = "state" data-checkbox = "true"></th>
+      <th data-field = "id">ID</th>
       <th data-field = "title">Title</th>
       <th data-field = "details">Details</th>
       <th data-field = "genre">Genre</th>

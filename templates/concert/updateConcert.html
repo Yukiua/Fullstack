@@ -4,6 +4,7 @@
 {% block PageContent %}
 <link rel="stylesheet" href="/static/css/bootstrap.min.css">
 <link rel="stylesheet" href="/static/css/payment.css">
+
 <div class="row">
   <div class="col-75">
     <div class="container">
@@ -41,8 +42,10 @@
               <div class="form-group">
                 <label for = "tickets">Tickets:</label><br>
                 <select id = "tickets" name = "tickets" value = "{{tickets}}">
-                  <option value = "Normal">Normal</option>
+                  <option value = "Normal Ticket">Normal Ticket</option>
+                  <option value = "Ticket Bundle">Ticket Bundle</option>
                 </select>
+              </div>
               <input type="submit" value="Submit" class="btn btn-primary"/>
             </form>
           </div>
