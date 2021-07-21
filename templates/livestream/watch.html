@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+{% block title %}ESTIC - Livestreams{% endblock %}
+{% block PageContent %}
+<title>Livestream</title>
+<div id="data" token="{{token}}" role="{{role}}" username="{{username}}" userId="{{userId}}" streamId="{{streamId}}">
+</div>
+
+<div class="container-fluid">
+    <div class="col">
+        <div class="row container-video">
+            <video class="col" id="video-remote" autoplay="autoplay"></video>
+        </div>
+        <div class="col">
+            <div class="row container-chat-scroll"
+                style="border: solid black 1px; height: 256px; overflow-y: scroll; overflow-x: hidden;">
+                <div class="w-100 container-chat" id="chat-container">
+
+                </div>
+            </div>
+
+
+            <div class="row container-chat-input" style="margin-top: 16px;">
+                <textarea class="col" id="chat-input" type="text"></textarea>
+                <button class="col col-sm-1" id="chat-input-send">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/public/js/live.js"></script>
+
+{% endblock PageContent %}
