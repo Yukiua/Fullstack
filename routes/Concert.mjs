@@ -47,15 +47,46 @@ router.get("/concerts", async function(req, res){
 
 router.get("/updateConcert/:id", async function(req, res){
     console.log("Update Concert accessed");
-    return res.render('concert/updateConcert.html')
+    try{
+        const concert = await Concert.findOne({
+            where: {id: req.params("id")}
+        })
+        if (concert){
+            if (req.body.title == '') {
+                req.body.title = concert.title
+            }
+            if (req.body.details == '') {
+                req.body.title = concert.details
+            }
+            if (req.body.genre == '') {
+                req.body.title = concert.genre
+            }
+            if (req.body.date == '') {
+                req.body.title = concert.date
+            }
+            if (req.body.time == '') {
+                req.body.title = concert.time
+            }
+            if (req.body.tickets == '') {
+                req.body.title = concert.tickets
+            }
+        }
+    }
+    catch{
+        console.error("error in try page");
+    }
+    return res.render('concert/updateConcert.html', { id: req.params.id})
 })
 
 router.post("/updateConcert/:id", async function(req, res){
     console.log("Updating");
     try{
+        console.log(req.params.id)
+        console.log("try to grab id");
         const concert = await Concert.findOne({
-            where: {id: req.params("id")}
+            where: {id: req.params.id}
         });
+        console.log("grabbed id");
         if (concert){
             Concert.update({
                 title : req.body.title,
@@ -65,7 +96,7 @@ router.post("/updateConcert/:id", async function(req, res){
                 time: req.body.time,
                 tickets : req.body.tickets
             })
-            return res.render("/concert/updateConcert.html", {concert : concert})
+            return res.redirect("/concert/concerts")
             }
         }
     catch{
