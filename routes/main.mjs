@@ -3,6 +3,7 @@ const { Router } = route;
 const router = Router();
 export default router;
 import User, { UserRole } from '../models/User.js';
+import { DeleteFilePath } from '../utils/multer.mjs'
 import moment from 'moment';
 import Livestream from '../models/Livestream.js';
 import Concert from '../models/Concert.js';
@@ -42,13 +43,18 @@ router.use("/admin", admin)
 //	TODO:	Common URL paths here
 router.get("/",      async function(req, res) {
 	if(req.cookies['deleteperformer'] !== undefined){
-		User.destroy({
+		const userP = User.findOne({
 			where: {
 				email: req.cookies['deleteperformer'],
 				role:UserRole.Performer
 			}
 		})
+		console.log(`Deleting ${userP.name}'s picture`)
+		DeleteFilePath(`${process.cwd()}/${userP.imgURL}`);
+		console.log(`Deleting ${userP.name}`)
+		userP.destroy();
 		res.clearCookie("deleteperformer");
+		console.log("Deleted")
 	}
 	console.log("Home page accessed");
 	return res.render('index.html')});

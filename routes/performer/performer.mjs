@@ -23,8 +23,12 @@ async function dashboard_page(req, res) {
 	const user = await User.findOne({
 		where: { email: email, role:UserRole.Performer }
 	})
+	if(user.imgURL = ''){
+		user.imgURL = 'default.png'
+	}
 	return res.render('performer/dashboard.html', {
-		name: user.name
+		name: user.name,
+		imgURL: user.imgURL
 	})
 };
 
@@ -34,8 +38,12 @@ async function analytics_page(req, res) {
 	const user = await User.findOne({
 		where: { email: email, role: UserRole.Performer }
 	})
+	if(user.imgURL = ''){
+		user.imgURL = 'default.png'
+	}
 	return res.render('performer/analytics.html', {
 		name: user.name,
+		imgURL: user.imgURL,
 		author: "The awesome programmer",
 		// donations
 		values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -52,8 +60,12 @@ async function settings_page(req,res){
 	const user = await User.findOne({
 		where: { email: email,role:UserRole.Performer }
 	})
+	if(user.imgURL = ''){
+		user.imgURL = 'default.png'
+	}
 	return res.render('performer/settings.html', {
-		name: user.name
+		name: user.name,
+		imgURL: user.imgURL
 	})
 };
 
@@ -66,5 +78,5 @@ async function logout_page(req, res) {
 
 async function createLive_page(req, res) {
 	console.log("Create Livestream accessed, passing over");
-	return res.redirect('../createLivestream')
+	return res.redirect('../livestream/create')
 };
