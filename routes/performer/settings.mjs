@@ -7,8 +7,8 @@ import { ensureAuthenticated } from '../../config/authenticate.js';
 import Hash from 'hash.js';
 import { flashMessage } from '../../utils/messenger.js';
 import fs from 'fs';
-import upload from '../../utils/imageUpload.js'
-
+import { UploadTo, DeleteFile, DeleteFilePath, FindFileType} from '../../utils/multer.mjs'
+import path from 'path';
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
 const regexName = /^[a-zA-Z][a-zA-Z]{2,}$/;
@@ -17,6 +17,7 @@ const regexPwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&
 
 
 router.get("/upload", ensureAuthenticated, upload_page);
+router.post("/upload", ensureAuthenticated, upload_process);
 router.get("/update", ensureAuthenticated, update_page);
 router.post("/update", update_process);
 router.get("/delete", ensureAuthenticated, delete_page);
@@ -29,10 +30,48 @@ async function upload_page(req, res) {
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
+    if(user.imgURL = ''){
+		user.imgURL = 'default.png'
+	}
     return res.render('performer/settings/upload.html', {
-        name: user.name
+        name: user.name,
+        imgURL: user.imgURL
     })
 };
+async function upload_process(req,res){
+    let email = req.cookies['performer']
+    const user = await User.findOne({
+        where: { email: email,role:UserRole.Performer }
+    })
+    console.log("upload process asccessed")
+    const Uploader = UploadTo(`profile/${user.id}`).single("posterUpload");
+    return Uploader(req,res, async function(error_upload) {
+        if (error_upload) {
+            console.error("An error has occured during the uploading of file");
+            console.error(error_upload);
+        }
+        else{
+            try{
+                console.log('File uploaded without problems');
+                await User.update({
+                    imgURL: req.file.path
+                },{
+                    where:{
+                    id: user.id,
+                    role: UserRole.Performer
+                    }
+                })
+                return res.redirect("../dashboard")
+            }
+            catch(error){
+                console.error('File is uploaded but something crashed');
+                console.error(error);
+                DeleteFile(req.file);
+                return res.sendStatus(400).end();
+            }
+        }
+    })
+}
 
 //to be updated|| FORMLESS POST?????
 async function delete_page(req, res) {
@@ -41,8 +80,12 @@ async function delete_page(req, res) {
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
+    if(user.imgURL = ''){
+		user.imgURL = 'default.png'
+	}
     return res.render('performer/settings/delete.html', {
-        name: user.name
+        name: user.name,
+        imgURL: user.imgURL
     })
 };
 
@@ -51,7 +94,7 @@ async function delete_process(req, res) {
     let email = req.cookies['performer']
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
-    })    
+    })
     res.cookie('deleteperformer', user.email, { maxAge: 900000, httpOnly: true });
     res.clearCookie("performer");
     console.log("Performer deleted")
@@ -64,9 +107,13 @@ async function update_page(req, res) {
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
+    if(user.imgURL = ''){
+		user.imgURL = 'default.png'
+	}
     return res.render('performer/settings/update.html', {
         name: user.name,
-        email: user.email
+        email: user.email,
+        imgURL: user.imgURL
     })
 };
 
@@ -99,7 +146,7 @@ async function update_process(req, res) {
     }
     catch (error) {
         console.error("There is errors with the update form body.");
-        console.error(error);
+        console.error(errors);
         console.log("smth weird")
         return res.render('performer/settings/update.html', { errors: errors });
     }
@@ -109,6 +156,9 @@ async function update_process(req, res) {
         }
         if (req.body.email == '') {
             req.body.email = user.email
+        }
+        if(req.body.picture == ''){
+            req.body.picture = user.imgURL
         }
         if (req.body.password == '') {
             req.body.password = user.password
@@ -120,7 +170,8 @@ async function update_process(req, res) {
         await User.update({
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            imgURL: req.body.picture
         }, {
             where: {
                 id: user.id,

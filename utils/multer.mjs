@@ -6,7 +6,6 @@
 **/
 import Multer  from 'multer';
 import FileSys from 'fs';
-import Path    from 'path';
 
 /**
  * File filter used to accept image files only
@@ -36,13 +35,41 @@ export const UploadProfileImage = Multer({ dest:   `${Path}/profile`, fileFilter
 export const UploadProductImage = Multer({ dest:   `${Path}/product`, fileFilter: FilterFile.bind(this, "image") });
 
 /**
+ * Upload to arbitrary location
+ * @param {string} destination File path from /dynamic
+ * @param {string} filter "image" "audio" "video"
+ */
+ export function UploadTo(destination, filter = undefined) {
+	if (filter != undefined) 
+		filter = FilterFile.bind(this, filter);
+	return Multer({ dest:   `${Path}/${destination}`, fileFilter: filter });
+}
+export async function FindFileType(file){
+	return  path.extname(file)
+}
+/**
  * Function to delete a uploaded file
  * @param files {...Express.Multer.File}
 **/
 export async function DeleteFile(...files) {
 	for (let file of files) {
-		if (FileSys.existsSync(file.destination))
-			return FileSys.unlinkSync(file.destination);
+		if (FileSys.existsSync(file.path))
+			return FileSys.unlinkSync(file.path);
+		else
+			console.warn(`Attempting to delete non-existing file(s) ${file}`);
+	}
+}
+
+/**
+ * Function to delete a uploaded file
+ * @param files {...string}
+**/
+export function DeleteFilePath(...files) {
+	for (let file of files) {
+		if (FileSys.existsSync(file)) {
+			console.log(`Removing from server: ${file}`);
+			return FileSys.unlinkSync(file);
+		}
 		else
 			console.warn(`Attempting to delete non-existing file(s) ${file}`);
 	}

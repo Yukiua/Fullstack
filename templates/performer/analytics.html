@@ -1,81 +1,87 @@
-<head>
-    {% block PageJS %}
+{% extends "layouts/base.html" %}
+{% block PageJS %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
 {% endblock PageJS %}
 {% block PageCSS %}
 <style>
-#bigSidebar {
-    background-color: lightgrey;
-}
-#sidebarDash {
-    font-weight:bold;
-    font-size: 20px;
-    color: purple;
-}
-#sidebarLive {
-    font-weight:bold;
-    font-size: 20px;
-    color: purple;
-}
-#sidebarAna {
-    font-weight:bold;
-    font-size: 20px;
-    color: purple;
-}
-#sidebarSet {
-    font-weight:bold;
-    font-size: 20px;
-    color: purple;
-}
-#sidebarLog {
-    font-weight:bold;
-    font-size: 20px;
-    color: purple;
-}
-.analyticdiv{
-}
+    #bigSidebar {
+        background-color: lightgrey;
+    }
+
+    #sidebarDash {
+        font-weight: bold;
+        font-size: 20px;
+        color: purple;
+    }
+
+    #sidebarLive {
+        font-weight: bold;
+        font-size: 20px;
+        color: purple;
+    }
+
+    #sidebarAna {
+        font-weight: bold;
+        font-size: 20px;
+        color: purple;
+    }
+
+    #sidebarSet {
+        font-weight: bold;
+        font-size: 20px;
+        color: purple;
+    }
+
+    #sidebarLog {
+        font-weight: bold;
+        font-size: 20px;
+        color: purple;
+    }
+
+    .analyticdiv {}
 </style>
 {% endblock PageCSS %}
-</head>
-{% extends "layouts/base.html" %}
 {% block PageTitle %}ESTIC - Performer Analytics{% endblock PageTitle %}
 
 {% block PageContent %}
-    <div class="container-fluid">
-      <div class="row">
+<div class="container-fluid">
+    <div class="row">
         <div class="col-sm-3 col-md-2 sidebar" id="bigSidebar">
-        <ul class="nav nav-sidebar">
-            <li>
-              placeholderpic
-            </li>
-        </ul>
-          <ul class="nav nav-sidebar">
-            <li id="sidebarDash"><a href="dashboard">Dashboard</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li id="sidebarLive"><a href="createLivestream">Livestream</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li id="sidebarAna" class="active"><a href="#">Analytics <span class="sr-only">(current)</span></a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li id="sidebarSet"><a href="settings">Settings</a></li>
-          </ul>
             <ul class="nav nav-sidebar">
-            <li id="sidebarLog"><a href="logout">Log Out</a></li>
-          </ul>
+                <li>
+                    <img src="/{{imgURL}}">
+                </li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li id="sidebarDash"><a href="dashboard">Dashboard</a></li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li id="sidebarLive"><a href="createLivestream">Livestream</a></li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li id="sidebarAna" class="active"><a href="#">Analytics <span class="sr-only">(current)</span></a></li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li id="sidebarSet"><a href="settings">Settings</a></li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li id="sidebarLog"><a href="logout">Log Out</a></li>
+            </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">{{name}}</h1>
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
+            <h1 class="page-header">{{name}}</h1>
+            <div class="row placeholders">
+                <div class="col-xs-6 col-sm-3 placeholder">
+                </div>
             </div>
-          </div>
-          <h2 class="sub-header">Analytics</h2>
+            <h2 class="sub-header">Analytics</h2>
             <div class="analyticdiv">
-                <button class="tablink active" onclick="openPage('income', this, '#4381ff')"  id="defaultOpen"><b>Income from donations</b></button>
-                <button class="tablink" onclick="openPage('total_views', this, '#5d92ff')"><b>Total watch views</b></button>
-                <button class="tablink" onclick="openPage('per_hour', this, '#5d92ff')"><b>Total watch per hour</b></button>
+                <button class="tablink active" onclick="openPage('income', this, '#4381ff')" id="defaultOpen"><b>Income
+                        from donations</b></button>
+                <button class="tablink" onclick="openPage('total_views', this, '#5d92ff')"><b>Total watch
+                        views</b></button>
+                <button class="tablink" onclick="openPage('per_hour', this, '#5d92ff')"><b>Total watch per
+                        hour</b></button>
                 <div id='income' class="tabcontent">
                     <div style="width:400px;height:400px;">
                         <canvas id="income_chart" width="20px" height="20px"></canvas>
@@ -91,142 +97,151 @@
                         <canvas id="per_hour_chart" width="20px" height="20px"></canvas>
                     </div>
                 </div>
-            <script>
-var ctx = document.getElementById('income_chart').getContext('2d');
-var income_chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'Azure', 'Skyfire', 'Indigo', 'Crimson', 'Black', 'Void'],
-			datasets: [{
-				label: '# of Votes',
-				data: [
-					{% for v in values %}
+                <script>
+                    var ctx = document.getElementById('income_chart').getContext('2d');
+                    var income_chart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'Azure', 'Skyfire', 'Indigo', 'Crimson', 'Black', 'Void'],
+                            datasets: [{
+                                label: '# of Votes',
+                                data: [
+                                    {% for v in values %}
 						{{ v }},
 					{% endfor %}
 					],
-				backgroundColor: [
-                'transparent'],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-            ],
-            borderWidth: 1
+                    backgroundColor: [
+                        'transparent'],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                        ],
+                            borderWidth: 1
         }]
     },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-}}]}}});
-var ctx = document.getElementById('total_views_chart').getContext('2d');
-var total_views_chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June','July','August','September','October','November','December'],
-        datasets: [{
-            label: '',
-            data: [
-					{% for v in secondvalues %}
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }});
+                    var ctx = document.getElementById('total_views_chart').getContext('2d');
+                    var total_views_chart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                            datasets: [{
+                                label: '',
+                                data: [
+                                    {% for v in secondvalues %}
 						{{ v }},
 					{% endfor %}
-					],            backgroundColor: [
-                'transparent'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-            ],
-            borderWidth: 1
+					], backgroundColor: [
+                        'transparent'
+                    ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                        ],
+                            borderWidth: 1
         }]
     },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-}}]}}});
-var ctx = document.getElementById('per_hour_chart').getContext('2d');
-var per_hour_chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June','July','August','September','October','November','December'],
-        datasets: [{
-            label: '',
-            data: [
-					{% for v in thirdvalues %}
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }});
+                    var ctx = document.getElementById('per_hour_chart').getContext('2d');
+                    var per_hour_chart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                            datasets: [{
+                                label: '',
+                                data: [
+                                    {% for v in thirdvalues %}
 						{{ v }},
 					{% endfor %}
-					],            backgroundColor: [
-                'transparent'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-            ],
-            borderWidth: 1
+					], backgroundColor: [
+                        'transparent'
+                    ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                        ],
+                            borderWidth: 1
         }]
     },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-}}]}}});
-function openPage(pageName,elmnt,color) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablink");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].style.backgroundColor = "";
-    tablinks[i].addEventListener("click", function() {
-      var current = document.getElementsByClassName("active")
-      current[0].className = current[0].className.replace(" active","");
-      this.className += " active";
-    });
-  }
-  document.getElementById(pageName).style.display = "block";
-  elmnt.style.backgroundColor = color;
-}
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }});
+                    function openPage(pageName, elmnt, color) {
+                        var i, tabcontent, tablinks;
+                        tabcontent = document.getElementsByClassName("tabcontent");
+                        for (i = 0; i < tabcontent.length; i++) {
+                            tabcontent[i].style.display = "none";
+                        }
+                        tablinks = document.getElementsByClassName("tablink");
+                        for (i = 0; i < tablinks.length; i++) {
+                            tablinks[i].style.backgroundColor = "";
+                            tablinks[i].addEventListener("click", function () {
+                                var current = document.getElementsByClassName("active")
+                                current[0].className = current[0].className.replace(" active", "");
+                                this.className += " active";
+                            });
+                        }
+                        document.getElementById(pageName).style.display = "block";
+                        elmnt.style.backgroundColor = color;
+                    }
 
-// Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
-</script>
+                    // Get the element with id="defaultOpen" and click on it
+                    document.getElementById("defaultOpen").click();
+                </script>
             </div>
         </div>
-      </div>
     </div>
+</div>
 {% endblock PageContent%}
