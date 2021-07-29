@@ -29,7 +29,7 @@ router.post("/createConcert", async function(req, res){
 		res.cookie('concert', concert.id, {maxAge: 900000, httpOnly: true});
 	}
 	catch{
-		console.error("error");
+		console.error("error in createConcert");
 	}
 	
 	return res.redirect('/concert/concerts')
@@ -47,41 +47,23 @@ router.get("/concerts", async function(req, res){
 
 router.get("/updateConcert/:id", async function(req, res){
     console.log("Update Concert accessed");
-    try{
-        const concert = await Concert.findOne({
-            where: {id: req.params("id")}
-        })
-        if (concert){
-            if (req.body.title == '') {
-                req.body.title = concert.title
-            }
-            if (req.body.details == '') {
-                req.body.title = concert.details
-            }
-            if (req.body.genre == '') {
-                req.body.title = concert.genre
-            }
-            if (req.body.date == '') {
-                req.body.title = concert.date
-            }
-            if (req.body.time == '') {
-                req.body.title = concert.time
-            }
-            if (req.body.tickets == '') {
-                req.body.title = concert.tickets
-            }
-        }
-    }
-    catch{
-        console.error("error in try page");
-    }
-    return res.render('concert/updateConcert.html', { id: req.params.id})
+    const concert = await Concert.findOne({
+        where: {id: req.params.id}
+    });
+    return res.render('concert/updateConcert.html',
+    { id: req.params.id,
+    title: concert.title,
+    details: concert.details,
+    genre: concert.genre,
+    date: concert.date,
+    time: concert.time,
+    tickets: concert.tickets
+    })
 })
 
 router.post("/updateConcert/:id", async function(req, res){
     console.log("Updating");
     try{
-        console.log(req.params.id)
         console.log("try to grab id");
         const concert = await Concert.findOne({
             where: {id: req.params.id}
@@ -95,12 +77,15 @@ router.post("/updateConcert/:id", async function(req, res){
                 date : req.body.date,
                 time: req.body.time,
                 tickets : req.body.tickets
+            },
+            {
+            where: {id: req.params.id}
             })
             return res.redirect("/concert/concerts")
             }
         }
     catch{
-        console.error("error");
+        console.error("error in updateConcert");
     }
 })
 
@@ -108,22 +93,6 @@ router.get("/concertDetails", async function(req, res){
 	console.log("concertDetails accessed");
 	return res.render('concert/concertDetails.html')
 });
-
-// Update function
-async function update_concert(req, res){
-    console.log("Grabbed")
-    try{
-        const concert = await Concert.findOne({
-            where: {"id": req.params["id"]}
-        });
-    if (concert){
-        return res.render("concert/updateConcert", {concert : concert})
-        }
-    }
-    catch{
-        console.error("error");
-    }    
-}
 
 // concerts table
 async function cltable(req, res){
