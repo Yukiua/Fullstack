@@ -11,7 +11,7 @@ import nunjucks       from 'nunjucks';
 import SendGrid         from '@sendgrid/mail';
 import JWT              from 'jsonwebtoken';
 
-SendGrid.setApiKey('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');
+SendGrid.setApiKey(!!!!!!);
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
@@ -137,7 +137,7 @@ async function register_process(req, res) {
 }
 
 async function send_verification(uid, email) {
-	console.log("sneded verif ")
+	console.log("sending verification")
 	//	DO NOT PUT CREDENTIALS INSIDE PAYLOAD
 	//	WHY? -> JWT can be decoded easily
 	//		Whats the diff-> Signature don't match if mutated
@@ -151,14 +151,14 @@ async function send_verification(uid, email) {
 	return SendGrid.send({
 		to:      email,
 		from:    'setokurushi@gmail.com',
-		subject: `Verify your email`,
+		subject: `Please verify your email before continuing`,
 		html:    nunjucks.render(`${process.cwd()}/templates/layouts/email-verify.html`, {
 			token:  token
 		})
 	});
 }
 async function verify_process(req, res) {
-	console.log("verifiririeed")
+	console.log("processing verification")
 	const token = req.params.token;
 	let   uuid  = null;
 	try {
@@ -176,6 +176,7 @@ async function verify_process(req, res) {
 		const user = await User.findByPK(uuid).update({
 			verified: true
 		});
+		console.log("Sending to verification")
 		return res.render("auth/verified", {
 			name: user.name
 		});
