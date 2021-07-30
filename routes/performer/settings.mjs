@@ -7,14 +7,13 @@ import { ensureAuthenticated } from '../../config/authenticate.js';
 import Hash from 'hash.js';
 import { flashMessage } from '../../utils/messenger.js';
 import fs from 'fs';
-import { UploadTo, DeleteFile, DeleteFilePath, FindFileType} from '../../utils/multer.mjs'
-import path from 'path';
+import { UploadTo, DeleteFile, DeleteFolder} from '../../utils/multer.mjs'
+
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
 const regexName = /^[a-zA-Z][a-zA-Z]{2,}$/;
 //	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
 const regexPwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
 
 router.get("/upload", ensureAuthenticated, upload_page);
 router.post("/upload", ensureAuthenticated, upload_process);
@@ -30,9 +29,6 @@ async function upload_page(req, res) {
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
-    if(user.imgURL = ''){
-		user.imgURL = 'default.png'
-	}
     return res.render('performer/settings/upload.html', {
         name: user.name,
         imgURL: user.imgURL
@@ -44,8 +40,12 @@ async function upload_process(req,res){
         where: { email: email,role:UserRole.Performer }
     })
     console.log("upload process asccessed")
-    const Uploader = UploadTo(`profile/${user.id}`).single("posterUpload");
+    const Uploader = UploadTo(`public/img/uploads/${user.uuid}/`).single("posterUpload")
     return Uploader(req,res, async function(error_upload) {
+        fs.rename(req.file.path, req.file.path +"."+req.file.originalname.split(".")[1], function(err){
+            if(err) console.log('ERROR: '+err);
+        })
+        console.log(req.file)
         if (error_upload) {
             console.error("An error has occured during the uploading of file");
             console.error(error_upload);
@@ -54,10 +54,10 @@ async function upload_process(req,res){
             try{
                 console.log('File uploaded without problems');
                 await User.update({
-                    imgURL: req.file.path
+                    imgURL: req.file.path + "." + req.file.originalname.split(".")[1]
                 },{
                     where:{
-                    id: user.id,
+                    uuid: user.uuid,
                     role: UserRole.Performer
                     }
                 })
@@ -80,9 +80,6 @@ async function delete_page(req, res) {
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
-    if(user.imgURL = ''){
-		user.imgURL = 'default.png'
-	}
     return res.render('performer/settings/delete.html', {
         name: user.name,
         imgURL: user.imgURL
@@ -95,7 +92,25 @@ async function delete_process(req, res) {
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
-    res.cookie('deleteperformer', user.email, { maxAge: 900000, httpOnly: true });
+    if(user.imgURL != "public/img/default.png"){
+        console.log(`Deleting ${user.uuid}'s picture`)
+        DeleteFolder(`public/img/uploads/${user.uuid}`);
+    }
+    console.log(`Deleting ${user.name}`)
+    if(user !== undefined){
+		User.update({
+            name: "",
+            email: "",
+            password: "",
+            imgURL: "",
+        },{			
+            where: {
+                uuid: user.uuid,
+				email: user.email,
+				role: UserRole.Performer
+			}
+		})	
+	}
     res.clearCookie("performer");
     console.log("Performer deleted")
     return res.redirect('../../')
@@ -107,9 +122,6 @@ async function update_page(req, res) {
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
-    if(user.imgURL = ''){
-		user.imgURL = 'default.png'
-	}
     return res.render('performer/settings/update.html', {
         name: user.name,
         email: user.email,
@@ -174,13 +186,12 @@ async function update_process(req, res) {
             imgURL: req.body.picture
         }, {
             where: {
-                id: user.id,
+                uuid: user.uuid,
                 role: UserRole.Performer
             }
         })
         console.log('insert')
         flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-        console.log(req.body)
         res.cookie('performer', req.body.email, { maxAge: 900000, httpOnly: true });
         return res.redirect("../dashboard");
     }

@@ -16,7 +16,7 @@ $('#posterUpload').on('change', function () {
 	let formdata = new FormData();
 	formdata.append('posterUpload', image);
 	$.ajax({
-		url: '/performer/settings/upload',
+		url: 'upload',
 		type: 'POST',
 		data: formdata,
 		contentType: false,

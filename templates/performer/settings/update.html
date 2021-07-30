@@ -49,7 +49,9 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar" id="bigSidebar">
             <ul class="nav nav-sidebar">
-                <li><img src="/{{imgURL}}">
+                <li>
+                    <img src="../../{{imgURL}}" width="150" height="150">
+
                 </li>
             </ul>
             <ul class="nav nav-sidebar">
@@ -76,16 +78,8 @@
             </div>
             <h2 class="sub-header">Update Performer Account</h2>
             <div class="table-responsive">
-                <form action="update" method="post" enctype="multipart/form-data">
+                <form action="update" method="post">
                     <table class="table table-bordered">
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <input type="file" id="posterUpload" name="posterUpload" value={{picture}} accept="image/png,image/jpeg,image/jpg,image/gif">
-                                    <div class="font-weight-bold text-danger small" id="posterErr" style="display:none"></div>
-                                </div>
-                            </td>
-                        </tr>
                         <tr>
                             <td>
                                 <div class="form-group">

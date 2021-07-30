@@ -6,17 +6,24 @@ import User, { UserRole } from '../../models/User.js';
 import { flashMessage }  from '../../utils/messenger.js';
 import passport from 'passport';
 import Hash     from 'hash.js';
- 
- const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
- //	Min 3 character, must start with alphabet
- const regexName  = /^[a-zA-Z][a-zA-Z]{2,}$/;
- //	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
- const regexPwd   = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+import nunjucks       from 'nunjucks';
+import SendGrid         from '@sendgrid/mail';
+import JWT              from 'jsonwebtoken';
+
+SendGrid.setApiKey('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');
+
+const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//	Min 3 character, must start with alphabet
+const regexName  = /^[a-zA-Z][a-zA-Z]{2,}$/;
+//	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
+const regexPwd   = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
  
 router.get("/login",     login_page);
 router.post("/login",    login_process);
 router.get("/signup",  register_page);
 router.post("/signup", register_process);
+router.get("/verify/:token", verify_process);
 
 async function login_page(req, res) {
 	console.log("Performer Login page accessed");
@@ -117,6 +124,7 @@ async function register_process(req, res) {
 				name:     req.body.name,
 				role: UserRole.Performer
 		});
+		await send_verification(user.uuid, user.email);
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
 		return res.redirect("/auth/performer/login");
 	}
@@ -127,3 +135,57 @@ async function register_process(req, res) {
 		return res.status(500).end();
 	}
 }
+
+async function send_verification(uid, email) {
+	console.log("sneded verif ")
+	//	DO NOT PUT CREDENTIALS INSIDE PAYLOAD
+	//	WHY? -> JWT can be decoded easily
+	//		Whats the diff-> Signature don't match if mutated
+	const token = JWT.sign({
+		uuid:  uid
+	}, 'the-key', {
+		expiresIn: '30000'
+	});
+	
+	//	Send Grid stuff
+	return SendGrid.send({
+		to:      email,
+		from:    'setokurushi@gmail.com',
+		subject: `Verify your email`,
+		html:    nunjucks.render(`${process.cwd()}/templates/layouts/email-verify.html`, {
+			token:  token
+		})
+	});
+}
+async function verify_process(req, res) {
+	console.log("verifiririeed")
+	const token = req.params.token;
+	let   uuid  = null;
+	try {
+		const payload = JWT.verify(token, 'the-key');
+
+		uuid    = payload.uuid;
+	}
+	catch (error) {
+		console.error(`The token is invalid`);
+		console.error(error);
+		return res.sendStatus(400).end();
+	}
+
+	try {
+		const user = await User.findByPK(uuid).update({
+			verified: true
+		});
+		return res.render("auth/verified", {
+			name: user.name
+		});
+	}
+	catch (error) {
+		console.error(`Failed to locate ${uuid}`);
+		console.error(error);
+		return res.sendStatus(500).end();
+	}
+}
+
+
+
