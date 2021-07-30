@@ -4,17 +4,13 @@ const router = Router();
 export default router;
 import User, { UserRole } from '../../models/User.js';
 import { ensureAuthenticated } from '../../config/authenticate.js';
-import Hash from 'hash.js';
-import { flashMessage } from '../../utils/messenger.js';
-import fs from 'fs';
-import upload from '../../utils/imageUpload.js'
 import SettingsOptions from './settings.mjs'
 router.use("/settings", SettingsOptions)
 
 router.get("/dashboard", ensureAuthenticated, dashboard_page);
 router.get("/analytics", ensureAuthenticated, analytics_page);
 router.get("/settings",ensureAuthenticated, settings_page);
-router.get("/logout", logout_page);
+router.get("/logout", ensureAuthenticated,logout_page);
 router.get("/createLivestream", ensureAuthenticated, createLive_page);
 
 async function dashboard_page(req, res) {
@@ -23,9 +19,6 @@ async function dashboard_page(req, res) {
 	const user = await User.findOne({
 		where: { email: email, role:UserRole.Performer }
 	})
-	if(user.imgURL = ''){
-		user.imgURL = 'default.png'
-	}
 	return res.render('performer/dashboard.html', {
 		name: user.name,
 		imgURL: user.imgURL
@@ -38,9 +31,6 @@ async function analytics_page(req, res) {
 	const user = await User.findOne({
 		where: { email: email, role: UserRole.Performer }
 	})
-	if(user.imgURL = ''){
-		user.imgURL = 'default.png'
-	}
 	return res.render('performer/analytics.html', {
 		name: user.name,
 		imgURL: user.imgURL,
@@ -60,9 +50,6 @@ async function settings_page(req,res){
 	const user = await User.findOne({
 		where: { email: email,role:UserRole.Performer }
 	})
-	if(user.imgURL = ''){
-		user.imgURL = 'default.png'
-	}
 	return res.render('performer/settings.html', {
 		name: user.name,
 		imgURL: user.imgURL

@@ -66,14 +66,15 @@
   }
 </style>
 {% endblock PageCSS%}
-{% block title %}ESTIC - Performer Dashboard{% endblock %}
-
+{% block PageTitle %}ESTIC - Performer Dashboard{% endblock PageTitle %}
 {% block PageContent %}
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-3 col-md-2 sidebar" id="bigSidebar">
       <ul class="nav nav-sidebar">
-        <li><img src="/{{imgURL}}">
+        <li>
+          <img src="../{{imgURL}}" width="150" height="150">
+
         </li>
       </ul>
       <ul class="nav nav-sidebar">

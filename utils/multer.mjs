@@ -42,7 +42,7 @@ export const UploadProductImage = Multer({ dest:   `${Path}/product`, fileFilter
  export function UploadTo(destination, filter = undefined) {
 	if (filter != undefined) 
 		filter = FilterFile.bind(this, filter);
-	return Multer({ dest:   `${Path}/${destination}`, fileFilter: filter });
+	return Multer({ dest:   `${destination}`, fileFilter: filter });
 }
 export async function FindFileType(file){
 	return  path.extname(file)
@@ -72,5 +72,10 @@ export function DeleteFilePath(...files) {
 		}
 		else
 			console.warn(`Attempting to delete non-existing file(s) ${file}`);
+	}
+}
+export function DeleteFolder(dir){
+	if(FileSys.existsSync(dir)){
+		FileSys.rmdirSync(dir,{recursive: true})
 	}
 }
