@@ -47,8 +47,8 @@ async function upload_process(req,res){
         })
         console.log(req.file)
         if (error_upload) {
-            console.error("An error has occured during the uploading of file");
-            console.error(error_upload);
+            req.flash('error_msg', 'Something wrong happed within the file upload.');
+            return res.redirect("performer/settings/upload")
         }
         else{
             try{
@@ -61,13 +61,13 @@ async function upload_process(req,res){
                     role: UserRole.Performer
                     }
                 })
+                req.flash('success_msg', 'Profile picture uploaded');
                 return res.redirect("../dashboard")
             }
             catch(error){
-                console.error('File is uploaded but something crashed');
-                console.error(error);
                 DeleteFile(req.file);
-                return res.sendStatus(400).end();
+                req.flash('error_msg', 'File uploaded but something crashed');
+                return res.redirect("../dashboard")
             }
         }
     })
@@ -113,6 +113,7 @@ async function delete_process(req, res) {
 	}
     res.clearCookie("performer");
     console.log("Performer deleted")
+    req.flash('success_msg', 'Performer deleted');
     return res.redirect('../../')
 }
 
@@ -137,9 +138,6 @@ async function update_process(req, res) {
         where: { email: email }
     })
     let errors = [];
-    //	Check your Form contents
-    //	Basic IF ELSE STUFF no excuse not to be able to do this alone
-    //	Common Sense
     try {
         if (!regexName.test(req.body.name)) {
             errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
@@ -157,10 +155,8 @@ async function update_process(req, res) {
         }
     }
     catch (error) {
-        console.error("There is errors with the update form body.");
-        console.error(errors);
-        console.log("smth weird")
-        return res.render('performer/settings/update.html', { errors: errors });
+        console.log("There is errors with the update form body.")
+        return res.render('performer/settings/update.html', { error: errors });
     }
     try {
         if (req.body.name == '') {
@@ -178,7 +174,6 @@ async function update_process(req, res) {
         else {
             req.body.password = Hash.sha256().update(req.body.password).digest("hex")
         }
-        console.log("b4 insert")
         await User.update({
             name: req.body.name,
             email: req.body.email,
@@ -190,15 +185,16 @@ async function update_process(req, res) {
                 role: UserRole.Performer
             }
         })
-        console.log('insert')
         flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
         res.cookie('performer', req.body.email, { maxAge: 900000, httpOnly: true });
+        req.flash('success_msg', 'Performer Profile Updated');
         return res.redirect("../dashboard");
     }
     catch (error) {
         //	Else internal server error
         console.error(`Failed to update user: ${req.body.email} `);
         console.error(error);
-        return res.status(500).end();
+        req.flash('error_msg', 'Something wrong happed within the server.');
+        return res.redirect("../dashboard");
     }
 };
