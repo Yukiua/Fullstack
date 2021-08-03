@@ -47,11 +47,12 @@
 <body>
 	{% include "partials/_navbar.html" %}
 
-	<div class="container">
-		{% block    PageContent %}	
+	<div class="container">		
 		{% include "partials/_flashmsg.html"%}
 		{% include "partials/_msg.html"%}
 		{% include "partials/_error.html"%}
+		{% block    PageContent %}	
+
 		{% endblock PageContent %}
 	</div>
 </body>

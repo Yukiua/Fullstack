@@ -1,6 +1,3 @@
-{%if error%}
-<div class="alert alert-danger">{{error}}</div>
-{%endif%}
-{%for text in errors%}
-    <div class="alert alert-danger">{{text}}</div>
+{%for text in error%}
+    <div class="alert alert-danger">{{text.text}}</div>
 {%endfor%}
