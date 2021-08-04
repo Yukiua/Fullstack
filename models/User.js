@@ -11,30 +11,37 @@ export class UserRole {
 }
 
 const User = db.define('user', {
-    id:{
-        type: Sequelize.INTEGER,
+    uuid:{
+        type: Sequelize.CHAR(36),
         allowNull: false,
         primaryKey: true,
-        autoIncrement: 1,
+        defaultValue: Sequelize.UUIDV4
     },
     name: {
     type: Sequelize.STRING
     },
     email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
     },
     password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
     },
     imgURL:{
         type: Sequelize.STRING,
-        defaultValue: '',
+        defaultValue: 'public/img/default.png',
         allowNull: false
     },
     role:{
         type: Sequelize.ENUM(UserRole.Admin,UserRole.User,UserRole.Performer),
         allowNull:false,
         defaultValue: UserRole.User
+    },
+    verified:{
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 });
 

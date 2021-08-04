@@ -2,7 +2,12 @@ import route from 'express';
 const { Router } = route;
 const router = Router();
 export default router;
+<<<<<<< HEAD
 import User, { UserRole } from '../models/User.js';
+=======
+import moment from 'moment';
+import Livestream from '../models/Livestream.js';
+>>>>>>> dacf85b1beb24aafe212d865e4bc741bfa38ce33
 import Concert from '../models/Concert.js';
 
 //import addLivestream from './Livestream.mjs';
@@ -42,17 +47,10 @@ router.use("/stream", stream)
 // ---------------- 
 //	TODO:	Common URL paths here
 router.get("/",      async function(req, res) {
-	if(req.cookies['deleteperformer'] !== undefined){
-		User.destroy({
-			where: {
-				email: req.cookies['deleteperformer'],
-				role:UserRole.Performer
-			}
-		})
-		res.clearCookie("deleteperformer");
-	}
+	console.log(req.cookies)
 	console.log("Home page accessed");
-	return res.render('index.html')});
+	return res.render('index.html',)
+});
 
 router.get("/cart", async function(req, res){
 	console.log("Cart accessed");

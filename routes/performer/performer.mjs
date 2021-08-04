@@ -4,17 +4,13 @@ const router = Router();
 export default router;
 import User, { UserRole } from '../../models/User.js';
 import { ensureAuthenticated } from '../../config/authenticate.js';
-import Hash from 'hash.js';
-import { flashMessage } from '../../utils/messenger.js';
-import fs from 'fs';
-import upload from '../../utils/imageUpload.js'
 import SettingsOptions from './settings.mjs'
 router.use("/settings", SettingsOptions)
 
 router.get("/dashboard", ensureAuthenticated, dashboard_page);
 router.get("/analytics", ensureAuthenticated, analytics_page);
 router.get("/settings",ensureAuthenticated, settings_page);
-router.get("/logout", logout_page);
+router.get("/logout", ensureAuthenticated,logout_page);
 router.get("/createLivestream", ensureAuthenticated, createLive_page);
 
 async function dashboard_page(req, res) {
@@ -24,7 +20,8 @@ async function dashboard_page(req, res) {
 		where: { email: email, role:UserRole.Performer }
 	})
 	return res.render('performer/dashboard.html', {
-		name: user.name
+		name: user.name,
+		imgURL: user.imgURL
 	})
 };
 
@@ -36,6 +33,7 @@ async function analytics_page(req, res) {
 	})
 	return res.render('performer/analytics.html', {
 		name: user.name,
+		imgURL: user.imgURL,
 		author: "The awesome programmer",
 		// donations
 		values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -53,7 +51,8 @@ async function settings_page(req,res){
 		where: { email: email,role:UserRole.Performer }
 	})
 	return res.render('performer/settings.html', {
-		name: user.name
+		name: user.name,
+		imgURL: user.imgURL
 	})
 };
 
@@ -66,5 +65,5 @@ async function logout_page(req, res) {
 
 async function createLive_page(req, res) {
 	console.log("Create Livestream accessed, passing over");
-	return res.redirect('../createLivestream')
+	return res.redirect('../livestream/create')
 };

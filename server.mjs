@@ -38,7 +38,6 @@ Nunjcks.configure('templates', {
 })
 //	Sets `/public` to be the virtual path to access static files
 Server.use("/public", Express.static('public'));
-
 /**
  * Form body parsers etc
  */
