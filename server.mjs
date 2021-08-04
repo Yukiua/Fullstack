@@ -15,10 +15,15 @@ import db              from './config/db.js'
 import FlashConnect    from 'connect-flash'
 import FlashMessenger  from 'flash-messenger'
 import passport        from 'passport';
+import Http             from 'http';
+import { initialize_https } from './utils/https.mjs';
 
 
 const Server = Express();
 const Port   = process.env.PORT || 3000;
+
+const ServerHttp  = Http.createServer(Server);
+const ServerHttps = initialize_https(Server);
 
 /**
  * Template Engine
@@ -111,10 +116,17 @@ ListRoutes(Server._router).forEach(route => {
 });
 console.log(`===========================`);
 
+import { initialize_socket } from './utils/socket.mjs';
+initialize_socket(Server, ServerHttps);
 /**
  * Start the server in infinite loop
  */
-Server.listen(Port, function() {
-	console.log(`Server listening at port ${Port}`);
+ServerHttp.listen(Port, function() {
+    console.log("Server listening at port ${Port}");
 	console.log("http://localhost:3000")
 });
+
+ServerHttps.listen(443, function () {
+    console.log("Server listening at port ${443}");
+});
+

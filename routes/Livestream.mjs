@@ -17,7 +17,12 @@ router.get("/create", async function(req,res){
 router.get('/list',(req,res) => {
     console.log("list livestream page accessed");
     return res.render('livestream/list.html')
-})
+});
+
+// router.get("/watch", async function(req,res){
+//     console.log("Watch Livestream Page accessed");
+//     return res.render('livestream/watch.html')
+// })
 
 router.post('/create', async function(req, res){
     try{

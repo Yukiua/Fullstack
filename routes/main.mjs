@@ -3,8 +3,6 @@ const { Router } = route;
 const router = Router();
 export default router;
 import User, { UserRole } from '../models/User.js';
-import moment from 'moment';
-import Livestream from '../models/Livestream.js';
 import Concert from '../models/Concert.js';
 
 //import addLivestream from './Livestream.mjs';
@@ -37,6 +35,9 @@ router.use("/user", user)
 
 import admin from './admin/admin.mjs';
 router.use("/admin", admin)
+
+import stream from './stream.mjs'
+router.use("/stream", stream)
 
 // ---------------- 
 //	TODO:	Common URL paths here
