@@ -2,15 +2,6 @@ import route from 'express';
 const { Router } = route;
 const router = Router();
 export default router;
-<<<<<<< HEAD
-import User, { UserRole } from '../models/User.js';
-=======
-import moment from 'moment';
-import Livestream from '../models/Livestream.js';
->>>>>>> dacf85b1beb24aafe212d865e4bc741bfa38ce33
-import Concert from '../models/Concert.js';
-
-//import addLivestream from './Livestream.mjs';
 
 // ---------------- 
 //	Serves dynamic files from the dynamic folder

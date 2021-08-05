@@ -126,6 +126,9 @@ ServerHttp.listen(Port, function() {
 });
 
 ServerHttps.listen(443, function () {
-    console.log("Server listening at port ${443}");
+    console.log(`Server listening at port ${443}`);
+	console.log("https://localhost:443")
+	console.log('')
+	console.log('')
 });
 

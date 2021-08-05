@@ -18,9 +18,9 @@ const regexPwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&
 router.get("/upload", ensureAuthenticated, upload_page);
 router.post("/upload", ensureAuthenticated, upload_process);
 router.get("/update", ensureAuthenticated, update_page);
-router.post("/update", update_process);
+router.post("/update", ensureAuthenticated,update_process);
 router.get("/delete", ensureAuthenticated, delete_page);
-router.post('/delete', delete_process);
+router.post('/delete', ensureAuthenticated,delete_process);
 
 //to be updated|| FORMLESS POST????
 async function upload_page(req, res) {

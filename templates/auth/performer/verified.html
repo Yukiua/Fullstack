@@ -1,3 +1,33 @@
-<div>
-	Thank you {{name}} for choosing our services, your email has been verified.
-</div>
+{% block PageCSS%}
+<style>
+h1 {
+    font-size: 5.5rem;
+    font-weight: bold;
+    line-height: 1.2;
+    color: black;
+    text-align: center;
+    margin-top: 100px;
+    text-shadow: -2.5px 3px 3.5px grey;
+}
+.ver{
+	font-size: 25px;
+	margin: auto;
+	text-align: center;
+}
+a {
+margin:auto;
+margin-left:10px;
+}
+</style>
+{%endblock PageCSS %}
+<h1>ESTIC</h1><hr>
+<div class="ver">
+	<p>Thank you {{name}} for choosing our services</p><br>
+    <form method="post" action="../verify/:token">
+        <h5>To ensure that you are indeed a performer, please enter the code given out below</h5>
+        <label for="code">Code</label>
+        <input type="code" name="code" class="form-control" value="{{code}}" required>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>    <a href="../../index.html">Else, go back to the home page</a>
+

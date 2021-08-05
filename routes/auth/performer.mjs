@@ -10,7 +10,7 @@ import nunjucks from 'nunjucks';
 import SendGrid from '@sendgrid/mail';
 import JWT from 'jsonwebtoken';
 
-// SendGrid.setApiKey(!!!!!!);
+SendGrid.setApiKey(!!!!!!);
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
@@ -22,13 +22,13 @@ router.get("/login", login_page);
 router.post("/login", login_process);
 router.get("/signup", register_page);
 router.post("/signup", register_process);
-// router.get("/verify/:token", verify_process);
+router.get("/verify/:token", verify_process);
+router.post("/verify/:token", verify_code);
 
 async function login_page(req, res) {
 	console.log("Performer Login page accessed");
 	return res.render('auth/performer/login.html');
 }
-
 async function login_process(req, res, next) {
 	console.log("login contents received");
 	console.log(req.body);
@@ -42,45 +42,50 @@ async function login_process(req, res, next) {
 			}
 		});
 		if (user) {
-			res.cookie('performer', req.body.email, { maxAge: 900000, httpOnly: true });
-			console.log("HERE")
-			passport.authenticate('local', {
-				successRedirect: "../../performer/dashboard",
-				failureRedirect: "auth/performer/login.html",
-				failureFlash: true
-			})(req, res, next);
-			return
+			if(user.verified == 1){
+				if (!regexEmail.test(req.body.email)) {
+					errors = errors.concat({ text: "Invalid email address!" });
+				}
+				if (!regexPwd.test(req.body.password)) {
+					errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character!" });
+				}
+				if (user.email != req.body.email) {
+					errors = errors.concat({ text: "Email does not match" })
+				}
+				if (user.password != Hash.sha256().update(req.body.password).digest("hex")) {
+					errors = errors.concat({ text: "Password does not match" })
+				}
+				if (errors.length > 0) {
+					throw new Error("There are validation errors");
+				}
+				res.cookie('performer', req.body.email, { maxAge: 900000, httpOnly: true });
+				console.log("HERE")
+				passport.authenticate('local', {
+					successRedirect: "../../performer/dashboard",
+					failureRedirect: "auth/performer/login.html",
+					failureFlash: true
+				})(req, res, next);
+				return 
+			}
+			else{
+				errors = errors.concat({text:"Performer is not yet verified. Please check your email."})
+				throw new Error("Performer is not yet verified. Please check your email.")
+			}
 		}
-		else {
-		}
-		if (!regexEmail.test(req.body.email)) {
-			errors = errors.concat({ text: "Invalid email address!" });
-		}
-
-		if (!regexPwd.test(req.body.password)) {
-			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character!" });
-		}
-		if (user.email != req.body.email) {
-			errors = errors.concat({ text: "Email does not match" })
-		}
-		if (user.password != req.body.password) {
-			errors = errors.concat({ text: "Password does not match" })
-		}
-		if (errors.length > 0) {
-			throw new Error("There are validation errors");
+		else{
+			errors = errors.concat({text:"Performer not found. Have you signed in?"})
+			throw new Error("Performer not found. Have you signed in?")
 		}
 	}
 	catch (error) {
+		console.log(error)
 		return res.render('auth/performer/login.html', { error: errors });
 	}
-	return successRedirect
 }
-
 async function register_page(req, res) {
 	console.log("performer signup page accessed");
 	return res.render('auth/performer/signup.html');
 }
-
 async function register_process(req, res) {
 	console.log("signup contents received");
 	console.log(req.body);
@@ -119,7 +124,7 @@ async function register_process(req, res) {
 			name: req.body.name,
 			role: UserRole.Performer
 		});
-		// await send_verification(user.uuid, user.email);
+		await send_verification(user.uuid, user.email);
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
 		req.flash('success_msg', 'You have successfully signed in. Please log in');
 		return res.redirect("/auth/performer/login");
@@ -132,7 +137,6 @@ async function register_process(req, res) {
 		return res.render('auth/performer/signup.html')
 	}
 }
-
 async function send_verification(uid, email) {
 	console.log("sending verification")
 	//	DO NOT PUT CREDENTIALS INSIDE PAYLOAD
@@ -149,7 +153,7 @@ async function send_verification(uid, email) {
 		to: email,
 		from: 'setokurushi@gmail.com',
 		subject: `Please verify your email before continuing`,
-		html: nunjucks.render(`${process.cwd()}/templates/layouts/email-verify.html`, {
+		html: nunjucks.render(`${process.cwd()}/templates/layouts/performer-email-verify.html`, {
 			token: token
 		})
 	});
@@ -157,10 +161,10 @@ async function send_verification(uid, email) {
 async function verify_process(req, res) {
 	console.log("processing verification")
 	const token = req.params.token;
+	console.log(req.params.token)
 	let uuid = null;
 	try {
 		const payload = JWT.verify(token, 'the-key');
-
 		uuid = payload.uuid;
 	}
 	catch (error) {
@@ -168,13 +172,21 @@ async function verify_process(req, res) {
 		console.error(error);
 		return res.sendStatus(400).end();
 	}
-
 	try {
-		const user = await User.findByPK(uuid).update({
-			verified: true
-		});
-		console.log("Sending to verification")
-		return res.render("auth/verified", {
+		const user = await User.findByPk(uuid);
+		if(user){
+			User.update({
+				verified: true
+			}, {where:{
+				uuid: uuid
+				}
+			})
+			console.log("Performer is now verified")
+		}
+		else{
+			throw new Error("Unable to find Peformer");
+		}
+		return res.render("auth/performer/verified.html", {
 			name: user.name
 		});
 	}
@@ -184,6 +196,14 @@ async function verify_process(req, res) {
 		return res.sendStatus(500).end();
 	}
 }
-
-
-
+async function verify_code(req,res){
+	console.log(req.body)
+	if(req.body.code == "estic"){
+		req.flash('success_msg', 'You are now verified.');
+		return res.redirect('../login')
+	}
+	else{
+		req.flash('error_msg', 'You are not a real performer');
+		return res.redirect('../../../')
+	}
+}
