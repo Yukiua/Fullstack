@@ -1,38 +1,92 @@
-{% extends "base (Customer).html" %}
-{% block title %}My Profile{% endblock %}
+{% extends "layouts/base.html" %}
+{% block PageCSS%}
+<style>
+  #bigSidebar {
+    background-color: lightgrey;
+  }
 
-{% block content %}
+  #sidebarDash {
+    font-weight: bold;
+    font-size: 20px;
+    color: purple;
+  }
 
-<h1 class="display-4">My Profile</h1>
-{{ cuserID }}
-{{ cuser }}
-<div>
-     <table class="table table-striped">
-         <thead>
-         <tr>
-             <th>User ID</th>
-             <th>Name</th>
-             <th>Contact No.</th>
-             <th>Email</th>
-             <th>Gender</th>
-             <th>Age</th>
-         </tr>
-     </thead>
-     <tbody>
-     {% for users in user %}
-     <tr>
-         {% for details in users %}
-         <td>{{ details }}</td>
-         {% endfor %}
-         <td><a href="/updateProfile/{{users[0]}}" class="btn btn-warning">Update</a></td>
-         <td>
-         <form action="{{url_for('deleteCustomer', id=users[0])}}" method="POST">
-         <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete your account?');">
-         </form>
-         </td>
-     </tr>
-     {% endfor %}
-     </tbody>
-     </table>
+  #sidebarLive {
+    font-weight: bold;
+    font-size: 20px;
+    color: purple;
+  }
+
+  #sidebarAna {
+    font-weight: bold;
+    font-size: 20px;
+    color: purple;
+  }
+
+  #sidebarSet {
+    font-weight: bold;
+    font-size: 20px;
+    color: purple;
+  }
+
+  #sidebarLog {
+    font-weight: bold;
+    font-size: 20px;
+    color: purple;
+  }
+
+  #container {
+    width: 500px;
+    height: 500px;
+    position: relative;
+  }
+
+  #videocontainer {
+    padding-top: 30px;
+    width: 500px;
+    height: 375px;
+    display: inline-block;
+  }
+
+  #sumanalytic {
+    margin-top: 30px;
+    width: 250px;
+    height: 325px;
+    background: grey;
+    display: inline-block;
+    position: absolute;
+    margin-left: 150px;
+  }
+
+  #videoElement {
+    width: 500px;
+    height: 375px;
+    background-color: #666;
+    border: 3px #333 solid;
+  }
+</style>
+{% endblock PageCSS%}
+{% block PageTitle %}ESTIC - User profile{% endblock PageTitle %}
+{% block PageContent %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar" id="bigSidebar">
+      <ul class="nav nav-sidebar">
+        <li>
+          <img src="../{{imgURL}}" width="150" height="150">
+
+        </li>
+      </ul>
+      <ul class="nav nav-sidebar">
+        <li id="sidebarDash" class="active"><a href="#">Profile <span class="sr-only">(current)</span></a></li>
+      </ul>
+      <ul class="nav nav-sidebar">
+        <li id="sidebarSet"><a href="settings">Settings</a></li>
+      </ul>
+      <ul class="nav nav-sidebar">
+        <li id="sidebarLog"><a href="logout">Log Out</a></li>
+      </ul>
+    </div>
+  </div>
 </div>
-{% endblock %}
+{% endblock PageContent %}
