@@ -10,7 +10,7 @@ import nunjucks from 'nunjucks';
 import SendGrid from '@sendgrid/mail';
 import JWT from 'jsonwebtoken';
 
-SendGrid.setApiKey('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');
+SendGrid.setApiKey('');
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
