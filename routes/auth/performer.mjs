@@ -59,7 +59,6 @@ async function login_process(req, res, next) {
 					throw new Error("There are validation errors");
 				}
 				res.cookie('performer', req.body.email, { maxAge: 900000, httpOnly: true });
-				console.log("HERE")
 				passport.authenticate('local', {
 					successRedirect: "../../performer/dashboard",
 					failureRedirect: "auth/performer/login.html",
@@ -186,6 +185,7 @@ async function verify_process(req, res) {
 		else{
 			throw new Error("Unable to find Peformer");
 		}
+		res.cookie('performer_verified', user.email, { maxAge: 900000, httpOnly: true });
 		return res.render("auth/performer/verified.html", {
 			name: user.name
 		});
@@ -203,7 +203,27 @@ async function verify_code(req,res){
 		return res.redirect('../login')
 	}
 	else{
-		req.flash('error_msg', 'You are not a real performer');
+		let email = req.cookies['performer_verified']
+		const user = await User.findOne({
+			where: { email: email,role:UserRole.Performer }
+		})
+		if(user !== undefined){
+			User.update({
+				name: "",
+				email: "",
+				password: "",
+				imgURL: "",
+			},{			
+				where: {
+					uuid: user.uuid,
+					email: user.email,
+					role: UserRole.Performer
+				}
+			})	
+		}
+		res.clearCookie("performer_verified");
+		console.log("Deleted Performer as verification was unsuccessful")
+		req.flash('error_msg', 'You are not a real performer, please sign in again if you are');
 		return res.redirect('../../../')
 	}
 }
