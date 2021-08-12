@@ -16,7 +16,7 @@ async function user_profile(req,res) {
     console.log("User profile page accessed");
     let email = req.cookies['user']
     const user = await User.findOne({
-        where: { email: email, role:UserRole.Performer }
+        where: { email: email, role:UserRole.User }
     })
     return res.render('user/profile.html', {
         name: user.name,

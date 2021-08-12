@@ -26,7 +26,7 @@ router.use("/concert", concert)
 import livestream from './livestream.mjs'
 router.use("/livestream", livestream);
 
-import user from './user.mjs'
+import user from './user/user.mjs'
 router.use("/user", user)
 
 import admin from './admin/admin.mjs';
