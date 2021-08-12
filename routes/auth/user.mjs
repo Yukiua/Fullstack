@@ -1,197 +1,216 @@
-  
 import route from 'express';
 const { Router } = route;
 const router = Router();
-import passport from 'passport';
-import crypt from 'bcryptjs';
-const { genSalt, hash } = crypt;
-import User from '../../models/User.js';
-import sendmail from '@sendgrid/mail';
-const { setApiKey, send } = sendmail;
-
-
-// JWT
-import jsonwebtoken from 'jsonwebtoken';
-const { verify, sign } = jsonwebtoken;
-
-// Flash Messegner
-import alertMessage from '../../utils/messenger.js';
-
-
-router.get("/login", async function(req, res){
-	return res.render('auth/user/login.html'); 
-});
-	
-router.get("/signup", async function(req, res){
-return res.render('auth/user/signup.html'); 
-});
-
-router.get('/verify/:userId/:token', (req, res, next) => {
-    // retreiever from user check, then set verified to true
-    User.findOne({
-        where: {
-            id: req.params.userId
-        }
-    }).then(user => {
-        if (user) {
-            let userEmail = user.email;
-            if (user.verified === true) {
-                alertMessage(res, 'info', 'User already verified', 'fas fa-exclamation-circle', true);
-                res.redirect('/login');
-            } else {
-                verify(req.params.token, 's3cr3Tk3y', (err, authData) => {
-                    if (err) {
-                        alertMessage(res, 'danger', 'Unauthorised Access', 'fas fa-exclamation-circle', true);
-                        res.redirect('/');
-                    } else {
-                        User.update({
-                            verified: 1
-                        }, {
-                            where: {
-                                id: user.id
-                            }
-                        }).then(user => {
-                            alertMessage(res, 'success', userEmail + ' verified. Please login', 'fas fa-sign-in-alt', true);
-                            res.redirect('/login');
-                        });
-                    }
-                });
-            }
-        } else {
-            alertMessage(res, 'danger', 'Unauthorised Access', 'fas fa-exclamation-circle', true);
-            res.redirect('/');
-        }
-    });
-});
-function sendEmail(userId, email, token) {
-    setApiKey(process.env.SENDGRID_API_KEY);
-
-    const message = {
-        to: email,
-        from: 'Do Not Reply <admin@video-jotter.sg>',
-        subject: 'Verify Video Jotter Account',
-        text: 'and easy to do anywhere, even with Node.js',
-        html: `Thank you registering with Video Jotter.<br><br>
-Please <a href="http://localhost:5000/user/verify/${userId}/${token}"><strong>verify</strong></a>
-your account.`
-    };
-    send(message);
-}
-// Login Form POST => /user/login
-router.post('/login', (req, res, next) => {
-    // Check if email verified
-    User.findOne({
-        where: {
-            email: req.body.email
-        }
-    }).then(user => {
-        if (user) {
-            if (user.verified !== true) {
-                alertMessage(res, 'danger', 'Email ' + user.email + ' has not been verified.', 'fas fa-exclamation-circle', true);
-                res.redirect('/');
-            }
-        }
-        authenticate('local', {
-            successRedirect: '/user/profile', // Route to /video/listVideos URL
-            failureRedirect: '/auth/user/login', // Route to /login URL
-            failureFlash: true
-            /*
-             * Setting the failureFlash option to true instructs Passport to flash an  error message
-             * using the message given by the strategy's verify callback, if any. When a failure occurs
-             * passport passes the message object as error
-             * */
-        })(req, res, next);
-    });
-});
-
-// User Register Route  => /user/register
-router.post('/register', (req, res) => {
-    let errors = [];
-
-    // Retrieves fields from register page from request body
-    let {
-        name,
-        email,
-        password,
-        password2
-    } = req.body;
-
-    // Checks if both passwords entered are the same
-    if (password !== password2) {
-        errors.push({
-            text: 'Passwords do not match'
-        });
-    }
-
-    // Checks that password length is more than 4
-    if (password.length < 4) {
-        errors.push({
-            text: 'Password must be at least 4 characters'
-        });
-    }
-
-    /*
-     If there is any error with password mismatch or size, then there must be
-     more than one error message in the errors array, hence its length must be more than one.
-     In that case, render register.handlebars with error messages.
-     */
-    if (errors.length > 0) {
-        res.render('/auth/user/signup.html', {
-            errors,
-            name,
-            email,
-            password,
-            password2
-        });
-    } else {
-        // If all is well, checks if user is already registered
-        User.findOne({
-            where: {
-                email
-            }
-        }).then(user => {
-            if (user) {
-                // If user is found, that means email given has already been registered
-                //req.flash('error_msg', user.name + ' already registered');
-                res.render('/auth/user/signup.html', {
-                    error: user.email + ' already registered',
-                    name,
-                    email,
-                    password,
-                    password2
-                });
-            } else {
-                // Generate JWT token
-                let token;
-                sign(email, 's3cr3Tk3y', (err, jwtoken) => {
-                    if (err) console.log('Error generating Token: ' + err);
-  
-                    token = jwtoken;
-                });
-
-                // Generate salt hashed password
-                genSalt(10, (err, salt) => {
-                    hash(password, salt, (err, hash) => {
-                        if (err) throw err;
-                        password = hash;
-                        // Create new user record
-                        User.create({
-                            name,
-                            email,
-                            password,
-                            verified: 0,
-                        }).then(user => {
-                            sendEmail(user.id, user.email, token);
-                            alertMessage(res, 'success',
-                                user.name + ' added. Please logon to ' + user.email + ' to verify account.', 'fas fa-sign-in-alt', true);
-                            res.redirect('/login');
-                        }).catch(err => console.log(err));
-                    })
-                });
-            }
-        });
-
-    }
-});
-
 export default router;
+import User, { UserRole } from '../../models/User.js';
+import flashMessage from '../../utils/messenger.js';
+import passport from 'passport';
+import Hash from 'hash.js';
+import nunjucks from 'nunjucks';
+import SendGrid from '@sendgrid/mail';
+import JWT from 'jsonwebtoken';
+
+SendGrid.setApiKey('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');
+
+const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//	Min 3 character, must start with alphabet
+const regexName = /^[a-zA-Z][a-zA-Z]{2,}$/;
+//	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
+const regexPwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+router.get("/login", login_page);
+router.post("/login", login_process);
+router.get("/signup", register_page);
+router.post("/signup", register_process);
+router.get("/verify/:token", verify_process);
+router.post("/verify/:token", verify_code);
+
+async function login_page(req, res) {
+	console.log("User Login page accessed");
+	return res.render('auth/user/login.html');
+}
+
+async function login_process(req, res, next) {
+	console.log("login contents received");
+	console.log(req.body);
+	let errors = [];
+	try {
+		const user = await User.findOne({
+			where: {
+				email: req.body.email,
+				password: Hash.sha256().update(req.body.password).digest("hex"),
+				role: UserRole.User
+			}
+		});
+		if (user) {
+			if(user.verified == 1){
+				if (!regexEmail.test(req.body.email)) {
+					errors = errors.concat({ text: "Invalid email address!" });
+				}
+				if (!regexPwd.test(req.body.password)) {
+					errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character!" });
+				}
+				if (user.email != req.body.email) {
+					errors = errors.concat({ text: "Email does not match" })
+				}
+				if (user.password != Hash.sha256().update(req.body.password).digest("hex")) {
+					errors = errors.concat({ text: "Password does not match" })
+				}
+				if (errors.length > 0) {
+					throw new Error("There are validation errors");
+				}
+				res.cookie('user', req.body.email, { maxAge: 900000, httpOnly: true });
+				console.log("HERE")
+				passport.authenticate('local', {
+					successRedirect: "../../user/profile",
+					failureRedirect: "auth/user/profile.html",
+					failureFlash: true
+				})(req, res, next);
+				return 
+			}
+			else{
+				errors = errors.concat({text:"user is not yet verified. Please check your email."})
+				throw new Error("user is not yet verified. Please check your email.")
+			}
+		}
+		else{
+			errors = errors.concat({text:"user not found. Have you signed in?"})
+			throw new Error("user not found. Have you signed in?")
+		}
+	}
+	catch (error) {
+		console.log(error)
+		return res.render('auth/user/login.html', { error: errors });
+	}
+}
+
+async function register_page(req, res) {
+	console.log("user signup page accessed");
+	return res.render('auth/user/signup.html');
+}
+
+async function register_process(req, res) {
+	console.log("signup contents received");
+	console.log(req.body);
+	let errors = [];
+	try {
+		if (!regexName.test(req.body.name)) {
+			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
+		}
+		if (!regexEmail.test(req.body.email)) {
+			errors = errors.concat({ text: "Invalid email address!" });
+		}
+		else {
+			const user = await User.findOne({ where: { email: req.body.email } });
+			if (user != null) {
+				errors = errors.concat({ text: "This email cannot be used!" });
+			}
+		}
+		if (!regexPwd.test(req.body.password)) {
+			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number and one symbol!" });
+		}
+		if (req.body.password !== req.body.password2) {
+			errors = errors.concat({ text: "Password do not match!" });
+		}
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.log(errors)
+		return res.render('auth/user/signup.html', { error:errors });
+	}
+	try {
+		const user = await User.create({
+			email: req.body.email,
+			password: Hash.sha256().update(req.body.password).digest("hex"),
+			name: req.body.name,
+			role: UserRole.User
+		});
+		await send_verification(user.uuid, user.email);
+		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
+		req.flash('success_msg', 'You have successfully signed in. Please log in');
+		return res.redirect("/auth/user/login");
+	}
+	catch (error) {
+		//	Else internal server error
+		console.error(`Failed to create a new user: ${req.body.email} `);
+		console.error(error);
+		req.flash('error_msg', 'Something wrong happed within the server.');
+		return res.render('auth/user/signup.html')
+	}
+}
+
+async function send_verification(uid, email) {
+	console.log("sending verification")
+	//	DO NOT PUT CREDENTIALS INSIDE PAYLOAD
+	//	WHY? -> JWT can be decoded easily
+	//		Whats the diff-> Signature don't match if mutated
+	const token = JWT.sign({
+		uuid: uid
+	}, 'the-key', {
+		expiresIn: '30000'
+	});
+
+	//	Send Grid stuff
+	return SendGrid.send({
+		to: email,
+		from: 'setokurushi@gmail.com',
+		subject: `Please verify your email before continuing`,
+		html: nunjucks.render(`${process.cwd()}/templates/layouts/user-email-verify.html`, {
+			token: token
+		})
+	});
+}
+
+async function verify_process(req, res) {
+	console.log("processing verification")
+	const token = req.params.token;
+	let uuid = null;
+	try {
+		const payload = JWT.verify(token, 'the-key');
+
+		uuid = payload.uuid;
+	}
+	catch (error) {
+		console.error(`The token is invalid`);
+		console.error(error);
+		return res.sendStatus(400).end();
+	}
+
+	try {
+		const user = await User.findByPk(uuid);
+		if(user){
+			User.update({
+				verified: true
+			}, {where:{
+				uuid: uuid
+				}
+			})
+			console.log("User is now verified")
+		}
+		else{
+			throw new Error("Unable to find user");
+		}
+		return res.render("auth/user/verified.html", {
+			name: user.name
+		});
+	}
+	catch (error) {
+		console.error(`Failed to locate ${uuid}`);
+		console.error(error);
+		return res.sendStatus(500).end();
+	}
+}
+
+async function verify_code(req,res){
+	console.log(req.body)
+	if(req.body.code == "estic"){
+		req.flash('success_msg', 'You are now verified.');
+		return res.redirect('../login')
+	}
+	else{
+		req.flash('error_msg', 'You are not a real user');
+		return res.redirect('../../../')
+	}
+} 
