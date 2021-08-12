@@ -25,7 +25,7 @@ router.post('/delete', ensureAuthenticated,delete_process);
 //to be updated|| FORMLESS POST????
 async function upload_page(req, res) {
     console.log("Upload page accessed");
-    let email = req.cookies['performer']
+    let email = req.cookies['performer'][0]
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
@@ -35,7 +35,7 @@ async function upload_page(req, res) {
     })
 };
 async function upload_process(req,res){
-    let email = req.cookies['performer']
+    let email = req.cookies['performer'][0]
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
@@ -76,7 +76,7 @@ async function upload_process(req,res){
 //to be updated|| FORMLESS POST?????
 async function delete_page(req, res) {
     console.log("Performer Delete accessed");
-    let email = req.cookies['performer']
+    let email = req.cookies['performer'][0]
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
@@ -88,7 +88,7 @@ async function delete_page(req, res) {
 
 async function delete_process(req, res) {
     console.log("Performer Delete processing");
-    let email = req.cookies['performer']
+    let email = req.cookies['performer'][0]
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
@@ -119,7 +119,7 @@ async function delete_process(req, res) {
 
 async function update_page(req, res) {
     console.log("Performer Update accessed");
-    let email = req.cookies['performer']
+    let email = req.cookies['performer'][0]
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
@@ -133,7 +133,7 @@ async function update_page(req, res) {
 async function update_process(req, res) {
     console.log("Update contents received");
     console.log(req.body);
-    let email = req.cookies['performer']
+    let email = req.cookies['performer'][0]
     const user = await User.findOne({
         where: { email: email }
     })
@@ -186,7 +186,7 @@ async function update_process(req, res) {
             }
         })
         flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-        res.cookie('performer', req.body.email, { maxAge: 900000, httpOnly: true });
+        res.cookie('performer', [req.body.email,UserRole.Performer], { maxAge: 900000, httpOnly: true });
         req.flash('success_msg', 'Performer Profile Updated');
         return res.redirect("../dashboard");
     }

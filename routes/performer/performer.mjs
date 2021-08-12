@@ -15,7 +15,7 @@ router.get("/createLivestream", ensureAuthenticated, createLive_page);
 
 async function dashboard_page(req, res) {
 	console.log("Performer Dashboard accessed");
-	let email = req.cookies['performer']
+	let email = req.cookies['performer'][0]
 	const user = await User.findOne({
 		where: { email: email, role:UserRole.Performer }
 	})
@@ -27,7 +27,7 @@ async function dashboard_page(req, res) {
 
 async function analytics_page(req, res) {
 	console.log("Performer Analytics accessed");
-	let email = req.cookies['performer']
+	let email = req.cookies['performer'][0]
 	const user = await User.findOne({
 		where: { email: email, role: UserRole.Performer }
 	})
@@ -46,7 +46,7 @@ async function analytics_page(req, res) {
 
 async function settings_page(req,res){
 	console.log("Performer Settings accessed");
-	let email = req.cookies['performer']
+	let email = req.cookies['performer'][0]
 	const user = await User.findOne({
 		where: { email: email,role:UserRole.Performer }
 	})

@@ -58,7 +58,7 @@ async function login_process(req, res, next) {
 				if (errors.length > 0) {
 					throw new Error("There are validation errors");
 				}
-				res.cookie('performer', req.body.email, { maxAge: 900000, httpOnly: true });
+				res.cookie('performer', [req.body.email,UserRole.Performer], { maxAge: 900000, httpOnly: true });
 				passport.authenticate('local', {
 					successRedirect: "../../performer/dashboard",
 					failureRedirect: "auth/performer/login.html",
@@ -185,7 +185,7 @@ async function verify_process(req, res) {
 		else{
 			throw new Error("Unable to find Peformer");
 		}
-		res.cookie('performer_verified', user.email, { maxAge: 900000, httpOnly: true });
+		res.cookie('performer_verified', [user.email, UserRole.Performer], { maxAge: 900000, httpOnly: true });
 		return res.render("auth/performer/verified.html", {
 			name: user.name
 		});
