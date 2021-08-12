@@ -9,7 +9,10 @@ export class UserRole {
 	static get User()  { return "user";  }
     static get Performer() { return "performer"; }
 }
-
+export class Gender {
+    static get Male() { return "M"; }
+    static get Female(){return "F"; }
+}
 const User = db.define('user', {
     uuid:{
         type: Sequelize.CHAR(36),
@@ -32,6 +35,21 @@ const User = db.define('user', {
         type: Sequelize.STRING,
         defaultValue: 'public/img/default.png',
         allowNull: false
+    },
+    age:{
+        type: Sequelize.NUMBER,
+        defaultValue: 0,
+        allowNull: false
+    },
+    gender:{
+        type: Sequelize.ENUM(Gender.Male, Gender.Female),
+        allowNull: false,
+        defaultValue: Gender.Male
+    },
+    contact:{
+        type: Sequelize.NUMBER,
+        allowNull: false,
+        defaultValue: 00000000
     },
     role:{
         type: Sequelize.ENUM(UserRole.Admin,UserRole.User,UserRole.Performer),
