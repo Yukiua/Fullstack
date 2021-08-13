@@ -3,18 +3,18 @@ const { Router } = route;
 const router = Router();
 export default router;
 import User, { UserRole } from '../../models/User.js';
-import { ensureAuthenticated } from '../../config/authenticate.js';
+import { ensureAuthenticatedCustomer } from '../../config/authenticate.js';
 import SettingsOptions from './settings.mjs'
 router.use("/settings", SettingsOptions)
 
-router.get("/profile", user_profile);
-router.get("/watchLivestream", watchLive_page);
-router.get("/logout", ensureAuthenticated, logout_page);
-router.get("/settings", ensureAuthenticated, settings_page);
+router.get("/profile", ensureAuthenticatedCustomer, user_profile);
+router.get("/watchLivestream", ensureAuthenticatedCustomer, watchLive_page);
+router.get("/logout", ensureAuthenticatedCustomer, logout_page);
+router.get("/settings", ensureAuthenticatedCustomer, settings_page);
 
 async function user_profile(req,res) {
     console.log("User profile page accessed");
-    let email = req.cookies['user']
+    let email = req.cookies['user'][0]
     const user = await User.findOne({
         where: { email: email, role:UserRole.User }
     })
@@ -26,7 +26,7 @@ async function user_profile(req,res) {
 
 async function settings_page(req,res){
 	console.log("User Settings accessed");
-	let email = req.cookies['user']
+	let email = req.cookies['user'][0]
 	const user = await User.findOne({
 		where: { email: email,role:UserRole.User }
 	})

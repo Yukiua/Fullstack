@@ -11,7 +11,7 @@ import SendGrid from '@sendgrid/mail';
 import JWT from 'jsonwebtoken';
 
 //dont commit 
-SendGrid.setApiKey(!!!!);
+SendGrid.setApiKey();
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
@@ -24,7 +24,6 @@ router.post("/login", login_process);
 router.get("/signup", register_page);
 router.post("/signup", register_process);
 router.get("/verify/:token", verify_process);
-router.post("/verify/:token", verify_code);
 
 async function login_page(req, res) {
 	console.log("User Login page accessed");
@@ -60,8 +59,8 @@ async function login_process(req, res, next) {
 				if (errors.length > 0) {
 					throw new Error("There are validation errors");
 				}
-				res.cookie('user', req.body.email, { maxAge: 900000, httpOnly: true });
-				console.log("HERE")
+				res.cookie('user',  [req.body.email, true], { maxAge: 900000, httpOnly: true });
+				console.log(req.cookies['user'][1])
 				passport.authenticate('local', {
 					successRedirect: "../../user/profile",
 					failureRedirect: "auth/user/profile.html",
@@ -207,15 +206,3 @@ async function verify_process(req, res) {
 		return res.sendStatus(500).end();
 	}
 }
-
-async function verify_code(req,res){
-	console.log(req.body)
-	if(req.body.code == "estic"){
-		req.flash('success_msg', 'You are now verified.');
-		return res.redirect('../login')
-	}
-	else{
-		req.flash('error_msg', 'You are not a real user');
-		return res.redirect('../../../')
-	}
-} 
