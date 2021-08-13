@@ -10,7 +10,8 @@ import nunjucks from 'nunjucks';
 import SendGrid from '@sendgrid/mail';
 import JWT from 'jsonwebtoken';
 
-SendGrid.setApiKey('');
+//dont commit 
+SendGrid.setApiKey(!!!!);
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
@@ -39,8 +40,6 @@ async function login_process(req, res, next) {
 			where: {
 				email: req.body.email,
 				password: Hash.sha256().update(req.body.password).digest("hex"),
-				gender: req.body.gender,
-				age: req.body.age,
 				role: UserRole.User
 			}
 		});
@@ -127,7 +126,11 @@ async function register_process(req, res) {
 			email: req.body.email,
 			password: Hash.sha256().update(req.body.password).digest("hex"),
 			name: req.body.name,
+			age: req.body.age,
+			gender: req.body.gender,
+			contact: req.body.contact,
 			role: UserRole.User
+
 		});
 		await send_verification(user.uuid, user.email);
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
@@ -157,7 +160,7 @@ async function send_verification(uid, email) {
 	//	Send Grid stuff
 	return SendGrid.send({
 		to: email,
-		from: 'setokurushi@gmail.com',
+		from: 'foo.joshua55@gmail.com',
 		subject: `Please verify your email before continuing`,
 		html: nunjucks.render(`${process.cwd()}/templates/layouts/user-email-verify.html`, {
 			token: token

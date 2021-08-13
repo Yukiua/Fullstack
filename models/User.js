@@ -21,7 +21,7 @@ const User = db.define('user', {
         defaultValue: Sequelize.UUIDV4
     },
     name: {
-    type: Sequelize.STRING
+        type: Sequelize.STRING
     },
     email: {
         type: Sequelize.STRING,
