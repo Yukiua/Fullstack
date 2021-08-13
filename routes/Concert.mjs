@@ -11,11 +11,13 @@ router.get("/createConcert", async function(req, res){
 	return res.render('concert/createConcert.html')
 })
 
+//user side concert page
 router.get("/concertList", async function(req, res){
 	console.log("concertLists accessed");
 	return res.render('concert/concertList.html')
 });
 
+//admin side concert page
 router.get("/concerts", async function(req, res){
 	console.log("Concerts accessed");
 	return res.render('concert/concerts.html')
