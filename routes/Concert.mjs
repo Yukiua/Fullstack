@@ -5,16 +5,28 @@ export default router;
 import Concert from '../models/Concert.js';
 import CookieParser    from 'cookie-parser';
 
-router.get("/concertList", cltable);
-router.get("/concerts", catable);
-router.get("/table-data", table_data);
-
-// router.get("/concerts", view_concerts)
+// Page renders
 router.get("/createConcert", async function(req, res){
 	console.log("createConcert accessed")
 	return res.render('concert/createConcert.html')
 })
 
+router.get("/concertList", async function(req, res){
+	console.log("concertLists accessed");
+	return res.render('concert/concertList.html')
+});
+
+router.get("/concerts", async function(req, res){
+	console.log("Concerts accessed");
+	return res.render('concert/concerts.html')
+});
+
+router.get("/concertDetails", async function(req, res){
+	console.log("concertDetails accessed");
+	return res.render('concert/concertDetails.html')
+});
+
+//Create Concert
 router.post("/createConcert", async function(req, res){
 	console.log("Concert created")
 	try{
@@ -35,16 +47,7 @@ router.post("/createConcert", async function(req, res){
 	return res.redirect('/concert/concerts')
 })
 
-router.get("/concertList", async function(req, res){
-	console.log("concertLists accessed");
-	return res.render('concert/concertList.html')
-});
-
-router.get("/concerts", async function(req, res){
-	console.log("Concerts accessed");
-	return res.render('concert/concerts.html')
-});
-
+//Update Concert
 router.get("/updateConcert/:id", async function(req, res){
     console.log("Update Concert accessed");
     const concert = await Concert.findOne({
@@ -89,12 +92,14 @@ router.post("/updateConcert/:id", async function(req, res){
     }
 })
 
-router.get("/concertDetails", async function(req, res){
-	console.log("concertDetails accessed");
-	return res.render('concert/concertDetails.html')
-});
+//Delete Concert
+
 
 // concerts table
+router.get("/concertList", cltable);
+router.get("/concerts", catable);
+router.get("/table-data", table_data);
+
 async function cltable(req, res){
     return res.render("concert/concertList.html");
 }
