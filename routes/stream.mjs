@@ -1,4 +1,5 @@
-import { Router }       from 'express';
+import route from 'express';
+const { Router } = route;
 import JWT              from 'jsonwebtoken';
 import Hash             from 'hash.js';
 // import { UserRole }     from '';
