@@ -39,6 +39,8 @@ async function login_process(req, res, next) {
 			where: {
 				email: req.body.email,
 				password: Hash.sha256().update(req.body.password).digest("hex"),
+				gender: req.body.gender,
+				age: req.body.age,
 				role: UserRole.User
 			}
 		});
