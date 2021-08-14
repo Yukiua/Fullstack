@@ -30,7 +30,7 @@ router.get("/concertDetails", async function(req, res){
 
 //Create Concert
 router.post("/createConcert", async function(req, res){
-	console.log("Concert created")
+	console.log("Trying to create concert")
 	try{
 		const concert = await Concert.create({
 			title: req.body.title,
@@ -41,11 +41,11 @@ router.post("/createConcert", async function(req, res){
 			tickets: req.body.tickets
 		});
 		res.cookie('concert', concert.id, {maxAge: 900000, httpOnly: true});
+        console.log("Concert created")
 	}
 	catch{
 		console.error("error in createConcert");
 	}
-	
 	return res.redirect('/concert/concerts')
 })
 
