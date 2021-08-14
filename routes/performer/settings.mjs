@@ -186,7 +186,7 @@ async function update_process(req, res) {
             }
         })
         flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-        res.cookie('performer', [req.body.email,UserRole.Performer], { maxAge: 900000, httpOnly: true });
+        res.cookie('performer', [req.body.email,"performer"], { maxAge: 900000, httpOnly: true });
         req.flash('success_msg', 'Performer Profile Updated');
         return res.redirect("../dashboard");
     }

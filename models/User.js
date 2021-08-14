@@ -21,7 +21,7 @@ const User = db.define('user', {
         defaultValue: Sequelize.UUIDV4
     },
     name: {
-    type: Sequelize.STRING
+        type: Sequelize.STRING
     },
     email: {
         type: Sequelize.STRING,
@@ -37,7 +37,7 @@ const User = db.define('user', {
         allowNull: false
     },
     age:{
-        type: Sequelize.NUMBER,
+        type: Sequelize.INTEGER,
         defaultValue: 0,
         allowNull: false
     },
@@ -47,9 +47,9 @@ const User = db.define('user', {
         defaultValue: Gender.Male
     },
     contact:{
-        type: Sequelize.NUMBER,
+        type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: 00000000
+        defaultValue: "00000000"
     },
     role:{
         type: Sequelize.ENUM(UserRole.Admin,UserRole.User,UserRole.Performer),

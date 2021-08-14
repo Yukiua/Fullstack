@@ -3,7 +3,7 @@ const { Router } = route
 const router = Router();
 export default router;
 import User, { UserRole } from '../../models/User.js';
-import { ensureAuthenticated } from '../../config/authenticate.js';
+import { ensureAuthenticatedCustomer } from '../../config/authenticate.js';
 import Hash from 'hash.js';
 import { flashMessage } from '../../utils/messenger.js';
 import fs from 'fs';
@@ -15,15 +15,15 @@ const regexName = /^[a-zA-Z][a-zA-Z]{2,}$/;
 //	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
 const regexPwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-router.get("/update", ensureAuthenticated, update_page);
-router.post("/update", ensureAuthenticated, update_process);
-router.get("/delete", ensureAuthenticated, delete_page);
-router.post('/delete', ensureAuthenticated, delete_process);
+router.get("/update", ensureAuthenticatedCustomer, update_page);
+router.post("/update", ensureAuthenticatedCustomer, update_process);
+router.get("/delete", ensureAuthenticatedCustomer, delete_page);
+router.post('/delete', ensureAuthenticatedCustomer, delete_process);
 
 //to be updated|| FORMLESS POST?????
 async function delete_page(req, res) {
     console.log("User Delete accessed");
-    let email = req.cookies['user']
+    let email = req.cookies['user'][0]
     const user = await User.findOne({
         where: { email: email,role:UserRole.User }
     })
@@ -35,7 +35,7 @@ async function delete_page(req, res) {
 
 async function delete_process(req, res) {
     console.log("User Delete processing");
-    let email = req.cookies['user']
+    let email = req.cookies['user'][0]
     const user = await User.findOne({
         where: { email: email,role:UserRole.User }
     })
@@ -66,7 +66,7 @@ async function delete_process(req, res) {
 
 async function update_page(req, res) {
     console.log("User Update accessed");
-    let email = req.cookies['user']
+    let email = req.cookies['user'][0]
     const user = await User.findOne({
         where: { email: email,role:UserRole.User }
     })
@@ -80,7 +80,7 @@ async function update_page(req, res) {
 async function update_process(req, res) {
     console.log("Update contents received");
     console.log(req.body);
-    let email = req.cookies['user']
+    let email = req.cookies['user'][0]
     const user = await User.findOne({
         where: { email: email }
     })
@@ -129,11 +129,11 @@ async function update_process(req, res) {
         }, {
             where: {
                 uuid: user.uuid,
-                role: UserRole.Performer
+                role: UserRole.User
             }
         })
         flashMessage(res, 'success', 'Successfully updated your account. Please login', 'fas fa-sign-in-alt', true);
-        res.cookie('user', req.body.email, { maxAge: 900000, httpOnly: true });
+        res.cookie('user',  [req.body.email,"user"], { maxAge: 900000, httpOnly: true });
         req.flash('success_msg', 'User Profile Updated');
         return res.redirect("../profile");
     }

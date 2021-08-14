@@ -58,7 +58,7 @@ async function login_process(req, res, next) {
 				if (errors.length > 0) {
 					throw new Error("There are validation errors");
 				}
-				res.cookie('performer', [req.body.email,UserRole.Performer], { maxAge: 900000, httpOnly: true });
+				res.cookie('performer', [req.body.email, "performer"], { maxAge: 900000, httpOnly: true });
 				passport.authenticate('local', {
 					successRedirect: "../../performer/dashboard",
 					failureRedirect: "auth/performer/login.html",

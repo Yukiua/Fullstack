@@ -10,7 +10,8 @@ import nunjucks from 'nunjucks';
 import SendGrid from '@sendgrid/mail';
 import JWT from 'jsonwebtoken';
 
-SendGrid.setApiKey('');
+//dont commit 
+SendGrid.setApiKey();
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
@@ -23,7 +24,6 @@ router.post("/login", login_process);
 router.get("/signup", register_page);
 router.post("/signup", register_process);
 router.get("/verify/:token", verify_process);
-router.post("/verify/:token", verify_code);
 
 async function login_page(req, res) {
 	console.log("User Login page accessed");
@@ -39,8 +39,6 @@ async function login_process(req, res, next) {
 			where: {
 				email: req.body.email,
 				password: Hash.sha256().update(req.body.password).digest("hex"),
-				gender: req.body.gender,
-				age: req.body.age,
 				role: UserRole.User
 			}
 		});
@@ -61,8 +59,8 @@ async function login_process(req, res, next) {
 				if (errors.length > 0) {
 					throw new Error("There are validation errors");
 				}
-				res.cookie('user', req.body.email, { maxAge: 900000, httpOnly: true });
-				console.log("HERE")
+				res.cookie('user',  [req.body.email, true], { maxAge: 900000, httpOnly: true });
+				console.log(req.cookies['user'][1])
 				passport.authenticate('local', {
 					successRedirect: "../../user/profile",
 					failureRedirect: "auth/user/profile.html",
@@ -127,7 +125,11 @@ async function register_process(req, res) {
 			email: req.body.email,
 			password: Hash.sha256().update(req.body.password).digest("hex"),
 			name: req.body.name,
+			age: req.body.age,
+			gender: req.body.gender,
+			contact: req.body.contact,
 			role: UserRole.User
+
 		});
 		await send_verification(user.uuid, user.email);
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
@@ -157,7 +159,7 @@ async function send_verification(uid, email) {
 	//	Send Grid stuff
 	return SendGrid.send({
 		to: email,
-		from: 'setokurushi@gmail.com',
+		from: 'foo.joshua55@gmail.com',
 		subject: `Please verify your email before continuing`,
 		html: nunjucks.render(`${process.cwd()}/templates/layouts/user-email-verify.html`, {
 			token: token
@@ -204,15 +206,3 @@ async function verify_process(req, res) {
 		return res.sendStatus(500).end();
 	}
 }
-
-async function verify_code(req,res){
-	console.log(req.body)
-	if(req.body.code == "estic"){
-		req.flash('success_msg', 'You are now verified.');
-		return res.redirect('../login')
-	}
-	else{
-		req.flash('error_msg', 'You are not a real user');
-		return res.redirect('../../../')
-	}
-} 
