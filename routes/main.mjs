@@ -48,3 +48,7 @@ router.get("/cart", async function(req, res){
 	return res.render('cart.html')
 });
 
+router.get("/payment", async function(req, res){
+	console.log("Payment accessed");
+	return res.render('payment.html')
+});
