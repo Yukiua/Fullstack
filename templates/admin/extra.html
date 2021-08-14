@@ -1,0 +1,70 @@
+{% extends "layouts/base.html" %}
+{% block title %}Retrieve Users{% endblock %}
+
+{% block content %}
+<h1 class="display-4">Retrieve Users</h1>
+<div>
+    {% if count == 0 %}
+    <p>There are no users.</p>
+    {% elif count == 1 %}
+    <p>There is 1 user.</p>
+    {% else %}
+    <p>There are {{ count }} users.</p>
+    {% endif %}
+</div>
+<div>
+     <table class="table table-striped">
+         <thead>
+         <tr>
+             <th>User ID</th>
+             <th>Name</th>
+             <th>Contact No.</th>
+             <th>Email</th>
+             <th>Gender</th>
+             <th>Age</th>
+             <th>Access Level</th>
+             <th>
+                 <a class="nav-link dropdown-toggle" href="navbardrop" data-toggle="dropdown">
+                     Sort By
+                 </a>
+                 <div class="dropdown-menu">
+                     <a class="dropdown-item" href="/sortID">ID</a>
+                     <a class="dropdown-item" href="/sortName">Name</a>
+                     <a class="dropdown-item" href="/sortContact">Contact</a>
+                     <a class="dropdown-item" href="/sortEmail">Email</a>
+                     <a class="dropdown-item" href="/sortGender">Gender</a>
+                     <a class="dropdown-item" href="/sortAge">Age</a>
+                     <a class="dropdown-item" href="/sortAccess">Access Level</a>
+                 </div>
+             </th>
+         </tr>
+     </thead>
+     <tbody>
+     {% for user in usersList %}
+     <tr>
+         <td>{{ user.get_userID() }}</td>
+         <td>{{ user.get_name() }}</td>
+         <td>{{ user.get_contact() }}</td>
+         <td>{{ user.get_email() }}</td>
+         <td>{{ user.get_gender() }}</td>
+         <td>{{ user.get_age() }}</td>
+         {% if user.get_access() == "C" %}
+         <td>Customer</td>
+         {% elif user.get_access() == "S" %}
+         <td>Staff</td>
+         {% elif user.get_access() == "A" %}
+         <td>Administrator</td>
+         {% endif %}
+         <td><a href="/updateUser/{{user.get_userID()}}" class="btn btn-primary">Update</a></td>
+         <td><a href="/updateUserPassword/{{user.get_userID()}}" class='btn btn-warning'>Reset Password</a></td>
+         <td>
+         <form action="{{url_for('deleteUser', id=user.get_userID())}}" method="POST">
+         <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?');">
+         </form>
+         </td>
+     </tr>
+     {% endfor %}
+     </tbody>
+     </table>
+</div>
+{% endblock %}
