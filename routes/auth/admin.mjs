@@ -10,8 +10,7 @@ import nunjucks from 'nunjucks';
 import SendGrid from '@sendgrid/mail';
 import JWT from 'jsonwebtoken';
 
-//dont commit 
-SendGrid.setApiKey();
+SendGrid.setApiKey('');
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
@@ -24,14 +23,29 @@ router.post("/login", login_process);
 router.get("/signup", register_page);
 router.post("/signup", register_process);
 router.get("/verify/:token", verify_process);
+router.post("/verify/:token", verify_code);
+router.get("/retrieveUsers", retrieveUsers);
 
 async function login_page(req, res) {
-	console.log("User Login page accessed");
-	return res.render('auth/user/login.html');
+	console.log("Admin Login page accessed");
+	return res.render('auth/admin/login.html');
+}
+
+async function retrieveUsers(req, res) {
+	console.log("retrieveUsers page accessed");
+	const user = await User.findAll({
+        where: { role:UserRole.User }
+    })
+	console.log("user ----> " , user);
+	console.log("user length ----> " , user.length);
+    return res.render('admin/retrieveUsers.html', {
+       	users: user,
+        total_users: user.length
+    })
 }
 
 async function login_process(req, res, next) {
-	console.log("login contents received");
+	console.log("admin contents received");
 	console.log(req.body);
 	let errors = [];
 	try {
@@ -39,7 +53,7 @@ async function login_process(req, res, next) {
 			where: {
 				email: req.body.email,
 				password: Hash.sha256().update(req.body.password).digest("hex"),
-				role: UserRole.User
+				role: UserRole.Admin
 			}
 		});
 		if (user) {
@@ -59,28 +73,30 @@ async function login_process(req, res, next) {
 				if (errors.length > 0) {
 					throw new Error("There are validation errors");
 				}
-				res.cookie('user',  [req.body.email, true], { maxAge: 900000, httpOnly: true });
-				//console.log(req.cookies['user'])
+				//res.cookie('user', req.body.email, { maxAge: 900000, httpOnly: true });
+				console.log("HERE")
+				res.cookie('user',  [req.body.email, false], { maxAge: 900000, httpOnly: true });
+				console.log("HERE ", res.cookie["user"]);
 				passport.authenticate('local', {
-					successRedirect: "../../user/profile",
-					failureRedirect: "auth/user/profile.html",
+					successRedirect: "../../admin/profile",
+					failureRedirect: "auth/admin/profile.html",
 					failureFlash: true
 				})(req, res, next);
 				return 
 			}
 			else{
-				errors = errors.concat({text:"user is not yet verified. Please check your email."})
-				throw new Error("user is not yet verified. Please check your email.")
+				errors = errors.concat({text:"Admin is not yet verified. Please check your email."})
+				throw new Error("Admin is not yet verified. Please check your email.")
 			}
 		}
 		else{
-			errors = errors.concat({text:"user not found. Have you signed in?"})
-			throw new Error("user not found. Have you signed in?")
+			errors = errors.concat({text:"Admin not found. Have you signed in?"})
+			throw new Error("Admin not found. Have you signed in?")
 		}
 	}
 	catch (error) {
 		console.log(error)
-		return res.render('auth/user/login.html', { error: errors });
+		return res.render('auth/admin/login.html', { error: errors });
 	}
 }
 
@@ -125,11 +141,7 @@ async function register_process(req, res) {
 			email: req.body.email,
 			password: Hash.sha256().update(req.body.password).digest("hex"),
 			name: req.body.name,
-			age: req.body.age,
-			gender: req.body.gender,
-			contact: req.body.contact,
 			role: UserRole.User
-
 		});
 		await send_verification(user.uuid, user.email);
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
@@ -159,7 +171,7 @@ async function send_verification(uid, email) {
 	//	Send Grid stuff
 	return SendGrid.send({
 		to: email,
-		from: 'foo.joshua55@gmail.com',
+		from: 'setokurushi@gmail.com',
 		subject: `Please verify your email before continuing`,
 		html: nunjucks.render(`${process.cwd()}/templates/layouts/user-email-verify.html`, {
 			token: token
@@ -191,10 +203,10 @@ async function verify_process(req, res) {
 				uuid: uuid
 				}
 			})
-			console.log("User is now verified")
+			console.log("Admin is now verified")
 		}
 		else{
-			throw new Error("Unable to find user");
+			throw new Error("Unable to find admin");
 		}
 		return res.render("auth/user/verified.html", {
 			name: user.name
@@ -206,3 +218,15 @@ async function verify_process(req, res) {
 		return res.sendStatus(500).end();
 	}
 }
+
+async function verify_code(req,res){
+	console.log(req.body)
+	if(req.body.code == "estic"){
+		req.flash('success_msg', 'You are now verified.');
+		return res.redirect('../login')
+	}
+	else{
+		req.flash('error_msg', 'You are not a real admin');
+		return res.redirect('../../../')
+	}
+} 

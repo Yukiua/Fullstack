@@ -1,70 +1,131 @@
-{% extends "base (Admin).html" %}
+{% extends "layouts/base.html" %}
 {% block title %}Retrieve Users{% endblock %}
-
 {% block content %}
-<h1 class="display-4">Retrieve Users</h1>
-<div>
-    {% if count == 0 %}
-    <p>There are no users.</p>
-    {% elif count == 1 %}
-    <p>There is 1 user.</p>
-    {% else %}
-    <p>There are {{ count }} users.</p>
-    {% endif %}
+
+{% block PageJS %}
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  {% endblock PageJS %}
+  {% block PageCSS %}
+  <style>
+    #bigSidebar {
+      background-color: lightgrey;
+    }
+
+    #sidebarDash {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
+
+    #sidebarLive {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
+
+    #sidebarAna {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
+
+    #sidebarSet {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
+
+    #sidebarLog {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
+  </style>
+  {% endblock PageCSS %}
+
+{% block PageTitle %}ESTIC - List of Users {% endblock PageTitle %}
+{% block PageContent %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar" id="bigSidebar">
+      <ul class="nav nav-sidebar">
+        <li>
+          <img src="../{{imgURL}}" width="150" height="150">
+
+        </li>
+      </ul>
+      <ul class="nav nav-sidebar">
+        <li id="sidebarDash" class="active"><a href="#">Profile <span class="sr-only">{{users}}</span></a></li>
+      </ul>
+      <ul class="nav nav-sidebar">
+        <li id="sidebarSet"><a href="listuser">List Of Users</a></li>
+      </ul>
+      <ul class="nav nav-sidebar">
+        <li id="sidebarLog"><a href="logout">Log Out</a></li>
+      </ul>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+      {% if count == 0 %}
+        <h1 class="page-header">No users</h1>
+      {% endif %}
+
+        
+      {% if count != 0 %}
+        <h6 class="page-header">total users {{count}}</h6>
+
+      <h6 class="page-header">Users List</h6>
+
+      <div class="col">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Age</th>
+                <th scope="col">Role</th>
+                <th scope="col">Verified</th>
+                <th scope="col">Update User</th>
+                <th>
+                    <a class="nav-link dropdown-toggle" href="navbardrop" data-toggle="dropdown">
+                        Sort By
+                    </a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="sortID">ID</a>
+                      <a class="dropdown-item" href="sortName">Name</a>
+                      <a class="dropdown-item" href="sortEmail">Email</a>
+                      <a class="dropdown-item" href="sortGender">Gender</a>
+                      <a class="dropdown-item" href="sortAge">Age</a>
+                      <a class="dropdown-item" href="sortRole">Role</a>
+                      <a class="dropdown-item" href="sortVerified">Verified</a>
+                    </div>
+                </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for userData in users %}
+
+            <tr>
+                <td>{{userData.sno}}</td>
+                <td>{{userData.name}}</td>
+                <td>{{userData.email}}</td>
+                <td>{{userData.gender}}</td>
+                <td>{{userData.age}}</td>
+                <td>{{userData.role}}</td>
+                <td>{{userData.verified}}</td>
+                <td><a href="/admin/updateuser/{{userData.id}}" class="btn btn-primary">Update</a></td>
+                <!-- <td><a href="/updateUserPassword/{{userData.id}}" class='btn btn-warning'>Reset Password</a></td> -->
+                <td><a href="/admin/deletebyadmin/{{userData.id}}" class='btn btn-warning'>Delete</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
 </div>
-<div>
-     <table class="table table-striped">
-         <thead>
-         <tr>
-             <th>User ID</th>
-             <th>Name</th>
-             <th>Contact No.</th>
-             <th>Email</th>
-             <th>Gender</th>
-             <th>Age</th>
-             <th>Access Level</th>
-             <th>
-                 <a class="nav-link dropdown-toggle" href="navbardrop" data-toggle="dropdown">
-                     Sort By
-                 </a>
-                 <div class="dropdown-menu">
-                     <a class="dropdown-item" href="/sortID">ID</a>
-                     <a class="dropdown-item" href="/sortName">Name</a>
-                     <a class="dropdown-item" href="/sortContact">Contact</a>
-                     <a class="dropdown-item" href="/sortEmail">Email</a>
-                     <a class="dropdown-item" href="/sortGender">Gender</a>
-                     <a class="dropdown-item" href="/sortAge">Age</a>
-                     <a class="dropdown-item" href="/sortAccess">Access Level</a>
-                 </div>
-             </th>
-         </tr>
-     </thead>
-     <tbody>
-     {% for user in usersList %}
-     <tr>
-         <td>{{ user.get_userID() }}</td>
-         <td>{{ user.get_name() }}</td>
-         <td>{{ user.get_contact() }}</td>
-         <td>{{ user.get_email() }}</td>
-         <td>{{ user.get_gender() }}</td>
-         <td>{{ user.get_age() }}</td>
-         {% if user.get_access() == "C" %}
-         <td>Customer</td>
-         {% elif user.get_access() == "S" %}
-         <td>Staff</td>
-         {% elif user.get_access() == "A" %}
-         <td>Administrator</td>
-         {% endif %}
-         <td><a href="/updateUser/{{user.get_userID()}}" class="btn btn-primary">Update</a></td>
-         <td><a href="/updateUserPassword/{{user.get_userID()}}" class='btn btn-warning'>Reset Password</a></td>
-         <td>
-         <form action="{{url_for('deleteUser', id=user.get_userID())}}" method="POST">
-         <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?');">
-         </form>
-         </td>
-     </tr>
-     {% endfor %}
-     </tbody>
-     </table>
-</div>
+{% endblock PageContent %}
 {% endblock %}
