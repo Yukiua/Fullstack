@@ -19,6 +19,7 @@
 </div>
 {% endif %}#}
 <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+<link rel="stylesheet" href="/public/css/font-awesome.min.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
 <h1 class="display-4">Concerts</h1>
 
@@ -61,7 +62,13 @@
     return `<i class = "fa fa-spinner fa-spin fa-fw fa-2x"></i>`
   }
   function format_actions(value, row, index){
-    return `<a href = "/concert/updateConcert/${row.id}">Update</a>`; //Change to icon later
+    return [`<a href = "/concert/updateConcert/${row.id}">`,
+      `<i class = "fa fa-wrench"></i>`,
+      `</a> `,
+      `<a href = "concerts/${row.id}">`,
+      `<i class = "fa fa-trash"></i>`,
+      `</a>`
+    ].join('')
   }
 </script>
 

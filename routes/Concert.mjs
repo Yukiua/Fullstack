@@ -23,13 +23,13 @@ router.get("/concerts", async function(req, res){
 	return res.render('concert/concerts.html')
 });
 
-router.get("/concertDetails", async function(req, res){
-	console.log("concertDetails accessed");
-	return res.render('concert/concertDetails.html')
-});
+// router.get("/concertDetails", async function(req, res){
+// 	console.log("concertDetails accessed");
+// 	return res.render('concert/concertDetails.html')
+// });
 
 //View Concert details
-router.get("/concertDetails", async function(req, res){
+router.get("/concertDetails/:id", async function(req, res){
     console.log("Concert Details page accessed");
     const concert = await Concert.findOne({
         where: {id: req.params.id}
