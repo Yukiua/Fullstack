@@ -10,14 +10,14 @@
     <div class="container">
         <div class="row">
           <div class="col-50">
-            <form method="POST" action="/concert/concerts">
+            <form method="POST" action="{{id}}">
               <div class="form-group">
                 <label for = "title">Title:</label><br>
                 <input type = "text" id = "title" name = "title" value="{{title}}" readonly><br>
               </div>
               <div class="form-group">
                 <label for = "details">Details:</label><br>
-                <input type = "text" id = "details" name = "details" value="{{details}}" readonly><br>
+                <input type="text" id = "details" name = "details" value="{{details}}" readonly><br>
               </div>
               <div class="form-group">
                 <label for = "genre">Genre:</label><br>
@@ -33,7 +33,17 @@
               </div>
               <div class="form-group">
                 <label for = "tickets">Tickets:</label><br>
-                <input type="text" id = "tickets" name = "tickets" value = "{{tickets}}" readonly>
+                {% if bticket == 1 %}
+                <select id = "bticket" name = "bticket" value = "{{bticket}}">
+                  <option value = "0">Normal Ticket</option>
+                  <option value = "1">Ticket Bundle</option>
+                </select>
+                {% endif %}
+                {% if bticket == 0 %}
+                <select id = "bticket" name = "bticket" value = "{{bticket}}">
+                  <option value = "0">Normal Ticket</option>
+                </select>
+                {% endif %}
               </div>
               <input type="submit" value="Submit" class="btn btn-primary"/>
             </form>
