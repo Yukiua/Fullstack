@@ -41,9 +41,15 @@ async function logout_page(req,res) {
 	req.logout();
 	req.flash('success_msg', 'You are logged out from user')
 	return res.redirect('/')
-}
+};
 
 async function watchLive_page(req,res) {
     console.log("Watch Livestream accessed");
-    return res.redirect('../livestream/watch')
+    const user = await User.findOne({
+        where: { email : email, role:UserRole.User }
+    })
+    return res.redirect('../livestream/watch.html', {
+        uuid: user.uuid,
+
+    })
 }

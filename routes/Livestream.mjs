@@ -8,42 +8,40 @@ import CookieParser from 'cookie-parser';
 
 router.get("/livestream", lstable);
 router.get("/livestream-data", ls_data);
+router.get("/create", create_ls_page)
+router.post("/create", create_ls_process)
 
-router.get("/create", async function(req,res){
+async function create_ls_page(req,res){
 	console.log("Create Livestream Page accessed");
 	return res.render('livestream/create.html')
-});
+}
+
+async function create_ls_process(req,res){
+    try{
+        const livestream = await Livestream.create({
+            performer_id : req.user.uuid,
+            title : req.body.title,
+            info : req.body.info,
+            dateLivestream : req.body.dateLivestream
+        });
+        res.cookie('livestream', livestream.streamId, {maxAge:99999, httpOnly:true});
+    }
+    catch{
+        console.error("error");
+    }
+    return res.redirect('/')
+}
+
 
 router.get('/list',(req,res) => {
     console.log("list livestream page accessed");
     return res.render('livestream/list.html')
 });
 
-// router.get("/watch", async function(req,res){
-//     console.log("Watch Livestream Page accessed");
-//     return res.render('livestream/watch.html')
-// })
-
-router.post('/create', async function(req, res){
-    try{
-        const livestream = await Livestream.create({
-            title : req.body.title,
-            info : req.body.info,
-            dateLivestream : req.body.dateLivestream
-        });
-        res.cookie('livestream', livestream.id, {maxAge:99999, httpOnly:true});
-    }
-    catch{
-        console.error("error");
-    }
-    return res.redirect('livestream/list')
-}) 
-       
-
 async function update_livestream(req,res){
     try{
         const livestream = await Livestream.findOne({
-            where: {"id": req.params["id"]}
+            where: {"streamId": req.params["streamId"]}
         });
     if (livestream){
         return res.render("updateLivestream", {livestream : livestream})

@@ -2,7 +2,13 @@ import Sequelize from 'sequelize';
 import db from '../config/DBConfig.js';
 
 const Livestream = db.define('livestream',{
-    id:{
+    uuid:{
+        type: Sequelize.CHAR(36),
+        allowNull: false,
+        primaryKey: true,
+        defaultValue: Sequelize.UUIDV4
+    },
+    streamId:{
         type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
