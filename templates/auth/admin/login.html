@@ -1,0 +1,28 @@
+{% extends "layouts/base.html" %}
+{% block PageTitle %}ESTIC - Admin Login{% endblock PageTitle %}
+{% block PageContent %}
+
+
+<h1 class="display-4">Admin Login</h1>
+<div class="row">
+	<div class="col-md-6 mx-auto">
+		<div class="card card-body">
+			<h3 class="text-center">Admin Account Login</h3>
+			<form action="login" method="post">
+				<div class="form-group">
+					<label for="email">Email</label>
+					<input type="email" name="email" class="form-control" value="{{email}}" required>
+				</div>
+				<div class="form-group">
+					<label for="password">Password</label>
+					<input type="password" name="password" class="form-control" value="{{password}}" required>
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<a href="login.html">Not an admin? Login as user</a>
+{% endblock PageContent %}

@@ -8,3 +8,6 @@ router.use("/performer", Performer)
 
 import user from './auth/user.mjs'
 router.use("/user", user)
+
+import admin from './auth/admin.mjs'
+router.use("/admin", admin)

@@ -1,0 +1,92 @@
+{% extends "layouts/base.html" %}
+{% block PageJS %}
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  {% endblock PageJS %}
+  {% block PageCSS %}
+  <style>
+    #bigSidebar {
+      background-color: lightgrey;
+    }
+
+    #sidebarDash {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
+
+    #sidebarLive {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
+
+    #sidebarAna {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
+
+    #sidebarSet {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
+
+    #sidebarLog {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
+  </style>
+  {% endblock PageCSS %}
+{% block PageTitle %}ESTIC - Manage FAQ{% endblock PageTitle %}
+{% block PageContent %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar" id="bigSidebar">
+      <ul class="nav nav-sidebar">
+        <li>
+          <img src="../{{imgURL}}" width="150" height="150">
+        </li>
+        <ul class="nav nav-sidebar">
+            <li id="sidebarLog"><a href="listuser">List of Users</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarLog"><a href="createuserbyadmin">Create User</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li id="sidebarLog"><a href="managefaq">Manage FAQ</a></li>
+          </ul>
+          <!-- <ul class="nav nav-sidebar">
+            <li id="sidebarSet"><a href="settings">Settings</a></li>
+          </ul> -->
+          <ul class="nav nav-sidebar">
+            <li id="sidebarLog"><a href="logout">Log Out</a></li>
+          </ul>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <h1 class="page-header">{{name}}</h1>
+      <div class="row placeholders">
+        <div class="col-xs-6 col-sm-3 placeholder">
+        </div>
+      </div>
+      <h2 class="sub-header">Manage FAQ</h2>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <tr>
+            <td><a href="faq/createfaq"><button type="button">Create FAQ</button></a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a href="faq/listfaq"><button type="button">List FAQ</button></a>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock PageContent %}

@@ -45,7 +45,7 @@
   </style>
   {% endblock PageCSS %}
 
-{% block PageTitle %}ESTIC - List of Users {% endblock PageTitle %}
+{% block PageTitle %}ESTIC - FAQ List {% endblock PageTitle %}
 {% block PageContent %}
 <div class="container-fluid">
   <div class="row">
@@ -66,72 +66,49 @@
         <li id="sidebarLog"><a href="createuserbyadmin">Create User</a></li>
       </ul>
       <ul class="nav nav-sidebar">
-        <li id="sidebarLog"><a href="managefaq">Manage FAQ</a></li>
-      </ul>
-      <ul class="nav nav-sidebar">
         <li id="sidebarLog"><a href="logout">Log Out</a></li>
       </ul>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
       {% if count == 0 %}
-        <h1 class="page-header">No users</h1>
+        <h1 class="page-header">No Faqs</h1>
       {% endif %}
 
         
       {% if count != 0 %}
-        <h6 class="page-header">total users {{count}}</h6>
+        <h6 class="page-header">Total Faqs {{count}}</h6>
 
-      <h6 class="page-header">Users List</h6>
+      <h6 class="page-header">FAQ List</h6>
 
       <div class="col">
         <table class="table table-striped">
           <thead>
             <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Age</th>
-                <th scope="col">Role</th>
-                <th scope="col">Verified</th>
-                <th scope="col">Update User</th>
-                <th>
-                    <a class="nav-link dropdown-toggle" href="navbardrop" data-toggle="dropdown">
-                        Sort By
-                    </a>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="sortID">ID</a>
-                      <a class="dropdown-item" href="sortName">Name</a>
-                      <a class="dropdown-item" href="sortEmail">Email</a>
-                      <a class="dropdown-item" href="sortGender">Gender</a>
-                      <a class="dropdown-item" href="sortAge">Age</a>
-                      <a class="dropdown-item" href="sortRole">Role</a>
-                      <a class="dropdown-item" href="sortVerified">Verified</a>
-                    </div>
-                </th>
+                <th scope="col">S.No</th>
+                <th scope="col">Questions</th>
+                <th scope="col">Answers</th>
             </tr>
           </thead>
           <tbody>
-            {% for userData in users %}
 
+            {% for faqData in faqs %}
             <tr>
-                <td>{{userData.sno}}</td>
-                <td>{{userData.name}}</td>
-                <td>{{userData.email}}</td>
-                <td>{{userData.gender}}</td>
-                <td>{{userData.age}}</td>
-                <td>{{userData.role}}</td>
-                <td>{{userData.verified}}</td>
-                <td><a href="/admin/updateuser/{{userData.id}}" class="btn btn-primary">Update</a></td>
+                <td>{{faqData.sno}}</td>
+                <td>{{faqData.question}}</td>
+                <td>{{faqData.answer}}</td>
+                <td><a href="/admin/faq/updatefaq/{{faqData.id}}" class="btn btn-primary">Update</a></td>
                 <!-- <td><a href="/updateUserPassword/{{userData.id}}" class='btn btn-warning'>Reset Password</a></td> -->
-                <td><a href="/admin/deletebyadmin/{{userData.id}}" class='btn btn-warning'>Delete</a></td>
+                <td><a href="/admin/faq/deletefaqbyadmin/{{faqData.id}}" class='btn btn-warning'>Delete</a></td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
         {% endif %}
       </div>
+      <a href="../managefaq">Go back to Manage Faq</a>
+    </div>
+  </div>
 </div>
 {% endblock PageContent %}
 {% endblock %}
