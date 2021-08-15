@@ -2,34 +2,31 @@
 {% block title %}ESTIC{% endblock %}
 
 {% block PageContent %}
-{#{% if 'concert_added' in session%}
-<div class="alert alert-success alert-dismissible">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  {{ session.pop('concert_added', None) }}, {{ session.pop('ticket_chose', None) }} was added.
-</div>
-{% endif %}#}
 <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
 <link rel="stylesheet" href="/public/css/font-awesome.min.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
-<h1 class="display-4">Concerts</h1>
+
+<h1 class="display-4">Cart</h1>
+
+<div id = "toolbar">
+  <button data-formatter="topayment">
+    <i class = "fa fa-money"></i> Pay
+  </button>
+</div>
 
 <table 
   data-toggle = "table"
-  data-height = "800"
-  data-search = "true"
-  data-show-columns = "true"
-  data-show-columns-toggle-all = "true"
-  data-pagination = "true"
+  data-height = "400"
+  data-toolbar = "#toolbar"
   data-loading-template = "loadingTemplate"
-  data-url = "/concert/concert-data">
+  data-url = "/concert/cart-data">
   <thead>
     <tr>
       <th data-field = "id" data-formatter="format_actions"></th>
       <th data-field = "title">Title</th>
-      <th data-field = "details">Details</th>
-      <th data-field = "genre">Genre</th>
-      <th data-field = "date">Date</th>
-      <th data-field = "time">Time</th>
+      <th data-field = "price">Price</th>
+      <th data-field = "ticket">Ticket</th>
+      <th data-field = "id" data-formatter="delete_action"></th>
     </tr>
   </thead>
 </table>
@@ -45,6 +42,14 @@
       `</a>`
     ].join('')
   }
-</script>
 
+  function delete_action(value, row, index){
+    return [`<i class = "fa fa-trash"></i>`].join('')
+  }
+
+  function topayment(){
+    return [`<a href = "/concert/payment"></a>`]
+  }
+
+</script>
 {% endblock PageContent %}

@@ -5,7 +5,6 @@ const Cart = db.define('cart',{
     id:{
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: 1
     },
     title:{
         type: Sequelize.STRING

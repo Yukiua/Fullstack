@@ -6,7 +6,7 @@ import Concert from '../models/Concert.js';
 import Cart from '../models/Cart.js';
 import CookieParser    from 'cookie-parser';
 
-// Page renders
+//Create Concert page
 router.get("/createConcert", async function(req, res){
 	console.log("createConcert accessed");
 	return res.render('concert/createConcert.html');
@@ -24,10 +24,17 @@ router.get("/concerts", async function(req, res){
 	return res.render('concert/concerts.html');
 });
 
-// router.get("/concertDetails", async function(req, res){
-// 	console.log("concertDetails accessed");
-// 	return res.render('concert/concertDetails.html')
-// });
+//Cart page
+router.get("/cart", async function(req, res){
+	console.log("Cart accessed");
+	return res.render('concert/cart.html');
+});
+
+//Payment Page
+router.get("/payment", async function(req, res){
+	console.log("Payment accessed");
+	return res.render('concert/payment.html')
+});
 
 //View Concert Details
 router.get("/concertDetails/:id", async function(req, res){
@@ -53,8 +60,9 @@ router.post("/concertDetails/:id", async function(req, res){
         const concert = await Concert.findOne({
             where: {id: req.params.id}
         });
-        if (concert.bticket == 1){
+        if (req.body.bticket == 1){
             const cart = await Cart.create({
+                id: concert.id,
                 title: concert.title,
                 price: 100,
                 ticket: "Bundle Ticket"
@@ -62,6 +70,7 @@ router.post("/concertDetails/:id", async function(req, res){
         }
         else{
             const cart = await Cart.create({
+                id: concert.id,
                 title: concert.title,
                 price: 20,
                 ticket: "Normal Ticket"
@@ -159,18 +168,24 @@ router.get("concerts/deleteconcert/:id", async function(req, res){
 
 // concerts table
 router.get("/concertList", cltable);
-router.get("/concerts", catable);
-router.get("/table-data", table_data);
+router.get("/concerts", ctable);
+router.get("cart", catable);
+router.get("/concert-data", concert_data);
+router.get("/cart-data", cart_data);
 
 async function cltable(req, res){
     return res.render("concert/concertList.html");
 }
 
-async function catable(req, res){
+async function ctable(req, res){
     return res.render("concert/concerts.html");
 }
 
-async function table_data(req, res){
+async function catable(req, res){
+    return res.render("concert/cart.html");
+}
+
+async function concert_data(req, res){
     const concerts = await Concert.findAll({raw: true});
     return res.json({
         "total": concerts.length,
@@ -178,3 +193,10 @@ async function table_data(req, res){
     });
 }
 
+async function cart_data(req, res){
+    const cart = await Cart.findAll({raw: true});
+    return res.json({
+        "total": cart.length,
+        "rows": cart
+    });
+}
