@@ -93,6 +93,10 @@ async function goLive_page (req,res){
 };
 
 async function livestreams_page(req,res){
+	let performerV = false;
+	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
 	console.log("livestreams options page accessed");
 	let email = req.cookies['performer'][0]
 	const user = await User.findOne({
@@ -100,6 +104,7 @@ async function livestreams_page(req,res){
 	})
 	return res.render('performer/livestreams.html', {
 		name: user.name,
-		imgURL: user.imgURL
+		imgURL: user.imgURL,
+		performer:performerV
 	})
 }

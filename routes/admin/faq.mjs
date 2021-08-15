@@ -15,7 +15,7 @@ import e from 'express';
 import { UploadTo, DeleteFile, DeleteFolder } from '../../utils/multer.mjs'
 import Faq from '../../models/Faq.js';
 
-SendGrid.setApiKey('');
+SendGrid.setApiKey('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');
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
