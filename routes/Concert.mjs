@@ -3,33 +3,34 @@ const { Router } = route;
 const router = Router();
 export default router;
 import Concert from '../models/Concert.js';
+import Cart from '../models/Cart.js';
 import CookieParser    from 'cookie-parser';
 
 // Page renders
 router.get("/createConcert", async function(req, res){
-	console.log("createConcert accessed")
-	return res.render('concert/createConcert.html')
+	console.log("createConcert accessed");
+	return res.render('concert/createConcert.html');
 })
 
 //user side concert page
 router.get("/concertList", async function(req, res){
 	console.log("concertLists accessed");
-	return res.render('concert/concertList.html')
+	return res.render('concert/concertList.html');
 });
 
 //admin side concert page
 router.get("/concerts", async function(req, res){
 	console.log("Concerts accessed");
-	return res.render('concert/concerts.html')
+	return res.render('concert/concerts.html');
 });
 
-router.get("/concertDetails", async function(req, res){
-	console.log("concertDetails accessed");
-	return res.render('concert/concertDetails.html')
-});
+// router.get("/concertDetails", async function(req, res){
+// 	console.log("concertDetails accessed");
+// 	return res.render('concert/concertDetails.html')
+// });
 
-//View Concert details
-router.get("/concertDetails", async function(req, res){
+//View Concert Details
+router.get("/concertDetails/:id", async function(req, res){
     console.log("Concert Details page accessed");
     const concert = await Concert.findOne({
         where: {id: req.params.id}
@@ -41,8 +42,38 @@ router.get("/concertDetails", async function(req, res){
     genre: concert.genre,
     date: concert.date,
     time: concert.time,
-    tickets: concert.tickets
+    bticket: concert.bticket
     })
+});
+
+//Add to Cart from Concert Details
+router.post("/concertDetails/:id", async function(req, res){
+    console.log("Trying to add to cart");
+    try{
+        const concert = await Concert.findOne({
+            where: {id: req.params.id}
+        });
+        if (concert.bticket == 1){
+            const cart = await Cart.create({
+                title: concert.title,
+                price: 100,
+                ticket: "Bundle Ticket"
+            });
+        }
+        else{
+            const cart = await Cart.create({
+                title: concert.title,
+                price: 20,
+                ticket: "Normal Ticket"
+            });
+        }
+    }
+    catch{
+        console.error("error in trying to add to cart");
+        return res.redirect('/concert/concertDetails')
+    }
+    console.log("Added to Cart")
+    return res.redirect('/concert/concertlist');
 });
 
 //Create Concert
@@ -55,15 +86,16 @@ router.post("/createConcert", async function(req, res){
 			genre: req.body.genre,
 			date: req.body.date,
             time: req.body.time,
-			tickets: req.body.tickets
+			bticket: req.body.bticket
 		});
 		res.cookie('concert', concert.id, {maxAge: 900000, httpOnly: true});
-        console.log("Concert created")
+        console.log("Concert created");
 	}
 	catch{
 		console.error("error in createConcert");
+        return res.redirect('/concert/createConcert');
 	}
-	return res.redirect('/concert/concerts')
+	return res.redirect('/concert/concerts');
 });
 
 //Update Concert
@@ -79,8 +111,8 @@ router.get("/updateConcert/:id", async function(req, res){
     genre: concert.genre,
     date: concert.date,
     time: concert.time,
-    tickets: concert.tickets
-    })
+    bticket: concert.bticket
+    });
 });
 
 router.post("/updateConcert/:id", async function(req, res){
@@ -98,7 +130,7 @@ router.post("/updateConcert/:id", async function(req, res){
                 genre : req.body.genre,
                 date : req.body.date,
                 time: req.body.time,
-                tickets : req.body.tickets
+                bticket : req.body.bticket
             },
             {
             where: {id: req.params.id}
@@ -112,7 +144,7 @@ router.post("/updateConcert/:id", async function(req, res){
 });
 
 //Delete Concert
-router.get("concerts/:id", async function(req, res){
+router.get("concerts/deleteconcert/:id", async function(req, res){
     console.log("Trying to delete concert")
     try{
         console.log("try to grab id");

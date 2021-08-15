@@ -4,7 +4,8 @@ import db from '../config/DBConfig.js';
 const Cart = db.define('cart',{
     id:{
         type: Sequelize.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: 1
     },
     title:{
         type: Sequelize.STRING

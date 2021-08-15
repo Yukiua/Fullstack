@@ -24,12 +24,17 @@ router.post('/delete', ensureAuthenticated,delete_process);
 
 //to be updated|| FORMLESS POST????
 async function upload_page(req, res) {
+    let performerV = false;
+    if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
     console.log("Upload page accessed");
     let email = req.cookies['performer'][0]
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
     return res.render('performer/settings/upload.html', {
+        performer:performerV,
         name: user.name,
         imgURL: user.imgURL
     })
@@ -75,12 +80,17 @@ async function upload_process(req,res){
 
 //to be updated|| FORMLESS POST?????
 async function delete_page(req, res) {
+    let performerV = false
+    if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
     console.log("Performer Delete accessed");
     let email = req.cookies['performer'][0]
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
     return res.render('performer/settings/delete.html', {
+        performer:performerV,
         name: user.name,
         imgURL: user.imgURL
     })
@@ -118,12 +128,17 @@ async function delete_process(req, res) {
 }
 
 async function update_page(req, res) {
+    let performerV = false;
+    if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
     console.log("Performer Update accessed");
     let email = req.cookies['performer'][0]
     const user = await User.findOne({
         where: { email: email,role:UserRole.Performer }
     })
     return res.render('performer/settings/update.html', {
+        performer:performerV,
         name: user.name,
         email: user.email,
         imgURL: user.imgURL
@@ -186,7 +201,7 @@ async function update_process(req, res) {
             }
         })
         flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-        res.cookie('performer', [req.body.email,"performer"], { maxAge: 900000, httpOnly: true });
+        res.cookie('performer', [req.body.email,true], { maxAge: 900000, httpOnly: true });
         req.flash('success_msg', 'Performer Profile Updated');
         return res.redirect("../dashboard");
     }

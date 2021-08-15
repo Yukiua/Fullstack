@@ -18,12 +18,17 @@ router.get("/golive", ensureAuthenticated, goLive_page)
 
 
 async function dashboard_page(req, res) {
+	let performerV = false;
+	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
 	console.log("Performer Dashboard accessed");
 	let email = req.cookies['performer'][0]
 	const user = await User.findOne({
 		where: { email: email, role:UserRole.Performer }
 	})
 	return res.render('performer/dashboard.html', {
+		performer:performerV,
 		name: user.name,
 		imgURL: user.imgURL,
 		uuid: user.uuid,
@@ -31,12 +36,17 @@ async function dashboard_page(req, res) {
 };
 
 async function analytics_page(req, res) {
+	let performerV = false
+	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
 	console.log("Performer Analytics accessed");
 	let email = req.cookies['performer'][0]
 	const user = await User.findOne({
 		where: { email: email, role: UserRole.Performer }
 	})
 	return res.render('performer/analytics.html', {
+		performer:performerV,
 		name: user.name,
 		imgURL: user.imgURL,
 		author: "The awesome programmer",
@@ -50,12 +60,17 @@ async function analytics_page(req, res) {
 };
 
 async function settings_page(req,res){
+	let performerV = false;
+	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
 	console.log("Performer Settings accessed");
 	let email = req.cookies['performer'][0]
 	const user = await User.findOne({
 		where: { email: email,role:UserRole.Performer }
 	})
 	return res.render('performer/settings.html', {
+		performer:performerV,
 		name: user.name,
 		imgURL: user.imgURL
 	})
