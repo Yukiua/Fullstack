@@ -54,15 +54,6 @@
 
                 </li>
             </ul>
-            {% if req.cookies['admin'] == admin %}
-                <ul class="nav nav-sidebar">
-                    <li id="sidebarLog"><a href="../listuser">List of Users</a></li>
-                </ul>
-                <ul class="nav nav-sidebar">
-                    <li id="sidebarSet"><a href="../settings">Settings</a></li>
-                </ul>
-            {%endif%}
-            {% if req.cookies['admin'] != admin %}
             <ul class="nav nav-sidebar">
                 <li id="sidebarDash"><a href="../dashboard">Dashboard</a></li>
             </ul>
@@ -75,7 +66,6 @@
             <ul class="nav nav-sidebar">
                 <li id="sidebarSet"><a href="../settings">Settings</a></li>
             </ul>
-            {%endif%}
             <ul class="nav nav-sidebar">
                 <li id="sidebarLog"><a href="../logout">Log Out</a></li>
             </ul>
@@ -88,12 +78,8 @@
             </div>
             <h2 class="sub-header">Update Performer Account</h2>
             <div class="table-responsive">
-                {% if req.cookies['admin'] != admin %}
                     <form action="update" method="post">
-                {%endif%}
-                {% if req.cookies['admin'] == admin %}
-                    <form action="updatebyadmin" method="post">
-                {%endif%}
+                
                     <table class="table table-bordered">
                         <tr>
                             <td>

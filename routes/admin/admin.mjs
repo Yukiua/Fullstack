@@ -312,7 +312,7 @@ async function update_by_admin(req, res) {
     catch (error) {
         console.log("There is errors with the update form body.")
 		console.log("errors " , { error: errors });
-        return res.render('user/settings/update.html', { error: errors });
+        return res.render('../profile', { error: errors });
     }
     try {
         if (req.body.name == '') {
@@ -370,7 +370,7 @@ async function update_user(req , res) {
 	res.cookie('admin',  "admin", { maxAge: 900000, httpOnly: true });
 	if(user) {
 		if(user.dataValues.role == UserRole.User) {
-			return res.render('user/settings/update.html', {
+			return res.render('admin/updateuserbyadmin.html', {
 			name: user.name,
         	email: user.email,
         	imgURL: user.imgURL,
@@ -378,7 +378,7 @@ async function update_user(req , res) {
 			});
 		} else {
 			console.log(" performer ", user.role);
-			return res.render('performer/settings/update.html');
+			return res.render('admin/updateperformerbyadmin.html');
 		}
 	} else {
 		console.log("no user for update");
