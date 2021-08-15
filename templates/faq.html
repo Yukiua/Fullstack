@@ -1,164 +1,114 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Displays site properly based on user's device -->
-    <!-- <link rel="icon" type="image/png" sizes="32x32" href="">
-    <title>Frontend Mentor | FAQ Accordion Card</title>
+{% extends "layouts/base.html" %}
 
-    <link rel="stylesheet" href="/style.css">
-</head>
-<body>
-    <main class="wrapper">
-        <div class="image__wrapper">
-            <div class="image__wrapper_inner">
+{% block PageJS %}
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  {% endblock PageJS %}
+  {% block PageCSS %}
+  <style>
+    #bigSidebar {
+      background-color: lightgrey;
+    }
 
-            </div>
-            <img class="box" src="" alt="box">
-        </div>
-    <div class="accordion__wrapper">
-        <h1 class="title__accordion">FAQ</h1>
-        <div class="questions__accordions">
-            <div class="question-answer__accordion">
-                <div class="question">
-                    <h3 class="title__question">
-                        How many team members can I invite?
-                    </h3>
-                    <img src="" >
-                </div>
-                <div class="answer">
-                    You can invite up to 2 additional users on the Free plan. There is no limit on 
-            team members for the Premium plan.
-                </div>
-            </div>
+    #sidebarDash {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
 
-            <div class="question-answer__accordion">
-                <div class="question">
-                    <h3 class="title__question">
-                        What is the maximum file upload size?
-                    </h3>
-                    <img src="" >
-                </div>
-                <div class="answer ">
-                    No more than 2GB. All files in your account must fit your allotted storage space.
-                </div>
-            </div>
+    #sidebarLive {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
 
-            <div class="question-answer__accordion">
-                <div class="question">
-                    <h3 class="title__question">
-                        How do I reset my password?
-                    </h3>
-                    <img src="" >
-                </div>
-                <div class="answer ">
-                    Click “Forgot password” from the login page or “Change password” from your profile page.
-            A reset link will be emailed to you.
-                </div>
-            </div>
+    #sidebarAna {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
 
-            <div class="question-answer__accordion">
-                <div class="question">
-                    <h3 class="title__question">
-                        Can I cancel my subscription?
-                    </h3>
-                    <img src="" >
-                </div>
-                <div class="answer ">
-                    Yes! Send us a message and we’ll process your request no questions asked.
-                </div>
-            </div>
-            
-            <div class="question-answer__accordion">
-                <div class="question">
-                    <h3 class="title__question">
-                        Do you provide additional support?
-                    </h3>
-                    <img src="" >
-                </div>
-                <div class="answer ">
-                    Chat and email support is available 24/7. Phone lines are open during normal business hours.
-                </div>
-            </div>
+    #sidebarSet {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
 
-        </div>
-    </div>
-    </main>
-    <div class="footer-attribute">
-        Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank" >Frontend Mentor</a>
-        Coded by <a href="#">CodingAlong</a>
-    </div>
-    
-    <script src="/script.js"></script>
-</body>
-</html>  -->
+    #sidebarLog {
+      font-weight: bold;
+      font-size: 20px;
+      color: purple;
+    }
+    .accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
+
+.active, .accordion:hover {
+  background-color: #ccc;
+}
+
+.accordion:after {
+  content: '\002B';
+  color: #777;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2212";
+}
+
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+  </style>
+  {% endblock PageCSS %}
+
+{% block PageTitle %}ESTIC - Admin Login{% endblock PageTitle %}
+{% block PageContent %}
 
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device=width, initial-scale=1.0"/>
-        <title>FAQ</title>
-        <link rel="stylesheet" href="./faq.css"/>
-    </head>
-    <body>
-        <section>
-            <h2 class="title">FAQs</h2>
-
-            <div class="faq">
-                <div class="question">
-                    <h3>Question 1</h3>
-
-                    <svg width="15" height="10" viewBox="0 0 42 25">
-                        <path d="M3 3L21 21L39 3" stroke="white" stroke-width="7" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="answer">
-                    <p>Answer 1</p>
-                </div>
-            </div>
-
-            <div class="faq">
-                <div class="question">
-                    <h3>Question 2</h3>
-
-                    <svg width="15" height="10" viewBox="0 0 42 25">
-                        <path d="M3 3L21 21L39 3" stroke="white" stroke-width="7" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="answer">
-                    <p>Answer 2</p>
-                </div>
-            </div>
-
-            <div class="faq">
-                <div class="question">
-                    <h3>Question 3</h3>
-
-                    <svg width="15" height="10" viewBox="0 0 42 25">
-                        <path d="M3 3L21 21L39 3" stroke="white" stroke-width="7" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="answer">
-                    <p>Answer 3</p>
-                </div>
-            </div>
-
-            <div class="faq">
-                <div class="question">
-                    <h3>Question 4</h3>
-
-                    <svg width="15" height="10" viewBox="0 0 42 25">
-                        <path d="M3 3L21 21L39 3" stroke="white" stroke-width="7" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="answer">
-                    <p>Answer 4</p>
-                </div>
-            </div>
-
-        </section>
-        <script src="./faq.js"></script>
-    </body>
-</html>
+<!-- <link rel="stylesheet" href="/public/css/faq.css"> -->
+{% if count == 0 %}
+        <h1 class="page-header">No Faqs</h1>
+{% endif %}
+{% if count != 0 %}
+<h3 class="display-4">FAQs </h3>
+{% for faqData in faqs %}
+<button class="accordion">{{faqData.question}}</button>
+<div class="panel">
+  <p>{{faqData.answer}}</p>
+</div>
+{% endfor %}
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            } 
+        });
+    }
+</script>
+{% endif %}
+{% endblock PageContent %}

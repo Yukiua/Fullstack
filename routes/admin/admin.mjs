@@ -13,6 +13,8 @@ import { ensureAuthenticatedAdmin } from '../../config/authenticate.js';
 import JWT from 'jsonwebtoken';
 import e from 'express';
 import { UploadTo, DeleteFile, DeleteFolder} from '../../utils/multer.mjs'
+import FaqOptions from './faq.mjs'
+router.use("/faq", FaqOptions)
 
 SendGrid.setApiKey('');
 
@@ -43,6 +45,13 @@ router.get('/sortRole', ensureAuthenticatedAdmin, sort_by_role);
 router.get('/sortVerified', ensureAuthenticatedAdmin, sort_by_verified);
 router.get('/createuserbyadmin', ensureAuthenticatedAdmin, create_user_by_admin);
 router.post('/createuserprocess', ensureAuthenticatedAdmin, create_user_process);
+router.get('/managefaq', ensureAuthenticatedAdmin, manage_faq_page);
+
+async function manage_faq_page(req , res) {
+	console.log("managefaq page by admin accessed");
+	res.cookie('admin',  "admin", { maxAge: 900000, httpOnly: true });
+	res.render("admin/manageFaq.html")
+}
 
 async function create_user_process(req, res) {
 	console.log("create_user_process by admin contents received");
@@ -94,7 +103,7 @@ async function create_user_process(req, res) {
 	catch (error) {
 		//	Else internal server error
 		console.error(`Failed to create a new user: ${req.body.email} `);
-		console.error(error);
+		console.error(error);role9
 		req.flash('error_msg', 'Something wrong happed within the server.');
 		return res.render('admin/createUserByAdmin.html')
 	}
