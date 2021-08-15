@@ -54,10 +54,13 @@
 
                 </li>
             </ul>
+                <ul class="nav nav-sidebar">
+                    <li id="sidebarLog"><a href="../listuser">List of Users</a></li>
+                </ul>
             <ul class="nav nav-sidebar">
                 <li id="sidebarLog"><a href="../logout">Log Out</a></li>
             </ul>
-            
+
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <h1 class="page-header">{{name}}</h1>
@@ -67,7 +70,9 @@
             </div>
             <h2 class="sub-header">Update User Account</h2>
             <div class="table-responsive">
-                    <form action="update" method="post">
+
+                    <form action="updatebyadmin" method="post">
+
                     <table class="table table-bordered">
                         <tr>
                             <td>
@@ -97,7 +102,6 @@
                     </table>
                     <input type="submit" value="Save" class="btn btn-success" />
                 </form>
-            </div><a href="../settings">Go back to settings</a>
         </div>
     </div>
 </div>

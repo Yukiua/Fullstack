@@ -10,7 +10,7 @@ import nunjucks from 'nunjucks';
 import SendGrid from '@sendgrid/mail';
 import JWT from 'jsonwebtoken';
 
-SendGrid.setApiKey('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');
+SendGrid.setApiKey('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');
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
@@ -153,7 +153,7 @@ async function send_verification(uid, email) {
 	//	Send Grid stuff
 	return SendGrid.send({
 		to: email,
-		from: 'foo.joshua55@gmail.com',
+		from: 'setokurushi@gmail.com',
 		subject: `Please verify your email before continuing`,
 		html: nunjucks.render(`${process.cwd()}/templates/layouts/performer-email-verify.html`, {
 			token: token
