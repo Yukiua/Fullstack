@@ -4,15 +4,14 @@
 
   <!-- Links -->
   <ul class="navbar-nav">
-    {% if req.cookies['performer'][1] == 'performer' %}
+    {% if performer %}
     <li class="nav-item">
       <a class="nav-link" href="/performer/dashboard">Dashboard</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/stream/:streamId">Watch Livestream</a>
     </li>
-    {%endif%}
-    {% if req.cookies['user'][1] %}
+    {% elif req.cookies['user'][1] %}
     <li class="nav-item">
       <a class="nav-link" href="/stream/:streamId">Watch Livestream</a>
     </li>
@@ -25,9 +24,9 @@
     <li class = "nav-item">
       <a class="nav-link" href="/user/profile">Account Profile</a>
     </li>
-    {%endif%}
+    {%else%}
   
-  
+<!--   
     
     <li class="nav-item">
       <a class="nav-link" href="/stream/{{uuid}}">Watch Livestream</a>
@@ -37,14 +36,20 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="/cart">Cart</a>
-    </li>
+    </li> -->
     <li class="nav-item">
       <a class="nav-link" href="/auth/performer/signup">Performer Sign Up</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/auth/performer/login">Performer Log In</a>
     </li>
-    <li class="nav-item dropdown">
+    <li class="nav-item">
+      <a class="nav-link" href="/auth/user/login">Login</a>
+    </li>
+        <li class="nav-item">
+      <a class="nav-link" href="/auth/user/signup">Sign Up</a>
+    </li>
+    <!-- <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
         Admin
       </a>
@@ -55,16 +60,7 @@
         <a class="dropdown-item" href="/payment">Payment page</a>
         <a class="dropdown-item" href="/admin_logout">Admin Logout</a>
       </div>
-    </li>
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-        Users
-      </a>
-      <div class="dropdown-menu">
-        <a class="dropdown-item" href="/auth/user/login">Login</a>
-        <a class="dropdown-item" href="/auth/user/signup">Sign Up</a>
-        <a class="dropdown-item" href="/user/profile">Account Profile</a>
-      </div>
-    </li>
+    </li> -->
+    {%endif%}
   </ul>
 </nav>
