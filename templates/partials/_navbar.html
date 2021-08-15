@@ -4,17 +4,16 @@
 
   <!-- Links -->
   <ul class="navbar-nav">
-    {% if req.cookies['performer'][1] == 'performer' %}
+    {% if performer %}
     <li class="nav-item">
       <a class="nav-link" href="/performer/dashboard">Dashboard</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/displayLivestream">Watch Livestream</a>
+      <a class="nav-link" href="/stream/{{streamId}}">Watch Livestream</a>
     </li>
-    {%endif%}
-    {% if req.cookies['user'][1] %}
+    {% elif req.cookies['user'][1] %}
     <li class="nav-item">
-      <a class="nav-link" href="/displayLivestream">Watch Livestream</a>
+      <a class="nav-link" href="/stream/{{streamId}}">Watch Livestream</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/concert/concertList">Concerts</a>
@@ -48,16 +47,19 @@
     <li class="nav-item">
       <a class="nav-link" href="/admin/faq/showfaqs">FAQs</a>
     </li>
+    {%else%}
+
   
+<!--   
     
-    <!-- <li class="nav-item">
-      <a class="nav-link" href="/displayLivestream">Watch Livestream</a>
+    <li class="nav-item">
+      <a class="nav-link" href="/stream/{{uuid}}">Watch Livestream</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/concert/concertList">Concerts</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="/cart">Cart</a>
+        <a class="nav-link" href="/concert/cart">Cart</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/auth/performer/signup">Performer Sign Up</a>
@@ -65,27 +67,24 @@
     <li class="nav-item">
       <a class="nav-link" href="/auth/performer/login">Performer Log In</a>
     </li>
-    <li class="nav-item dropdown">
+    <li class="nav-item">
+      <a class="nav-link" href="/auth/user/login">Login</a>
+    </li>
+        <li class="nav-item">
+      <a class="nav-link" href="/auth/user/signup">Sign Up</a>
+    </li>
+    <!-- <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
         Admin
       </a>
       <div class="dropdown-menu">
-        <a class="dropdown-item" href="/retrieveLivestream">Retrieve Livestreams</a>
+        <a class="dropdown-item" href="/livestream/list">Retrieve Livestreams</a>
         <a class="dropdown-item" href="/concert/concerts">Concerts</a>
         <a class="dropdown-item" href="/concert/createConcert">Create Concert</a>
-        <a class="dropdown-item" href="/payment">Payment page</a>
+        <a class="dropdown-item" href="/concert/payment">Payment page</a>
         <a class="dropdown-item" href="/admin_logout">Admin Logout</a>
       </div>
-    </li>
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-        Users
-      </a>
-      <div class="dropdown-menu">
-        <a class="dropdown-item" href="/auth/user/login">Login</a>
-        <a class="dropdown-item" href="/auth/user/signup">Sign Up</a>
-        <a class="dropdown-item" href="/user/profile">Account Profile</a>
-      </div>
-    </li>
-  </ul> -->
+    </li> -->
+    {%endif%}
+  </ul>
 </nav>

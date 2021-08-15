@@ -10,7 +10,7 @@ import nunjucks from 'nunjucks';
 import SendGrid from '@sendgrid/mail';
 import JWT from 'jsonwebtoken';
 
-SendGrid.setApiKey('');
+SendGrid.setApiKey('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');
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
@@ -58,7 +58,7 @@ async function login_process(req, res, next) {
 				if (errors.length > 0) {
 					throw new Error("There are validation errors");
 				}
-				res.cookie('performer', [req.body.email, "performer"], { maxAge: 900000, httpOnly: true });
+				res.cookie('performer', [req.body.email, true], { maxAge: 900000, httpOnly: true });
 				passport.authenticate('local', {
 					successRedirect: "../../performer/dashboard",
 					failureRedirect: "auth/performer/login.html",
@@ -72,7 +72,7 @@ async function login_process(req, res, next) {
 			}
 		}
 		else{
-			errors = errors.concat({text:"Performer not found. Have you signed in?"})
+			errors = errors.concat({text:"Performer not found. Have you signed up?"})
 			throw new Error("Performer not found. Have you signed in?")
 		}
 	}
@@ -121,11 +121,14 @@ async function register_process(req, res) {
 			email: req.body.email,
 			password: Hash.sha256().update(req.body.password).digest("hex"),
 			name: req.body.name,
+			age: req.body.age,
+			gender: req.body.gender,
+			contact: req.body.contact,
 			role: UserRole.Performer
 		});
 		await send_verification(user.uuid, user.email);
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-		req.flash('success_msg', 'You have successfully signed in. Please log in');
+		req.flash('success_msg', 'You have successfully signed in. Please verify before login');
 		return res.redirect("/auth/performer/login");
 	}
 	catch (error) {
@@ -150,7 +153,7 @@ async function send_verification(uid, email) {
 	//	Send Grid stuff
 	return SendGrid.send({
 		to: email,
-		from: 'setokurushi@gmail.com',
+		from: 'foo.joshua55@gmail.com',
 		subject: `Please verify your email before continuing`,
 		html: nunjucks.render(`${process.cwd()}/templates/layouts/performer-email-verify.html`, {
 			token: token

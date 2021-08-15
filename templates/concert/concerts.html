@@ -1,5 +1,5 @@
 {% extends "layouts/base.html" %}
-{% block title %}ESTIC - Concerts{% endblock %}
+{% block title %}ESTIC{% endblock %}
 
 {% block PageContent %}{#
 {% if 'concert_created' in session%}
@@ -19,6 +19,7 @@
 </div>
 {% endif %}#}
 <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+<link rel="stylesheet" href="/public/css/font-awesome.min.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
 <h1 class="display-4">Concerts</h1>
 
@@ -34,7 +35,7 @@
 
 <table 
   data-toggle = "table"
-  data-height = "500"
+  data-height = "800"
   data-search = "true"
   data-show-columns = "true"
   data-show-columns-toggle-all = "true"
@@ -42,16 +43,16 @@
   data-pagination = "true"
   data-maintain-meta-data = "true"
   data-loading-template = "loadingTemplate"
-  data-url = "/concert/table-data">
+  data-url = "/concert/concert-data">
   <thead>
     <tr>
+      <th data-field = "id" data-formatter="format_actions"></th>
       <th data-field = "id">ID</th>
       <th data-field = "title">Title</th>
       <th data-field = "details">Details</th>
       <th data-field = "genre">Genre</th>
       <th data-field = "date">Date</th>
       <th data-field = "time">Time</th>
-      <th data-field = "id" data-formatter="format_actions"></th>
     </tr>
   </thead>
 </table>
@@ -60,9 +61,23 @@
   function loadingTemplate(message){
     return `<i class = "fa fa-spinner fa-spin fa-fw fa-2x"></i>`
   }
+
   function format_actions(value, row, index){
-    return `<a href = "/concert/updateConcert/${row.id}">Update</a>`; //Change to icon later
+    return [`<a href = "/concert/updateConcert/${row.id}">`,
+      `<i class = "fa fa-wrench"></i>`,
+      `</a> `,
+      `<a href = "/concert/concerts/${row.id}">`,
+      `<i class = "fa fa-trash"></i>`,
+      `</a>`
+    ].join('')
   }
+
+  // function delete_concert(index){
+  //   const concert = await Concert.findOne({
+  //           where: {id: req.params.id}
+  //       });
+
+  // }
 </script>
 
 {% endblock PageContent %}

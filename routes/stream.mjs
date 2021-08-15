@@ -2,7 +2,8 @@ import route from 'express';
 const { Router } = route;
 import JWT              from 'jsonwebtoken';
 import Hash             from 'hash.js';
-// import { UserRole }     from '';
+import User, { UserRole } from '../models/User.js';
+import Livestream from '../models/Livestream.js';
 const router = Router();
 export default router;
 
@@ -31,18 +32,25 @@ async function ensure_auth(req, res, next) {
  */
 async function page_stream(req, res) {
 	//	Create a validation token to be used for socket connection
+	console.log('streaming page accessed');
+	let email = req.cookies['performer'][0]
 	const  token = JWT.sign({
-		role: (req.user.role == UserRole.Admin) ? "HOST" : "GUEST",
+		role: (req.user.role == UserRole.Performer) ? "HOST" : "GUEST",
 		userId:   req.user.uuid,
 		username: req.user.name,
 		streamId: req.params.streamId
 	}, "the-key", {});
-
-	return res.render("/livestream/watch", {
-		streamId: req.params.streamId,
-		userId:   req.user.uuid,
-		username: req.user.name,
-		role:     (req.user.role == UserRole.Admin) ? "HOST" : "GUEST",
+	const user = await User.findOne({
+		where: { email:email, role:UserRole.Performer }
+	})
+	const livestream = await Livestream.findOne({
+		where: { performer:email }
+	})
+	return res.render("livestream/watch.html", {
+		streamId: livestream.uuid,
+		userId:   user.uuid,
+		username: user.name,
+		role:     (user.role == UserRole.Performer) ? "HOST" : "GUEST",
 		token:    token
 	});
 }

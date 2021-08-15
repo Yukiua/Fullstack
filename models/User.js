@@ -60,6 +60,11 @@ const User = db.define('user', {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    },
+    ticketsowned:{
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
     }
 });
 

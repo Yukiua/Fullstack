@@ -2,11 +2,11 @@ import Sequelize from 'sequelize';
 import db from '../config/DBConfig.js';
 
 const Livestream = db.define('livestream',{
-    id:{
-        type: Sequelize.INTEGER,
+    uuid:{
+        type: Sequelize.CHAR(36),
         allowNull: false,
         primaryKey: true,
-        defaultValue : 1
+        defaultValue: Sequelize.UUIDV4
     },
     title:{
         type: Sequelize.STRING
@@ -16,6 +16,10 @@ const Livestream = db.define('livestream',{
     },
     dateLivestream:{
         type: Sequelize.DATE
+    },
+    performer: {
+        type: Sequelize.STRING,
+        allowNull: false
     }
 });
 

@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="/public/css/payment.css">
 
 <div class="row">
-  <div class="col-75"></div>
+  <div class="col-75">
     <div class="container">
         <div class="row">
           <div class="col-50">
@@ -29,6 +29,18 @@
                   <option value = "Dance">Dance</option>
                   <option value = "Electronic">Electronic</option>
                   <option value = "Hip Hop/Rap">Hip Hop/Rap</option>
+                  <option value = "Indie Pop">Indie Pop</option>
+                  <option value = "Industrial">Industrial</option>
+                  <option value = "Instrumental">Instrumental</option>
+                  <option value = "J-Pop">J-Pop</option>
+                  <option value = "Jazz">Jazz</option>
+                  <option value = "K-Pop">K-Pop</option>
+                  <option value = "Metal">Metal</option>
+                  <option value = "New Age">New Age</option>
+                  <option value = "Pop">Pop</option>
+                  <option value = "R&B">R&B</option>
+                  <option value = "Raggae">Raggae</option>
+                  <option value = "Rock">Rock</option>
                 </select><br>
               </div>
               <div class="form-group">
@@ -40,10 +52,10 @@
                 <input type="time" id = "time" name = "time" value = "{{time}}"><br>
               </div>
               <div class="form-group">
-                <label for = "tickets">Tickets:</label><br>
-                <select id = "tickets" name = "tickets" value = "{{tickets}}">
-                  <option value = "Normal Ticket">Normal Ticket</option>
-                  <option value = "Ticket Bundle">Ticket Bundle</option>
+                <label for = "bticket">Tickets:</label><br>
+                <select id = "bticket" name = "bticket" value = "{{bticket}}">
+                  <option value = "0">Normal Ticket</option>
+                  <option value = "1">Ticket Bundle</option>
                 </select>
               </div>
               <input type="submit" value="Submit" class="btn btn-primary"/>

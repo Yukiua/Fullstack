@@ -22,8 +22,8 @@ const Concert = db.define('concert',{
     time:{
         type: Sequelize.TIME
     },
-    tickets:{
-        type: Sequelize.STRING
+    bticket:{
+        type: Sequelize.BOOLEAN
     }
 });
 

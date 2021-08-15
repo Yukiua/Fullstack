@@ -4,46 +4,50 @@ const router = Router();
 export default router;
 import moment from 'moment';
 import Livestream from '../models/Livestream.js';
+import { ensureAuthenticated } from '../config/authenticate.js';
 import CookieParser from 'cookie-parser';
 
 router.get("/livestream", lstable);
 router.get("/livestream-data", ls_data);
+router.get("/create", ensureAuthenticated, create_ls_page)
+router.post("/create", ensureAuthenticated, create_ls_process)
+router.get("/golive", ensureAuthenticated, goLive_page)
 
-router.get("/create", async function(req,res){
+
+async function create_ls_page(req,res){
 	console.log("Create Livestream Page accessed");
 	return res.render('livestream/create.html')
-});
+}
+
+async function create_ls_process(req,res){
+    console.log("livestream contents received");
+    console.log(req.body);
+    try{
+        const livestream = await Livestream.create({
+            performer_id : req.user.uuid,
+            title : req.body.title,
+            info : req.body.info,
+            dateLivestream : req.body.dateLivestream,
+            performer: req.user.email
+        });
+        res.cookie('livestream', livestream.uuid, {maxAge:99999, httpOnly:true});
+    }
+    catch{
+        console.error("error");
+    }
+    return res.redirect('../performer/dashboard')
+}
+
 
 router.get('/list',(req,res) => {
     console.log("list livestream page accessed");
     return res.render('livestream/list.html')
 });
 
-// router.get("/watch", async function(req,res){
-//     console.log("Watch Livestream Page accessed");
-//     return res.render('livestream/watch.html')
-// })
-
-router.post('/create', async function(req, res){
-    try{
-        const livestream = await Livestream.create({
-            title : req.body.title,
-            info : req.body.info,
-            dateLivestream : req.body.dateLivestream
-        });
-        res.cookie('livestream', livestream.id, {maxAge:99999, httpOnly:true});
-    }
-    catch{
-        console.error("error");
-    }
-    return res.redirect('livestream/list')
-}) 
-       
-
 async function update_livestream(req,res){
     try{
         const livestream = await Livestream.findOne({
-            where: {"id": req.params["id"]}
+            where: {"streamId": req.params["streamId"]}
         });
     if (livestream){
         return res.render("updateLivestream", {livestream : livestream})
@@ -66,10 +70,13 @@ async function ls_data(req, res){
     })
 }
 
-// await user.destroy();
-
-// const deleted = await ModelLivestream.destroy({
-//     where: {
-        
-//     }
-// });
+async function goLive_page (req,res){
+	console.log("go live page accessed");
+    let email = req.cookies['performer'][0]
+    const livestream = await Livestream.findOne({
+        where: { performer: email}
+    })
+	return res.render('livestream/golive.html', {
+        streamId: livestream.uuid,
+    })
+}

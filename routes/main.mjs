@@ -38,17 +38,11 @@ router.use("/stream", stream)
 // ---------------- 
 //	TODO:	Common URL paths here
 router.get("/",      async function(req, res) {
+	let performerV = false
+	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
 	console.log(req.cookies)
 	console.log("Home page accessed");
-	return res.render('index.html',)
-});
-
-router.get("/cart", async function(req, res){
-	console.log("Cart accessed");
-	return res.render('cart.html')
-});
-
-router.get("/payment", async function(req, res){
-	console.log("Payment accessed");
-	return res.render('payment.html')
+	return res.render('index.html',{performer:performerV})
 });
