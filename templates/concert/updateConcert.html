@@ -33,7 +33,10 @@
               </div>
               <div class="form-group">
                 <label for = "tickets">Tickets:</label><br>
-                <input type="text" id = "tickets" name = "tickets" value = "{{tickets}}" readonly>
+                <select id = "tickets" name = "tickets" value = "{{tickets}}" multiple>
+                  <option value = "Normal Ticket">Normal Ticket</option>
+                  <option value = "Ticket Bundle">Ticket Bundle</option>
+                </select>
               </div>
               <input type="submit" value="Submit" class="btn btn-primary"/>
             </form>

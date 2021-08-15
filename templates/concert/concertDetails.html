@@ -10,7 +10,7 @@
     <div class="container">
         <div class="row">
           <div class="col-50">
-            <form method="POST" action="">
+            <form method="POST" action="cart">
               <div class="form-group">
                 <label for = "title">Title:</label><br>
                 <input type = "text" id = "title" name = "title" value="{{title}}" readonly><br>
@@ -33,9 +33,7 @@
               </div>
               <div class="form-group">
                 <label for = "tickets">Tickets:</label><br>
-                <select id = "tickets" name = "tickets" value = "{{tickets}}">
-                  <option value = "Normal Ticket">Normal Ticket</option>
-                </select>
+                <input type="text" id = "tickets" name = "tickets" value = "{{tickets}}" readonly>
               </div>
               <input type="submit" value="Submit" class="btn btn-primary"/>
             </form>
