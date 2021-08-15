@@ -61,14 +61,20 @@
   function loadingTemplate(message){
     return `<i class = "fa fa-spinner fa-spin fa-fw fa-2x"></i>`
   }
+
   function format_actions(value, row, index){
     return [`<a href = "/concert/updateConcert/${row.id}">`,
       `<i class = "fa fa-wrench"></i>`,
       `</a> `,
-      `<a href = "concerts/${row.id}">`,
-      `<i class = "fa fa-trash"></i>`,
-      `</a>`
+      `<i class = "fa fa-trash" onclick = "delete_concert(${row.id})></i>`
     ].join('')
+  }
+
+  function delete_concert(index){
+    const concert = await Concert.findOne({
+            where: {id: req.params.id}
+        });
+
   }
 </script>
 

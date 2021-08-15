@@ -3,6 +3,7 @@ const { Router } = route;
 const router = Router();
 export default router;
 import Concert from '../models/Concert.js';
+import Cart from '../models/Cart.js';
 import CookieParser    from 'cookie-parser';
 
 // Page renders
@@ -28,7 +29,7 @@ router.get("/concerts", async function(req, res){
 // 	return res.render('concert/concertDetails.html')
 // });
 
-//View Concert details
+//View Concert Details
 router.get("/concertDetails/:id", async function(req, res){
     console.log("Concert Details page accessed");
     const concert = await Concert.findOne({
@@ -44,6 +45,22 @@ router.get("/concertDetails/:id", async function(req, res){
     tickets: concert.tickets
     })
 });
+
+//Add to Cart from Concert Details
+router.post("/concertDetails/:id", async function(req, res){
+    console.log("Trying to add to cart");
+    try{
+        const concert = await Concert.findOne({
+            where: {id: req.params.id}
+        });
+        const cart = await Cart.create({
+            title: concert.title
+        });
+    }
+    catch{
+        console.error("error in trying to add to cart");
+    }
+})
 
 //Create Concert
 router.post("/createConcert", async function(req, res){
@@ -112,7 +129,7 @@ router.post("/updateConcert/:id", async function(req, res){
 });
 
 //Delete Concert
-router.get("concerts/:id", async function(req, res){
+router.get("concerts/deleteconcert/:id", async function(req, res){
     console.log("Trying to delete concert")
     try{
         console.log("try to grab id");
