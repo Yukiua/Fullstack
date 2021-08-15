@@ -28,9 +28,26 @@ router.get("/concertDetails", async function(req, res){
 	return res.render('concert/concertDetails.html')
 });
 
+//View Concert details
+router.get("/concertDetails", async function(req, res){
+    console.log("Concert Details page accessed");
+    const concert = await Concert.findOne({
+        where: {id: req.params.id}
+    });
+    return res.render('concert/concertDetails.html',
+    { id: req.params.id,
+    title: concert.title,
+    details: concert.details,
+    genre: concert.genre,
+    date: concert.date,
+    time: concert.time,
+    tickets: concert.tickets
+    })
+});
+
 //Create Concert
 router.post("/createConcert", async function(req, res){
-	console.log("Concert created")
+	console.log("Trying to create concert");
 	try{
 		const concert = await Concert.create({
 			title: req.body.title,
@@ -41,13 +58,13 @@ router.post("/createConcert", async function(req, res){
 			tickets: req.body.tickets
 		});
 		res.cookie('concert', concert.id, {maxAge: 900000, httpOnly: true});
+        console.log("Concert created")
 	}
 	catch{
 		console.error("error in createConcert");
 	}
-	
 	return res.redirect('/concert/concerts')
-})
+});
 
 //Update Concert
 router.get("/updateConcert/:id", async function(req, res){
@@ -64,7 +81,7 @@ router.get("/updateConcert/:id", async function(req, res){
     time: concert.time,
     tickets: concert.tickets
     })
-})
+});
 
 router.post("/updateConcert/:id", async function(req, res){
     console.log("Updating");
@@ -92,10 +109,21 @@ router.post("/updateConcert/:id", async function(req, res){
     catch{
         console.error("error in updateConcert");
     }
-})
+});
 
 //Delete Concert
-
+router.get("concerts/:id", async function(req, res){
+    console.log("Trying to delete concert")
+    try{
+        console.log("try to grab id");
+        const concert = await Concert.findOne({
+            where: {id: req.params.id}
+        });
+    }
+    catch{
+        console.error("error in deleting concert");
+    }
+});
 
 // concerts table
 router.get("/concertList", cltable);
@@ -115,6 +143,6 @@ async function table_data(req, res){
     return res.json({
         "total": concerts.length,
         "rows": concerts
-    })
+    });
 }
 
