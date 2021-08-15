@@ -5,6 +5,7 @@ export default router;
 import User, { UserRole } from '../../models/User.js';
 import { ensureAuthenticated } from '../../config/authenticate.js';
 import SettingsOptions from './settings.mjs'
+import Livestream from '../../models/Livestream.js';
 router.use("/settings", SettingsOptions)
 
 router.get("/dashboard", ensureAuthenticated, dashboard_page);
@@ -12,6 +13,9 @@ router.get("/analytics", ensureAuthenticated, analytics_page);
 router.get("/settings",ensureAuthenticated, settings_page);
 router.get("/logout", ensureAuthenticated,logout_page);
 router.get("/createLivestream", ensureAuthenticated, createLive_page);
+router.get("/livestreams", ensureAuthenticated, livestreams_page)
+router.get("/golive", ensureAuthenticated, goLive_page)
+
 
 async function dashboard_page(req, res) {
 	let performerV = false;
@@ -26,7 +30,8 @@ async function dashboard_page(req, res) {
 	return res.render('performer/dashboard.html', {
 		performer:performerV,
 		name: user.name,
-		imgURL: user.imgURL
+		imgURL: user.imgURL,
+		uuid: user.uuid,
 	})
 };
 
@@ -82,3 +87,19 @@ async function createLive_page(req, res) {
 	console.log("Create Livestream accessed, passing over");
 	return res.redirect('../livestream/create')
 };
+async function goLive_page (req,res){
+	console.log("go live page accessed");
+	return res.redirect('../livestream/golive')
+};
+
+async function livestreams_page(req,res){
+	console.log("livestreams options page accessed");
+	let email = req.cookies['performer'][0]
+	const user = await User.findOne({
+		where: { email: email, role:UserRole.Performer }
+	})
+	return res.render('performer/livestreams.html', {
+		name: user.name,
+		imgURL: user.imgURL
+	})
+}
