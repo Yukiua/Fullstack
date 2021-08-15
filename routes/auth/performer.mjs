@@ -72,7 +72,7 @@ async function login_process(req, res, next) {
 			}
 		}
 		else{
-			errors = errors.concat({text:"Performer not found. Have you signed in?"})
+			errors = errors.concat({text:"Performer not found. Have you signed up?"})
 			throw new Error("Performer not found. Have you signed in?")
 		}
 	}

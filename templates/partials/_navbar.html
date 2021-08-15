@@ -9,11 +9,11 @@
       <a class="nav-link" href="/performer/dashboard">Dashboard</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/stream/:streamId">Watch Livestream</a>
+      <a class="nav-link" href="/stream/{{streamId}}">Watch Livestream</a>
     </li>
     {% elif req.cookies['user'][1] %}
     <li class="nav-item">
-      <a class="nav-link" href="/stream/:streamId">Watch Livestream</a>
+      <a class="nav-link" href="/stream/{{streamId}}">Watch Livestream</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/concert/concertList">Concerts</a>
