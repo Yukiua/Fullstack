@@ -8,12 +8,6 @@ const Livestream = db.define('livestream',{
         primaryKey: true,
         defaultValue: Sequelize.UUIDV4
     },
-    streamId:{
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        defaultValue : 1
-    },
     title:{
         type: Sequelize.STRING
     },
@@ -22,6 +16,10 @@ const Livestream = db.define('livestream',{
     },
     dateLivestream:{
         type: Sequelize.DATE
+    },
+    performer: {
+        type: Sequelize.STRING,
+        allowNull: false
     }
 });
 
