@@ -40,11 +40,11 @@ router.use("/stream", stream)
 router.get("/",      async function(req, res) {
 	let performerV = false
 	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
-		performer = true;
+		performerV = true;
 	}
 	console.log(req.cookies)
 	console.log("Home page accessed");
-	return res.render('index.html',{performer:performer})
+	return res.render('index.html',{performer:performerV})
 });
 
 router.get("/cart", async function(req, res){
