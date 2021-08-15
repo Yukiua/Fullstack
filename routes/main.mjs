@@ -38,7 +38,11 @@ router.use("/stream", stream)
 // ---------------- 
 //	TODO:	Common URL paths here
 router.get("/",      async function(req, res) {
+	let performerV = false
+	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
 	console.log(req.cookies)
 	console.log("Home page accessed");
-	return res.render('index.html',)
+	return res.render('index.html',{performer:performerV})
 });
