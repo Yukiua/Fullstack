@@ -58,7 +58,7 @@ async function login_process(req, res, next) {
 				if (errors.length > 0) {
 					throw new Error("There are validation errors");
 				}
-				res.cookie('performer', [req.body.email, "performer"], { maxAge: 900000, httpOnly: true });
+				res.cookie('performer', [req.body.email, true], { maxAge: 900000, httpOnly: true });
 				passport.authenticate('local', {
 					successRedirect: "../../performer/dashboard",
 					failureRedirect: "auth/performer/login.html",
@@ -128,7 +128,7 @@ async function register_process(req, res) {
 		});
 		await send_verification(user.uuid, user.email);
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-		req.flash('success_msg', 'You have successfully signed in. Please log in');
+		req.flash('success_msg', 'You have successfully signed in. Please verify before login');
 		return res.redirect("/auth/performer/login");
 	}
 	catch (error) {
