@@ -36,7 +36,13 @@ router.get("/cart", async function(req, res){
 //Payment Page
 router.get("/payment", async function(req, res){
 	console.log("Payment accessed");
-	return res.render('concert/payment.html')
+    //const user = await User.findOne({where: userloggedin})
+	return res.render('concert/payment.html'
+    // ,
+    // { name: User.name,
+    // email: User.email
+    // }
+    )
 });
 
 //Add to Ticket model
@@ -51,8 +57,9 @@ router.post("/payment", async function(req, res){
     }
     catch{
         console.error("Error in creating Ticket")
+        return res.redirect('/concert/payment')
     }
-    return res.redirect('/user/settings/tickets')
+    return res.redirect('/user/tickets')
 });
 
 //View Concert Details
