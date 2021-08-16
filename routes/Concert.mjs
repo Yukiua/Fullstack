@@ -98,7 +98,7 @@ router.post("/concertDetails/:id", async function(req, res){
     }
     catch{
         console.error("error in trying to add to cart");
-        return res.redirect('/concert/concertDetails')
+        return res.redirect('/concert/concertlist')
     }
     console.log("Added to Cart")
     return res.redirect('/concert/concertlist');
@@ -168,17 +168,42 @@ router.post("/updateConcert/:id", async function(req, res){
         }
     catch{
         console.error("error in updateConcert");
+        return res.redirect("concert/updateConcert")
     }
 });
 
 //Delete Concert
-router.get("concerts/deleteconcert/:id", async function(req, res){
+router.post("/concerts/:id", async function(req, res){
     console.log("Trying to delete concert")
     try{
         console.log("try to grab id");
         const concert = await Concert.findOne({
             where: {id: req.params.id}
         });
+        if (concert !== undefined){
+            concert.destroy()
+            console.log("Concert Deleted")
+            return res.redirect("/concert/concerts")
+        }
+    }
+    catch{
+        console.error("error in deleting concert");
+    }
+});
+
+//Delete Cart
+router.post("/cart/:id", async function(req, res){
+    console.log("Trying to delete cart")
+    try{
+        console.log("try to grab id");
+        const cart = await Cart.findOne({
+            where: {id: req.params.id}
+        });
+        if (cart !== undefined){
+            cart.destroy()
+            console.log("Cart Deleted")
+            return res.redirect("/concert/cart")
+        }
     }
     catch{
         console.error("error in deleting concert");
