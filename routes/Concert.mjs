@@ -64,7 +64,7 @@ router.post("/payment", async function(req, res){
         for (x in cart){
             const ticket = await Ticket.create({
                 userID: user.uuid,
-                concertID: cart.id,
+                concertID: x.id,
                 livestreamID: Livestream.uuid
             });
         }
