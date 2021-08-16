@@ -47,12 +47,12 @@
   <thead>
     <tr>
       <th data-field = "id" data-formatter="format_actions"></th>
-      <th data-field = "id">ID</th>
       <th data-field = "title">Title</th>
       <th data-field = "details">Details</th>
       <th data-field = "genre">Genre</th>
       <th data-field = "date">Date</th>
       <th data-field = "time">Time</th>
+      <th data-field = "id" data-formatter="delete_action"></th>
     </tr>
   </thead>
 </table>
@@ -63,12 +63,20 @@
   }
 
   function format_actions(value, row, index){
-    return [`<a href = "/concert/updateConcert/${row.id}">`,
+    return [
+      `<a href = "/concert/updateConcert/${row.id}">`,
       `<i class = "fa fa-wrench"></i>`,
-      `</a> `,
-      `<a href = "/concert/concerts/${row.id}">`,
+      `</a> `
+    ].join('')
+  }
+
+  function delete_action(value, row, index){
+    return [
+      `<form method = "POST" action = "concerts/${row.id}">`,
+      `<button type="submit" class = "btn btn-primary">`,
       `<i class = "fa fa-trash"></i>`,
-      `</a>`
+      `</button>`,
+      `</form>`
     ].join('')
   }
 

@@ -4,7 +4,7 @@ const router = Router();
 export default router;
 import Concert from '../models/Concert.js';
 import Cart from '../models/Cart.js';
-import User from '../models/User.js';
+import User, { UserRole } from '../models/User.js';
 import Livestream from '../models/Livestream.js';
 import Ticket from '../models/Ticket.js';
 import CookieParser    from 'cookie-parser';
@@ -52,25 +52,45 @@ router.get("/payment", async function(req, res){
 		userV = true;
 	}
 	console.log("Payment accessed");
-	return res.render('concert/payment.html',{
-        user:userV
-    })
+    //const user = await User.findOne({where: userloggedin})
+	return res.render('concert/payment.html'
+    // ,
+    // { name: User.name,
+    // email: User.email
+    // }
+    )
 });
 
 //Add to Ticket model
 router.post("/payment", async function(req, res){
     console.log("Trying to create Ticket");
     try{
-        const ticket = await Ticket.create({
-            userID: User.uuid,
-            concertID: Concert.id,
-            livestreamID: Livestream.uuid
-        });
+        const cart = await Cart.findAll({raw: true})
+
+        let email = req.cookies['user'][0]
+        const user = await User.findOne({
+            where: { email: email, role: UserRole.User}
+        })
+
+        // let pemail = req.cookies['performer'][0]
+        // const livestream = await Livestream.findOne({
+        //     where: {email = pemail}
+        // })
+
+        for (x in cart){
+            const ticket = await Ticket.create({
+                userID: user.uuid,
+                concertID: x.id,
+                livestreamID: Livestream.uuid
+            });
+        }
     }
     catch{
         console.error("Error in creating Ticket")
+        req.flash('error', 'Payment was unsuccessful.')
+        return res.redirect('/concert/payment')
     }
-    return res.redirect('/user/settings/tickets')
+    return res.redirect('/user/tickets')
 });
 
 //View Concert Details
@@ -121,7 +141,8 @@ router.post("/concertDetails/:id", async function(req, res){
     }
     catch{
         console.error("error in trying to add to cart");
-        return res.redirect('/concert/concertDetails')
+        req.flash('error', 'Failed to add to cart.')
+        return res.redirect('/concert/concertlist')
     }
     console.log("Added to Cart")
     return res.redirect('/concert/concertlist');
@@ -131,6 +152,10 @@ router.post("/concertDetails/:id", async function(req, res){
 router.post("/createConcert", async function(req, res){
 	console.log("Trying to create concert");
 	try{
+        let email = req.cookies['performer'][0]
+        const livestream = await Livestream.findOne({
+            where: { performer: email}
+        })
 		const concert = await Concert.create({
 			title: req.body.title,
 			details: req.body.details,
@@ -138,12 +163,14 @@ router.post("/createConcert", async function(req, res){
 			date: req.body.date,
             time: req.body.time,
 			bticket: req.body.bticket
+            // email: livestream.uuid
 		});
 		res.cookie('concert', concert.id, {maxAge: 900000, httpOnly: true});
         console.log("Concert created");
 	}
 	catch{
 		console.error("error in createConcert");
+        req.flash('error', 'Failed to create concert.')
         return res.redirect('/concert/createConcert');
 	}
 	return res.redirect('/concert/concerts');
@@ -191,20 +218,48 @@ router.post("/updateConcert/:id", async function(req, res){
         }
     catch{
         console.error("error in updateConcert");
+        req.flash('error', 'Failed to update concert.')
+        return res.redirect("concert/updateConcert")
     }
 });
 
 //Delete Concert
-router.get("concerts/deleteconcert/:id", async function(req, res){
+router.post("/concerts/:id", async function(req, res){
     console.log("Trying to delete concert")
     try{
         console.log("try to grab id");
         const concert = await Concert.findOne({
             where: {id: req.params.id}
         });
+        if (concert !== undefined){
+            concert.destroy()
+            console.log("Concert Deleted")
+            return res.redirect("/concert/concerts")
+        }
     }
     catch{
         console.error("error in deleting concert");
+        req.flash('error', 'Failed to delete concert.')
+    }
+});
+
+//Delete Cart
+router.post("/cart/:id", async function(req, res){
+    console.log("Trying to delete cart")
+    try{
+        console.log("try to grab id");
+        const cart = await Cart.findOne({
+            where: {id: req.params.id}
+        });
+        if (cart !== undefined){
+            cart.destroy()
+            console.log("Cart Deleted")
+            return res.redirect("/concert/cart")
+        }
+    }
+    catch{
+        console.error("error in deleting concert");
+        req.flash('error', 'Failed to delete from cart.')
     }
 });
 

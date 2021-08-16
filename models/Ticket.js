@@ -8,13 +8,16 @@ const Ticket = db.define('tickets',{
         autoIncrement: 1
     },
     userID:{
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
     },
     concertID:{
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
     },
     livestreamID:{
-        type: Sequelize.CHAR(36)
+        type: Sequelize.CHAR(36),
+        allowNull: false
     }
 });
 
