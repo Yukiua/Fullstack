@@ -4,6 +4,9 @@ const router = Router();
 export default router;
 import Concert from '../models/Concert.js';
 import Cart from '../models/Cart.js';
+import User from '../models/User.js';
+import Livestream from '../models/Livestream.js';
+import Ticket from '../models/Ticket.js';
 import CookieParser    from 'cookie-parser';
 
 //Create Concert page
@@ -34,6 +37,22 @@ router.get("/cart", async function(req, res){
 router.get("/payment", async function(req, res){
 	console.log("Payment accessed");
 	return res.render('concert/payment.html')
+});
+
+//Add to Ticket model
+router.post("/payment", async function(req, res){
+    console.log("Trying to create Ticket");
+    try{
+        const ticket = await Ticket.create({
+            userID: User.uuid,
+            concertID: Concert.id,
+            livestreamID: Livestream.uuid
+        });
+    }
+    catch{
+        console.error("Error in creating Ticket")
+    }
+    return res.redirect('/user/settings/tickets')
 });
 
 //View Concert Details
