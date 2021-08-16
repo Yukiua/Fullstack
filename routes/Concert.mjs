@@ -17,8 +17,14 @@ router.get("/createConcert", async function(req, res){
 
 //user side concert page
 router.get("/concertList", async function(req, res){
+    let userV = false
+    if(req.cookies['user'] !== undefined && req.cookies['user'][1] == true){
+		userV = true;
+	}
 	console.log("concertLists accessed");
-	return res.render('concert/concertList.html');
+	return res.render('concert/concertList.html',{
+        user:userV
+    });
 });
 
 //admin side concert page
@@ -29,14 +35,26 @@ router.get("/concerts", async function(req, res){
 
 //Cart page
 router.get("/cart", async function(req, res){
+    let userV = false
+    if(req.cookies['user'] !== undefined && req.cookies['user'][1] == true){
+		userV = true;
+	}
 	console.log("Cart accessed");
-	return res.render('concert/cart.html');
+	return res.render('concert/cart.html',{
+        user:userV
+    });
 });
 
 //Payment Page
 router.get("/payment", async function(req, res){
+    let userV = false
+    if(req.cookies['user'] !== undefined && req.cookies['user'][1] == true){
+		userV = true;
+	}
 	console.log("Payment accessed");
-	return res.render('concert/payment.html')
+	return res.render('concert/payment.html',{
+        user:userV
+    })
 });
 
 //Add to Ticket model
@@ -57,6 +75,10 @@ router.post("/payment", async function(req, res){
 
 //View Concert Details
 router.get("/concertDetails/:id", async function(req, res){
+    let userV = false
+    if(req.cookies['user'] !== undefined && req.cookies['user'][1] == true){
+		userV = true;
+	}
     console.log("Concert Details page accessed");
     const concert = await Concert.findOne({
         where: {id: req.params.id}
@@ -68,7 +90,8 @@ router.get("/concertDetails/:id", async function(req, res){
     genre: concert.genre,
     date: concert.date,
     time: concert.time,
-    bticket: concert.bticket
+    bticket: concert.bticket,
+    user:userV
     })
 });
 

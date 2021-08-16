@@ -70,6 +70,13 @@
         </div>
       </div>
       <h2 class="sub-header">Your Tickets</h2>
+        {% if livestreams.count == 0 %}
+        <h1 class="page-header">No Livestreams showing now</h1>
+        {% endif %}
+        {% if livestreams.count != 0 %}
+        <h3 class="display-4">Livestream(s) </h3>
+        {% for livestreamDetails in livestreams %}
+        {% endfor %}
     </div>
   </div>
 </div>

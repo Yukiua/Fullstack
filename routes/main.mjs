@@ -42,7 +42,14 @@ router.get("/",      async function(req, res) {
 	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
 		performerV = true;
 	}
+	let userV = false
+    if(req.cookies['user'] !== undefined && req.cookies['user'][1] == true){
+		userV = true;
+	}
 	console.log(req.cookies)
 	console.log("Home page accessed");
-	return res.render('index.html',{performer:performerV})
+	return res.render('index.html',{
+		performer:performerV,
+		user:userV
+	})
 });

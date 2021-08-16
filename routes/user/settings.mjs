@@ -22,6 +22,10 @@ router.post('/delete', ensureAuthenticatedCustomer, delete_process);
 
 //to be updated|| FORMLESS POST?????
 async function delete_page(req, res) {
+    let userV = false
+    if(req.cookies['user'] !== undefined && req.cookies['user'][1] == true){
+		userV = true;
+	}
     console.log("User Delete accessed");
     let email = req.cookies['user'][0]
     const user = await User.findOne({
@@ -65,6 +69,10 @@ async function delete_process(req, res) {
 }
 
 async function update_page(req, res) {
+    let userV = false
+    if(req.cookies['user'] !== undefined && req.cookies['user'][1] == true){
+		userV = true;
+	}
     console.log("User Update accessed");
     let email = req.cookies['user'][0]
     const user = await User.findOne({
