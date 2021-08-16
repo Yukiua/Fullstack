@@ -4,6 +4,7 @@ import FileSys from 'fs';
 import Axios from 'axios';
 import Hash from 'hash.js';
 import Moment from 'moment';
+import Livestream from '../models/Livestream.js';
 
 const router = Router();
 export default router
@@ -16,7 +17,12 @@ router.post("/void",     nets_void);
 
 router.get("/donation", async function(req,res){
 	console.log("Donation page accessed");
-	return res.render('donation/donation.html')
+	const livestream = await Livestream.findOne({
+		where: {performer: email}
+	})
+	return res.render('donation/donation.html', {
+		streamId: livestream.uuid
+	})
 });
 
 router.get("/invoice", async function(req,res){
