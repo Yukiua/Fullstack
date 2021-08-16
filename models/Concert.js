@@ -33,7 +33,8 @@ const Concert = db.define('concert',{
     },
     code: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
     }
 });
 

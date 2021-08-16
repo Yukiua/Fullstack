@@ -20,7 +20,8 @@ const Cart = db.define('cart',{
     },
     code: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
     } 
 });
 

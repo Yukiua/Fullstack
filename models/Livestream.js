@@ -23,7 +23,8 @@ const Livestream = db.define('livestream',{
     },
     code: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
     }
 });
 
