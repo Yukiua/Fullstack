@@ -21,6 +21,7 @@ const Livestream = db.define('livestream',{
         type: Sequelize.STRING,
         allowNull: false
     }
+    
 });
 
 export default Livestream;

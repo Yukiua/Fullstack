@@ -12,6 +12,8 @@ router.get("/livestream-data", ls_data);
 router.get("/create", ensureAuthenticated, create_ls_page)
 router.post("/create", ensureAuthenticated, create_ls_process)
 router.get("/golive", ensureAuthenticated, goLive_page)
+router.get("/delete", ensureAuthenticated, delete_page)
+router.post("/delete", ensureAuthenticated, delete_process)
 
 
 async function create_ls_page(req,res){
@@ -77,6 +79,31 @@ async function goLive_page (req,res){
         where: { performer: email}
     })
 	return res.render('livestream/golive.html', {
-        streamId: livestream.uuid,
+        streamId: livestream.uuid
     })
+}
+
+async function delete_page (req,res){
+    console.log("delete livestream page accessed");
+    let email = req.cookies['performer'][0]
+    const livestream = await Livestream.findOne({
+        where: {performer: email}
+    })
+    return res.render('livestream/delete.html',{
+        streamId: livestream.uuid
+    })
+}
+
+async function delete_process (req,res){
+    console.log("deleting livestream");
+    let email = req.cookies['performer'][0]
+    const livestream = await Livestream.findOne({
+        where: {performer: email}
+    })
+    if (livestream !== undefined){
+        livestream.destroy()
+    }
+    console.log("livestream deleted")
+    req.flash('success_msg', 'livestream successfully deleted');
+    return res.redirect('../')
 }
