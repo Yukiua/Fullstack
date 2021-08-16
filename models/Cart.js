@@ -7,13 +7,16 @@ const Cart = db.define('cart',{
         primaryKey: true,
     },
     title:{
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
     },
     price:{
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
+        allowNull: false
     },
     ticket:{
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
     }
 });
 

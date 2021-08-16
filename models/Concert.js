@@ -8,22 +8,32 @@ const Concert = db.define('concert',{
         autoIncrement: 1
     },
     title:{
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
     },
     details:{
-        type: Sequelize.STRING(1000)
+        type: Sequelize.STRING(1000),
+        allowNull: false
     },
     genre:{
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
     },
     date:{
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATEONLY,
+        allowNull: false
     },
     time:{
-        type: Sequelize.TIME
+        type: Sequelize.TIME,
+        allowNull: false
     },
     bticket:{
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+    },
+    email: {
+        type: Sequelize.STRING,
+        allowNull: false
     }
 });
 
