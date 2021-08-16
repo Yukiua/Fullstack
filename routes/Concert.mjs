@@ -72,16 +72,14 @@ router.post("/payment", async function(req, res){
             where: { email: email, role: UserRole.User}
         })
 
-        // let pemail = req.cookies['performer'][0]
-        // const livestream = await Livestream.findOne({
-        //     where: {email = pemail}
-        // })
-
         for (x in cart){
+            const livestream = await Livestream.findOne({
+                where: { code: x.code}
+            });
             const ticket = await Ticket.create({
                 userID: user.uuid,
                 concertID: x.id,
-                livestreamID: Livestream.uuid
+                livestreamID: livestream.uuid
             });
         }
     }
@@ -127,7 +125,8 @@ router.post("/concertDetails/:id", async function(req, res){
                 id: concert.id,
                 title: concert.title,
                 price: 100,
-                ticket: "Bundle Ticket"
+                ticket: "Bundle Ticket",
+                code: concert.code
             });
         }
         else{
@@ -135,7 +134,8 @@ router.post("/concertDetails/:id", async function(req, res){
                 id: concert.id,
                 title: concert.title,
                 price: 20,
-                ticket: "Normal Ticket"
+                ticket: "Normal Ticket",
+                code: concert.code
             });
         }
     }
@@ -162,8 +162,8 @@ router.post("/createConcert", async function(req, res){
 			genre: req.body.genre,
 			date: req.body.date,
             time: req.body.time,
-			bticket: req.body.bticket
-            // email: livestream.uuid
+			bticket: req.body.bticket,
+            code: req.body.code
 		});
 		res.cookie('concert', concert.id, {maxAge: 900000, httpOnly: true});
         console.log("Concert created");
@@ -266,7 +266,7 @@ router.post("/cart/:id", async function(req, res){
 // concerts table
 router.get("/concertList", cltable);
 router.get("/concerts", ctable);
-router.get("cart", catable);
+router.get("/cart", catable);
 router.get("/concert-data", concert_data);
 router.get("/cart-data", cart_data);
 

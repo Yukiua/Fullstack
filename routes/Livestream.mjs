@@ -4,6 +4,7 @@ const router = Router();
 export default router;
 import moment from 'moment';
 import Livestream from '../models/Livestream.js';
+import Concert from '../models/Concert.js';
 import { ensureAuthenticated } from '../config/authenticate.js';
 import CookieParser from 'cookie-parser';
 
@@ -30,7 +31,8 @@ async function create_ls_process(req,res){
             title : req.body.title,
             info : req.body.info,
             dateLivestream : req.body.dateLivestream,
-            performer: req.user.email
+            performer: req.user.email,
+            code: req.body.code
         });
         res.cookie('livestream', livestream.uuid, {maxAge:99999, httpOnly:true});
     }
