@@ -15,7 +15,7 @@ const Faq = db.define('faq', {
         type: Sequelize.STRING
     },
     answer: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
     }
 });
 
