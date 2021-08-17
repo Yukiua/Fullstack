@@ -34,6 +34,10 @@ async function page_stream(req, res) {
 	//	Create a validation token to be used for socket connection
 	console.log('streaming page accessed');
 	let email = req.cookies['performer'][0]
+	let performerV = false;
+	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
 	const  token = JWT.sign({
 		role: (req.user.role == UserRole.Performer) ? "HOST" : "GUEST",
 		userId:   req.user.uuid,
@@ -51,7 +55,8 @@ async function page_stream(req, res) {
 		userId:   user.uuid,
 		username: user.name,
 		role:     (user.role == UserRole.Performer) ? "HOST" : "GUEST",
-		token:    token
+		token:    token,
+		performer:performerV
 	});
 }
 

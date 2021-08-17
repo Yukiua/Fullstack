@@ -152,13 +152,13 @@ async function send_verification(uid, email) {
 	const token = JWT.sign({
 		uuid: uid
 	}, 'the-key', {
-		expiresIn: '30000'
+		expiresIn: '300000'
 	});
 
 	//	Send Grid stuff
 	return SendGrid.send({
 		to: email,
-		from: 'foo.joshua55@gmail.com',
+		from: 'setokurushi@gmail.com',
 		subject: `Please verify your email before continuing`,
 		html: nunjucks.render(`${process.cwd()}/templates/layouts/user-email-verify.html`, {
 			token: token
