@@ -11,7 +11,7 @@ import SendGrid from '@sendgrid/mail';
 import JWT from 'jsonwebtoken';
 
 //dont commit 
-SendGrid.setApiKey('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');
+SendGrid.setApiKey(!!!);
 
 const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 //	Min 3 character, must start with alphabet
