@@ -90,8 +90,8 @@ async function login_process(req, res, next) {
 			}
 		}
 		else{
-			errors = errors.concat({text:"Admin not found. Have you signed in?"})
-			throw new Error("Admin not found. Have you signed in?")
+			errors = errors.concat({text:"Admin not found. Please try again."})
+			throw new Error("Admin not found. Please try again.")
 		}
 	}
 	catch (error) {
