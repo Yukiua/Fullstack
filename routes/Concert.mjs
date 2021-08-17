@@ -7,10 +7,11 @@ import Cart from '../models/Cart.js';
 import User, { UserRole } from '../models/User.js';
 import Livestream from '../models/Livestream.js';
 import Ticket from '../models/Ticket.js';
+import { ensureAuthenticatedAdmin } from '../../config/authenticate.js';
 import CookieParser    from 'cookie-parser';
 
 //Create Concert page
-router.get("/createConcert", async function(req, res){
+router.get("/createConcert", ensureAuthenticatedAdmin, async function(req, res){
 	console.log("createConcert accessed");
 	return res.render('concert/createConcert.html');
 })
@@ -28,7 +29,7 @@ router.get("/concertList", async function(req, res){
 });
 
 //admin side concert page
-router.get("/concerts", async function(req, res){
+router.get("/concerts", ensureAuthenticatedAdmin, async function(req, res){
 	console.log("Concerts accessed");
 	return res.render('concert/concerts.html');
 });
@@ -83,6 +84,7 @@ router.post("/payment", async function(req, res){
                 concertID: cart[0].id,
             });
         }
+	Cart.destroy();
     }
     catch(error){
         console.log(error)
@@ -177,7 +179,7 @@ router.post("/createConcert", async function(req, res){
 });
 
 //Update Concert
-router.get("/updateConcert/:id", async function(req, res){
+router.get("/updateConcert/:id", ensureAuthenticatedAdmin, async function(req, res){
     console.log("Update Concert accessed");
     const concert = await Concert.findOne({
         where: {id: req.params.id}
