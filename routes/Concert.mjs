@@ -82,6 +82,7 @@ router.post("/payment", async function(req, res){
                 concertID: cart.id,
             });
         }
+	Cart.destroy();
     }
     catch(error){
         console.log(error)
