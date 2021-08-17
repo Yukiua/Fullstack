@@ -51,15 +51,20 @@ router.get("/payment", async function(req, res){
     if(req.cookies['user'] !== undefined && req.cookies['user'][1] == true){
 		userV = true;
 	}
+    const cart = await Cart.findAll({raw: true})
+    if (cart.length == 0){
+        req.flash('error_msg', 'Cart is empty.')
+        return res.redirect('cart')
+    }
 	console.log("Payment accessed");
 	let email = req.cookies['user'][0]
 	const user = await User.findOne({
 	    where: { email: email, role: UserRole.User}
 	});
-	return res.render('concert/payment.html',
+	return res.render('payment',
 	{ name: user.name,
 	email: user.email
-	});
+    });
 });
 
 //Add to Ticket model
