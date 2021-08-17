@@ -20,19 +20,16 @@
                 <textarea style="width: 100%; max-width: 100%;" id = "details" name = "details" readonly>{{details}}</textarea><br>
               </div>
               <div class="form-group">
-                <label for = "genre">Genre:</label><br>
-                <input type = "text" id = "genre" name = "genre" value = "{{genre}}" readonly>
+                <label for = "genre">Genre: <input type = "text" id = "genre" name = "genre" value = "{{genre}}" readonly></label><br>
               </div>
               <div class="form-group">
-                <label for = "date">Date:</label><br>
-                <input type = "date" id = "date" name = "date" value = "{{date}}" readonly><br>
+                <label for = "date">Date: <input type = "date" id = "date" name = "date" value = "{{date}}" readonly></label><br>
               </div>
               <div class="form-group">
-                <label for = "time">Time:</label><br>
-                <input type = "time" id = "time" name = "time" value = "{{time}}" readonly><br>
+                <label for = "time">Time: <input type = "time" id = "time" name = "time" value = "{{time}}" readonly></label><br>
               </div>
               <div class="form-group">
-                <label for = "tickets">Tickets:</label>
+                <label for = "tickets">Tickets:
                 {% if bticket == 1 %}
                 <select id = "bticket" name = "bticket" value = "{{bticket}}">
                   <option value = "0">Normal Ticket</option>
@@ -47,6 +44,7 @@
                 </select>
                 <label for = "price">Normal Ticket Price: ${{ntp}}</label>
                 {% endif %}
+                </label>
               </div>
               <input type="submit" value="Add to Cart" class="btn btn-primary"/>
             </form>
