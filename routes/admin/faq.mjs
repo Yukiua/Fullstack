@@ -43,7 +43,8 @@ async function showfaqs(req , res) {
     }
     return res.render("faq.html", {
         faqs : faqs ,
-        count : faqs.length
+        count : faqs.length,
+        imgURL: 'public/img/default.png'
     });
 }
 
@@ -127,7 +128,8 @@ async function listfaq(req , res) {
     console.log("faq ----> ", faqs);
     res.render("admin/faq/listFaq.html", {
         count: faq.length,
-        faqs: faqs
+        faqs: faqs,
+        imgURL: 'public/img/default.png'
     });
 }
 
@@ -138,7 +140,8 @@ async function fetchFaqs() {
 
 async function createfaq(req , res) {
     console.log("create faq page is accessed by admin");
-    res.render("admin/faq/createFaq.html");
+    res.render("admin/faq/createFaq.html",{		imgURL: 'public/img/default.png'
+});
 }
 
 async function createfaq_process(req , res)  {

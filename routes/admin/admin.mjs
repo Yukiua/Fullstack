@@ -50,9 +50,10 @@ router.get('/managefaq', ensureAuthenticatedAdmin, manage_faq_page);
 async function manage_faq_page(req , res) {
 	console.log("managefaq page by admin accessed");
 	res.cookie('admin',  "admin", { maxAge: 900000, httpOnly: true });
-	res.render("admin/manageFaq.html")
+	res.render("admin/manageFaq.html",{
+		imgURL: 'public/img/default.png'
+	})
 }
-
 async function create_user_process(req, res) {
 	console.log("create_user_process by admin contents received");
 	console.log(req.body);
@@ -111,7 +112,9 @@ async function create_user_process(req, res) {
 }
 
 async function create_user_by_admin(req , res ) {
-	return res.render('admin/createUserByAdmin.html');
+	return res.render('admin/createUserByAdmin.html',{
+		imgURL: 'public/img/default.png'
+	});
 }
 
 
@@ -124,7 +127,8 @@ async function sort_by_verified(req , res) {
 	})
 	return res.render('admin/sortVerified.html', {
         count: users.length,
-        users: users
+        users: users,
+		imgURL: 'public/img/default.png'
     })
 }
 
@@ -145,7 +149,8 @@ async function sort_by_role(req , res) {
 	})
 	return res.render('admin/sortRole.html', {
         count: users.length,
-        users: users
+        users: users,
+		imgURL: 'public/img/default.png'
     })
 }
 
@@ -168,7 +173,8 @@ async function sort_by_age(req , res) {
 	})
 	return res.render('admin/sortAge.html', {
         count: users.length,
-        users: users
+        users: users,
+		imgURL: 'public/img/default.png'
     })
 }
 
@@ -189,7 +195,8 @@ async function sort_by_gender(req , res) {
 	})
 	return res.render('admin/sortGender.html', {
         count: users.length,
-        users: users
+        users: users,
+		imgURL: 'public/img/default.png'
     })
 }
 
@@ -211,7 +218,8 @@ async function sort_by_email(req , res) {
 	})
 	return res.render('admin/sortEmail.html', {
         count: users.length,
-        users: users
+        users: users,
+		imgURL: 'public/img/default.png'
     })
 }
 
@@ -234,7 +242,8 @@ async function sort_by_name(req , res) {
 	})
 	return res.render('admin/sortName.html', {
         count: users.length,
-        users: users
+        users: users,
+		imgURL: 'public/img/default.png'
     })
 }
 
@@ -246,7 +255,8 @@ async function sort_by_id(req , res) {
 		});
 	return res.render('admin/sortID.html', {
         count: users.length,
-        users: users
+        users: users,
+		imgURL: 'public/img/default.png'
     })
 }
 
@@ -423,7 +433,8 @@ async function list_user(req, res) {
 	console.log("users ----> ", users);
     return res.render('admin/retrieveUsers.html', {
         count: users.length,
-        users: users
+        users: users,
+		imgURL: 'public/img/default.png'
     })
 }
 
