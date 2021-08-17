@@ -92,7 +92,8 @@ async function create_user_process(req, res) {
 			age: req.body.age,
 			gender: req.body.gender,
 			contact: req.body.contact,
-			role: UserRole.User
+			role: UserRole.User,
+			verified: true
 
 		});
 		//await send_verification(user.uuid, user.email);
