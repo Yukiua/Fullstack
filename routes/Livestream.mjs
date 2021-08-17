@@ -61,7 +61,7 @@ async function update_livestream(req,res){
 }
 
 async function lstable(req, res){
-    return res.render("livestream/list.html");
+    return res.render("../user/tickets.html");
 }
 
 async function ls_data(req, res){

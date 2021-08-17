@@ -54,3 +54,7 @@ async function page_stream(req, res) {
 		token:    token
 	});
 }
+
+async function error_page(req,res){
+	return res.render("user/tickets.html")
+}

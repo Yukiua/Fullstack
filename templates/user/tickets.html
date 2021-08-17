@@ -1,83 +1,46 @@
 {% extends "layouts/base.html" %}
-{% block PageJS %}
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-  {% endblock PageJS %}
-  {% block PageCSS %}
-  <style>
-    #bigSidebar {
-      background-color: lightgrey;
-    }
+{% block title %}ESTIC - Livestreams{% endblock %}
 
-    #sidebarDash {
-      font-weight: bold;
-      font-size: 20px;
-      color: purple;
-    }
-
-    #sidebarLive {
-      font-weight: bold;
-      font-size: 20px;
-      color: purple;
-    }
-
-    #sidebarAna {
-      font-weight: bold;
-      font-size: 20px;
-      color: purple;
-    }
-
-    #sidebarSet {
-      font-weight: bold;
-      font-size: 20px;
-      color: purple;
-    }
-
-    #sidebarLog {
-      font-weight: bold;
-      font-size: 20px;
-      color: purple;
-    }
-  </style>
-  {% endblock PageCSS %}
-{% block PageTitle %}ESTIC - Performer Settings{% endblock PageTitle %}
 {% block PageContent %}
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar" id="bigSidebar">
-      <ul class="nav nav-sidebar">
-        <li>
-          <img src="../{{imgURL}}" width="150" height="150">
-
-        </li>
-      </ul>
-
-      <ul class="nav nav-sidebar">
-        <li id="sidebarSet"><a href="settings">Settings</a></li>
-      </ul>
-      <ul class="nav nav-sidebar">
-        <li id="sidebarSet"><a href="tickets">Your Tickets</a></li>
-      </ul>
-      <ul class="nav nav-sidebar">
-        <li id="sidebarLog"><a href="logout">Log Out</a></li>
-      </ul>
-    </div>
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-      <h1 class="page-header">{{name}}</h1>
-      <div class="row placeholders">
-        <div class="col-xs-6 col-sm-3 placeholder">
-        </div>
-      </div>
-      <h2 class="sub-header">Your Tickets</h2>
-        {% if livestreams.count == 0 %}
-        <h1 class="page-header">No Livestreams showing now</h1>
-        {% endif %}
-        {% if livestreams.count != 0 %}
-        <h3 class="display-4">Livestream(s) </h3>
-        {% for livestreamDetails in livestreams %}
-        {% endfor %}
-    </div>
-  </div>
+{#{% if 'livestream_added' in session%}
+<div class="alert alert-success alert-dismissible">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
 </div>
+{% endif %}#}
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+<h1 class="display-4">Livestreams</h1>
+
+<table 
+  data-toggle = "table"
+  data-height = "500"
+  data-search = "true"
+  data-show-columns = "true"
+  data-show-columns-toggle-all = "true"
+  data-pagination = "true"
+  data-loading-template = "loadingTemplate"
+  data-url = "/user/tickets-data">
+  <thead>
+    <tr>
+      <th data-field = "title">Livestream Title</th>
+      <th data-field = "info">Livestream Info</th>
+      <th data-field = "dateLivestream">Date of Livestream</th>
+      <th data-field = "uuid" data-formatter="watch_stream"></th>
+    </tr>
+  </thead>
+</table>
+
+<script>
+  function loadingTemplate(message){
+    return '<i class = "fa fa-spinner fa-spin fa-fw fa-2x"></i>'
+  }
+  function watch_stream(value, row, index){
+    return [
+      `<a href = "/stream/{{streamId}}">`,
+      `Watch Now`,
+      `</a>`
+    ].join('')
+  }
+</script>
+
 {% endblock PageContent %}

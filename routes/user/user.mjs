@@ -12,7 +12,8 @@ router.get("/profile", ensureAuthenticatedCustomer, user_profile);
 router.get("/watchLivestream", ensureAuthenticatedCustomer, watchLive_page);
 router.get("/logout", ensureAuthenticatedCustomer, logout_page);
 router.get("/settings", ensureAuthenticatedCustomer, settings_page);
-router.get("/tickets", ensureAuthenticatedCustomer, tickets_page)
+router.get("/tickets", ensureAuthenticatedCustomer, tickets_page);
+router.get("/tickets-data", ensureAuthenticatedCustomer, tickets_data);
 
 async function user_profile(req,res) {
     let userV = false
@@ -70,31 +71,30 @@ async function watchLive_page(req,res) {
     })
 };
 
-async function fetch_streams(){
+async function retrieve_stream(){
     const livestream = await Livestream.findAll();
     return livestream;
 }
 
+async function tickets_data(req,res){
+    const livestreams = await Livestream.findAll({raw: true});
+    return res.json({
+        "total": livestreams.length,
+        "rows": livestreams
+    });
+}
 async function tickets_page(req,res) {
-    let livestream = await fetch_streams();
-    let livestreams = [];
-    let livestreamNo = 0;
-    for(var i=0; i<livestream.length; i++){
-        livestreamNo = livestreamNo + 1;
-        livestreams.push({
-            "livestreamNo":livestreamNo,
-            "title" : livestream[i].dataValues.title,
-			"info" : livestream[i].dataValues.info,
-			"dateLivestream" : livestream[i].dataValues.dateLivestream
-        })
-    }
     let userV = false
     if(req.cookies['user'] !== undefined && req.cookies['user'][1] == true){
 		userV = true;
 	}
+    let email = req.cookies['user'][0]
     const user = await User.findOne({
         where: { email : email, role:UserRole.User }
     })
+    const livestreams = await Livestream.findAll({raw: true});
     console.log("tickets page accessed");
-    return res.render
+    return res.render("user/tickets.html",{
+        user:userV
+    })
 }
