@@ -76,10 +76,11 @@ router.post("/payment", async function(req, res){
         const user = await User.findOne({
             where: { email: email, role: UserRole.User}
         })
-        for (x in cart){
+        console.log(cart[0].id)
+        for (let i =0;i< cart.length; i++){
             const ticket = await Ticket.create({
                 userID: user.uuid,
-                concertID: cart.id,
+                concertID: cart[0].id,
             });
         }
     }
