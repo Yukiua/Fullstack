@@ -371,15 +371,13 @@ async function update_by_admin(req, res) {
 
 async function update_user(req , res) {
 	console.log("Update user by admin page accessed");
-	let email = req.cookies['user'][0];
 	console.log("req.body.uuid", req.params.id);
-	console.log("email ---> ", email);
 	const user = await User.findOne({
 		where : { uuid : req.params.id }
 	});
 	res.cookie('uuid',  [req.params.id , true], { maxAge: 900000, httpOnly: true });
 	res.cookie('admin',  "admin", { maxAge: 900000, httpOnly: true });
-	if(user) {
+	if(user||performer) {
 		if(user.dataValues.role == UserRole.User) {
 			return res.render('admin/updateuserbyadmin.html', {
 			name: user.name,
@@ -387,11 +385,21 @@ async function update_user(req , res) {
         	imgURL: user.imgURL,
 			updateBy : "admin"
 			});
-		} else {
+		}
+		else if(user.dataValues.role == UserRole.Performer){
+			return res.render('admin/updateuserbyadmin.html',{
+			name: user.name,
+			email:user.email,
+			imgURL:user.imgURL,
+			updateBy: 'admin'
+			});
+		}
+		 else {
 			console.log(" performer ", user.role);
 			return res.render('admin/updateperformerbyadmin.html');
 		}
-	} else {
+	} 
+	else {
 		console.log("no user for update");
 		return res.render('auth/admin/login.html');
 	}
