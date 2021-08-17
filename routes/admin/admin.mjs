@@ -311,7 +311,7 @@ async function update_by_admin(req, res) {
     }
     catch (error) {
         console.log("There is errors with the update form body.")
-		console.log("errors " , { error: errors });
+// 		console.log("errors " , { error: errors });
         return res.render('../profile', { error: errors });
     }
     try {
