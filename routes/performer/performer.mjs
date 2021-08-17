@@ -79,7 +79,7 @@ async function settings_page(req,res){
 async function logout_page(req, res) {
 	console.log("Performer Logout accessed");
 	req.logout();
-	res.clearCookie("performer_verified");
+	res.clearCookie("performer");
 	req.flash('success_msg', 'You are logged out from performer')
 	return res.redirect('/')
 };
