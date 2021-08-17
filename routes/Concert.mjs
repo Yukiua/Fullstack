@@ -52,13 +52,14 @@ router.get("/payment", async function(req, res){
 		userV = true;
 	}
 	console.log("Payment accessed");
-    //const user = await User.findOne({where: userloggedin})
-	return res.render('concert/payment.html'
-    // ,
-    // { name: User.name,
-    // email: User.email
-    // }
-    )
+	let email = req.cookies['user'][0]
+	const user = await User.findOne({
+	    where: { email: email, role: UserRole.User}
+	});
+	return res.render('concert/payment.html',
+	{ name: user.name,
+	email: user.email
+	});
 });
 
 //Add to Ticket model
