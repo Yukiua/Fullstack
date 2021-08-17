@@ -20,8 +20,12 @@ const Livestream = db.define('livestream',{
     performer: {
         type: Sequelize.STRING,
         allowNull: false
+    },
+    code: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true
     }
-    
 });
 
 export default Livestream;

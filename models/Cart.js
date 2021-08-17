@@ -17,7 +17,12 @@ const Cart = db.define('cart',{
     ticket:{
         type: Sequelize.STRING,
         allowNull: false
-    }
+    },
+    code: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true
+    } 
 });
 
 export default Cart;

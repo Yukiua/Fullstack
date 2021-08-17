@@ -31,9 +31,10 @@ const Concert = db.define('concert',{
         type: Sequelize.BOOLEAN,
         allowNull: false
     },
-    email: {
-        type: Sequelize.STRING,
-        allowNull: false
+    code: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true
     }
 });
 
