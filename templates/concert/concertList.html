@@ -13,9 +13,16 @@
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
 <h1 class="display-4">Concerts</h1>
 
+<div id = "toolbar">
+  <a href = "/concert/cart">
+    <button><i class = "fa fa-shopping-cart"></i> Cart</button>
+  </a>
+</div>
+
 <table 
   data-toggle = "table"
   data-height = "800"
+  data-toolbar = "#toolbar"
   data-search = "true"
   data-show-columns = "true"
   data-show-columns-toggle-all = "true"
