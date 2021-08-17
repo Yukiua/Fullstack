@@ -17,6 +17,7 @@ router.post("/void",     nets_void);
 
 router.get("/donation", async function(req,res){
 	console.log("Donation page accessed");
+	let email = req.cookies['performer'][0]
 	const livestream = await Livestream.findOne({
 		where: {performer: email}
 	})

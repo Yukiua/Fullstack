@@ -85,12 +85,24 @@ async function logout_page(req, res) {
 };
 
 async function createLive_page(req, res) {
+	let performerV = false;
+	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
 	console.log("Create Livestream accessed, passing over");
-	return res.redirect('../livestream/create')
+	return res.redirect('../livestream/create',{
+		performer:performerV
+	})
 };
 async function goLive_page (req,res){
+	let performerV = false;
+	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
 	console.log("go live page accessed");
-	return res.redirect('../livestream/golive')
+	return res.redirect('../livestream/golive',{
+		performer:performerV
+	})
 };
 
 async function livestreams_page(req,res){
