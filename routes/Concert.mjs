@@ -125,6 +125,7 @@ router.get("/concertDetails/:id", async function(req, res){
 //Add to Cart from Concert Details
 router.post("/concertDetails/:id", async function(req, res){
     console.log("Trying to add to cart");
+    let email = req.cookies['user'][0]
     try{
         const concert = await Concert.findOne({
             where: {id: req.params.id}
@@ -139,12 +140,15 @@ router.post("/concertDetails/:id", async function(req, res){
             const ticket = await Ticket.findOne({
                 where: { userID: user.uuid, concertID: concert.id}
             })
-            console.log("Duplicate ticket found");
-            req.flash('error_msg', 'Ticket already purchased');
-            return res.redirect('/concert/concertlist')
+            if (ticket){
+                console.log("Duplicate ticket found");
+                req.flash('error_msg', 'Ticket already purchased');
+                return res.redirect('/concert/concertlist')
+            }
         }
         catch{
             console.log("No Duplicate Ticket");
+            
         }        
 
         if (req.body.bticket == 1){
