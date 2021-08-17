@@ -15,7 +15,8 @@ const Ticket = db.define('tickets',{
     },
     concertID:{
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
     }
 });
 

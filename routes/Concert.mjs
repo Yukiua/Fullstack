@@ -7,7 +7,7 @@ import Cart from '../models/Cart.js';
 import User, { UserRole } from '../models/User.js';
 import Livestream from '../models/Livestream.js';
 import Ticket from '../models/Ticket.js';
-import { ensureAuthenticatedAdmin } from '../../config/authenticate.js';
+import { ensureAuthenticatedAdmin } from '../config/authenticate.js';
 import CookieParser    from 'cookie-parser';
 
 //Create Concert page
@@ -77,14 +77,17 @@ router.post("/payment", async function(req, res){
         const user = await User.findOne({
             where: { email: email, role: UserRole.User}
         })
-        console.log(cart[0].id)
-        for (let i =0;i< cart.length; i++){
+        console.log(cart.id)
+        for (let i = 0;i < cart.length; i++){
             const ticket = await Ticket.create({
                 userID: user.uuid,
-                concertID: cart[0].id,
+                concertID: cart[i].id,
             });
+            const dcart = await Cart.findOne({
+                where: {id: ticket.concertID}
+            });
+            dcart.destroy()
         }
-	Cart.destroy();
     }
     catch(error){
         console.log(error)
@@ -126,6 +129,24 @@ router.post("/concertDetails/:id", async function(req, res){
         const concert = await Concert.findOne({
             where: {id: req.params.id}
         });
+        console.log("1")
+        const user = await User.findOne({
+            where: { email: email, role: UserRole.User}
+        })
+        console.log("2")
+        try{
+            console.log("3")
+            const ticket = await Ticket.findOne({
+                where: { userID: user.uuid, concertID: concert.id}
+            })
+            console.log("Duplicate ticket found");
+            req.flash('error_msg', 'Ticket already purchased');
+            return res.redirect('/concert/concertlist')
+        }
+        catch{
+            console.log("No Duplicate Ticket");
+        }        
+
         if (req.body.bticket == 1){
             const cart = await Cart.create({
                 id: concert.id,
@@ -145,7 +166,7 @@ router.post("/concertDetails/:id", async function(req, res){
     }
     catch{
         console.error("error in trying to add to cart");
-        req.flash('error_msg', 'Concert Ticket already in Cart.')
+        req.flash('error_msg', 'Concert Ticket already in Cart.');
         return res.redirect('/concert/concertlist')
     }
     console.log("Added to Cart")
