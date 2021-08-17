@@ -38,11 +38,6 @@ const Concert = db.define('concert',{
     btp:{
         type: Sequelize.INTEGER,
         allowNull: false
-    },
-    code: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        primaryKey: true
     }
 });
 

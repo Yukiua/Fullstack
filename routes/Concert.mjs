@@ -61,7 +61,7 @@ router.get("/payment", async function(req, res){
 	const user = await User.findOne({
 	    where: { email: email, role: UserRole.User}
 	});
-	return res.render('payment',
+	return res.render('concert/payment.html',
 	{ name: user.name,
 	email: user.email
     });
@@ -72,24 +72,19 @@ router.post("/payment", async function(req, res){
     console.log("Trying to create Ticket");
     try{
         const cart = await Cart.findAll({raw: true})
-
         let email = req.cookies['user'][0]
         const user = await User.findOne({
             where: { email: email, role: UserRole.User}
         })
-
         for (x in cart){
-            const livestream = await Livestream.findOne({
-                where: { code: x.code}
-            });
             const ticket = await Ticket.create({
                 userID: user.uuid,
-                concertID: x.id,
-                livestreamID: livestream.uuid
+                concertID: cart.id,
             });
         }
     }
-    catch{
+    catch(error){
+        console.log(error)
         console.error("Error in creating Ticket")
         req.flash('error_msg', 'Payment was unsuccessful.')
         return res.redirect('/concert/payment')
@@ -134,7 +129,6 @@ router.post("/concertDetails/:id", async function(req, res){
                 title: concert.title,
                 price: concert.btp,
                 ticket: "Bundle Ticket",
-                code: concert.code
             });
         }
         else{
@@ -143,7 +137,6 @@ router.post("/concertDetails/:id", async function(req, res){
                 title: concert.title,
                 price: concert.ntp,
                 ticket: "Normal Ticket",
-                code: concert.code
             });
         }
     }
@@ -170,7 +163,6 @@ router.post("/createConcert", async function(req, res){
 			bticket: req.body.bticket,
             ntp: req.body.ntp,
             btp: req.body.btp,
-            code: req.body.code
 		});
         console.log("Concert created");
 	}
@@ -199,7 +191,6 @@ router.get("/updateConcert/:id", async function(req, res){
     bticket: concert.bticket,
     ntp: concert.ntp,
     btp: concert.btp,
-    code: concert.code
     });
 });
 
