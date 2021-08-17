@@ -130,13 +130,10 @@ router.post("/concertDetails/:id", async function(req, res){
         const concert = await Concert.findOne({
             where: {id: req.params.id}
         });
-        console.log("1")
         const user = await User.findOne({
             where: { email: email, role: UserRole.User}
         })
-        console.log("2")
         try{
-            console.log("3")
             const ticket = await Ticket.findOne({
                 where: { userID: user.uuid, concertID: concert.id}
             })
