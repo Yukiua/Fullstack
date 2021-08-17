@@ -34,11 +34,23 @@
               <div class="form-group">
                 <label for = "bticket">Tickets:</label><br>
                 {% if bticket == 1 %}
-                  <input type="text" id = "bticket" name = "bticket" value = "Ticket Bundle" readonly>
+                  <input type="text" id = "bticket" name = "bticket" value = "Ticket Bundle" readonly><br>
                 {% endif %}
                 {% if bticket == 0 %}
-                  <input type="text" id = "bticket" name = "bticket" value = "Normal Ticket" readonly>
+                  <input type="text" id = "bticket" name = "bticket" value = "Normal Ticket" readonly><br>
                 {% endif %}
+              </div>
+              <div class="form-group">
+                <label for = "ntp">Normal Ticket Price:</label><br>
+                <input type = "number" id = "ntp" name = "ntp" value = "{{ntp}}" readonly><br>
+              </div>
+              <div class="form-group">
+                <label for = "btp">Ticket Bundle Price:</label><br>
+                <input type = "number" id = "btp" name = "btp" value = "{{btp}}" readonly><br>
+              </div>
+              <div class="form-group">
+                <label for = "code">Code:</label><br>
+                <input type = "number" name = "code" value = "{{code}}" readonly><br>
               </div>
               <input type="submit" value="Update" class="btn btn-primary"/>
             </form>

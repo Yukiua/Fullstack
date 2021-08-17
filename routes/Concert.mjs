@@ -115,6 +115,8 @@ router.get("/concertDetails/:id", async function(req, res){
     date: concert.date,
     time: concert.time,
     bticket: concert.bticket,
+    ntp: concert.ntp,
+    btp: concert.btp,
     user:userV
     })
 });
@@ -130,7 +132,7 @@ router.post("/concertDetails/:id", async function(req, res){
             const cart = await Cart.create({
                 id: concert.id,
                 title: concert.title,
-                price: 100,
+                price: concert.btp,
                 ticket: "Bundle Ticket",
                 code: concert.code
             });
@@ -139,7 +141,7 @@ router.post("/concertDetails/:id", async function(req, res){
             const cart = await Cart.create({
                 id: concert.id,
                 title: concert.title,
-                price: 20,
+                price: concert.ntp,
                 ticket: "Normal Ticket",
                 code: concert.code
             });
@@ -147,7 +149,7 @@ router.post("/concertDetails/:id", async function(req, res){
     }
     catch{
         console.error("error in trying to add to cart");
-        req.flash('error_msg', 'Failed to add to cart.')
+        req.flash('error_msg', 'Concert Ticket already in Cart.')
         return res.redirect('/concert/concertlist')
     }
     console.log("Added to Cart")
@@ -166,6 +168,8 @@ router.post("/createConcert", async function(req, res){
 			date: req.body.date,
             time: req.body.time,
 			bticket: req.body.bticket,
+            ntp: req.body.ntp,
+            btp: req.body.btp,
             code: req.body.code
 		});
         console.log("Concert created");
@@ -192,7 +196,10 @@ router.get("/updateConcert/:id", async function(req, res){
     genre: concert.genre,
     date: concert.date,
     time: concert.time,
-    bticket: concert.bticket
+    bticket: concert.bticket,
+    ntp: concert.ntp,
+    btp: concert.btp,
+    code: concert.code
     });
 });
 

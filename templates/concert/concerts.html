@@ -23,19 +23,16 @@
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
 <h1 class="display-4">Concerts</h1>
 
-<div>{#
-  {% if count == 0 %}
-  <p>There are no concert entry.</p>
-  {% elif count == 1 %}
-  <p>There is 1 concert entries.</p>
-  {% else %}
-  <p>There are {{ count }} concert entry(ies).</p>
-  {% endif %}#}
+<div id = "toolbar">
+  <a href = "/concert/createConcert">
+    <button>Create</button>
+  </a>
 </div>
 
 <table 
   data-toggle = "table"
   data-height = "800"
+  data-toolbar = "#toolbar"
   data-search = "true"
   data-show-columns = "true"
   data-show-columns-toggle-all = "true"

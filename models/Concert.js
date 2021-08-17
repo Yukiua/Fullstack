@@ -31,6 +31,14 @@ const Concert = db.define('concert',{
         type: Sequelize.BOOLEAN,
         allowNull: false
     },
+    ntp:{
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    btp:{
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
     code: {
         type: Sequelize.INTEGER,
         allowNull: false,
