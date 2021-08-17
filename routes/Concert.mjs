@@ -7,7 +7,7 @@ import Cart from '../models/Cart.js';
 import User, { UserRole } from '../models/User.js';
 import Livestream from '../models/Livestream.js';
 import Ticket from '../models/Ticket.js';
-import { ensureAuthenticatedAdmin } from '../../config/authenticate.js';
+import { ensureAuthenticatedAdmin } from '../config/authenticate.js';
 import CookieParser    from 'cookie-parser';
 
 //Create Concert page
