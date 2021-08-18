@@ -17,12 +17,17 @@ router.post("/void",     nets_void);
 
 router.get("/donation", async function(req,res){
 	console.log("Donation page accessed");
+	let performerV = false;
+	if(req.cookies['performer'] !== undefined && req.cookies['performer'][1] == true){
+		performerV = true;
+	}
 	let email = req.cookies['performer'][0]
 	const livestream = await Livestream.findOne({
 		where: {performer: email}
 	})
 	return res.render('donation/donation.html', {
-		streamId: livestream.uuid
+		streamId: livestream.uuid,
+		performer:performerV
 	})
 });
 
