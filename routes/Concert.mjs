@@ -95,7 +95,7 @@ router.post("/payment", async function(req, res){
         req.flash('error_msg', 'Payment was unsuccessful.')
         return res.redirect('/concert/payment')
     }
-    return res.redirect('/user/tickets')
+    return res.redirect('/user/profile')
 });
 
 //View Concert Details
